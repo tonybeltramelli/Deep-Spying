@@ -3,60 +3,46 @@ package com.tonybeltramelli.swat.mobile;
 import android.content.Context;
 import android.util.Log;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.wearable.DataApi;
 import com.google.android.gms.wearable.PutDataMapRequest;
 import com.google.android.gms.wearable.PutDataRequest;
 import com.google.android.gms.wearable.Wearable;
-
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import com.tonybeltramelli.swat.mobile.common.ADataManager;
+import com.tonybeltramelli.swat.mobile.common.Const;
 
 /**
  * Created by tbeltramelli on 05/08/15.
  */
-public class DataManager implements ISensorDataSender {
+public class SensorDataSender extends ADataManager {
 
-    private static DataManager _instance = null;
+    private static SensorDataSender _instance = null;
 
-    private GoogleApiClient _client;
-    private ExecutorService _threadPool;
-
-    private DataManager(Context context)
+    private SensorDataSender(Context context)
     {
-        _client = new GoogleApiClient.Builder(context).addApi(Wearable.API).build();
-        _threadPool = Executors.newCachedThreadPool();
+        super(context);
     }
 
-    public static DataManager getInstance(Context context)
+    public static SensorDataSender getInstance(Context context)
     {
         if (_instance == null)
         {
-            _instance = new DataManager(context);
+            _instance = new SensorDataSender(context);
         }
 
         return _instance;
     }
 
-    private boolean _isConnected()
-    {
-        if (_client.isConnected()) return true;
-
-        ConnectionResult result = _client.blockingConnect();
-        return result.isSuccess();
-    }
-
-    @Override
     public void sendSensorData(final int sensorType, final int accuracy, final long timestamp, final float[] values)
     {
+        System.out.print("-------> send sensor data");
+
         _threadPool.submit(new Runnable() {
             @Override
             public void run() {
-                PutDataMapRequest dataMap = PutDataMapRequest.create("sensor_" + sensorType);
-                dataMap.getDataMap().putLong("timestamp", timestamp);
-                dataMap.getDataMap().putFloatArray("values", values);
+                PutDataMapRequest dataMap = PutDataMapRequest.create(Const.SENSOR_ROOT + sensorType);
+                dataMap.getDataMap().putLong(Const.TIMESTAMP, timestamp);
+                dataMap.getDataMap().putFloatArray(Const.VALUES, values);
 
                 PutDataRequest putDataRequest = dataMap.asPutDataRequest();
 
@@ -75,11 +61,5 @@ public class DataManager implements ISensorDataSender {
                 Log.wtf(this.getClass().getName(), "Sending sensor data: " + dataItemResult.getStatus().isSuccess());
             }
         });
-    }
-
-    public void kill()
-    {
-        if(_threadPool != null) _threadPool.shutdownNow();
-        if(_client != null) _client.disconnect();
     }
 }

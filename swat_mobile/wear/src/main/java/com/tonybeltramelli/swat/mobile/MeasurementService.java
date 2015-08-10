@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.google.android.gms.wearable.MessageEvent;
 import com.google.android.gms.wearable.WearableListenerService;
+import com.tonybeltramelli.swat.mobile.common.Const;
 
 /**
  * Created by tbeltramelli on 05/08/15.
@@ -16,8 +17,6 @@ public class MeasurementService extends WearableListenerService {
         super.onCreate();
 
         Log.wtf(this.getClass().getName(), "------> here");
-
-        startService(new Intent(this, MotionSensorService.class));
     }
 
     @Override
@@ -31,7 +30,15 @@ public class MeasurementService extends WearableListenerService {
     public void onMessageReceived(MessageEvent messageEvent) {
         Log.d(this.getClass().getName(), "Received message: " + messageEvent.getPath());
 
-        //startService(new Intent(this, MotionSensorService.class));
-        //stopService(new Intent(this, MotionSensorService.class));
+        switch (messageEvent.getPath()) {
+            case Const.START_RECORDING:
+                startService(new Intent(this, MotionSensorService.class));
+                break;
+            case Const.STOP_RECORDING:
+                stopService(new Intent(this, MotionSensorService.class));
+                break;
+            default:
+                break;
+        }
     }
 }

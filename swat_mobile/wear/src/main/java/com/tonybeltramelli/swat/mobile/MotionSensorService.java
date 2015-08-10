@@ -1,6 +1,5 @@
 package com.tonybeltramelli.swat.mobile;
 
-import android.app.Activity;
 import android.app.Service;
 import android.content.Intent;
 import android.hardware.Sensor;
@@ -35,7 +34,7 @@ public class MotionSensorService extends Service implements SensorEventListener 
     @Override
     public void onSensorChanged(SensorEvent event) {
         //Log.wtf(this.getClass().getName(), event.sensor.getType() + " " + event.accuracy + " " + event.timestamp + " " + event.values);
-        DataManager.getInstance(this).sendSensorData(event.sensor.getType(), event.accuracy, event.timestamp, event.values);
+        SensorDataSender.getInstance(this).sendSensorData(event.sensor.getType(), event.accuracy, event.timestamp, event.values);
     }
 
     @Override

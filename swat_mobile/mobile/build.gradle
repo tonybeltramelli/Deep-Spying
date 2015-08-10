@@ -24,4 +24,5 @@ dependencies {
     wearApp project(':wear')
     compile 'com.android.support:appcompat-v7:22.2.1'
     compile 'com.google.android.gms:play-services:7.5.0'
+    compile project(':common')
 }
