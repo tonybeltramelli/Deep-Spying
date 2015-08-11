@@ -25,6 +25,7 @@ proguard/
 *.iml
 *.ipr
 *.iws
+run.sh
 
 /out/
 

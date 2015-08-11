@@ -11,4 +11,8 @@ public class Const
     //
     public static final String TIMESTAMP = "timestamp";
     public static final String VALUES = "values";
+    //
+    public static final String ACCELEROMETER = "Accelerometer";
+    public static final String GYROSCOPE = "Gyroscope";
+    public static final String UNSUPPORTED = "Unsupported";
 }

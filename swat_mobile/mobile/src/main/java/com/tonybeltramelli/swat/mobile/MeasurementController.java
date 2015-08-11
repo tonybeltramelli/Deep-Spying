@@ -52,7 +52,7 @@ public class MeasurementController extends AThreadedClient
 
     private void _controlMeasurementInBackground(final String path)
     {
-        if (!_isConnected()) return;
+        if (!isConnected()) return;
 
         List<Node> nodes = Wearable.NodeApi.getConnectedNodes(_client).await().getNodes();
 

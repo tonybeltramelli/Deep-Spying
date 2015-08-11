@@ -23,12 +23,17 @@ public class AThreadedClient
         _threadPool = Executors.newCachedThreadPool();
     }
 
-    protected boolean _isConnected()
+    public boolean connect()
+    {
+        ConnectionResult result = _client.blockingConnect();
+        return result.isSuccess();
+    }
+
+    public boolean isConnected()
     {
         if (_client.isConnected()) return true;
 
-        ConnectionResult result = _client.blockingConnect();
-        return result.isSuccess();
+        return connect();
     }
 
     public void kill()

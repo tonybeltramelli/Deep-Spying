@@ -23,8 +23,6 @@ public class SensorDataSender extends AThreadedClient
 
     public void sendSensorData(final int sensorType, final int accuracy, final long timestamp, final float[] values)
     {
-        System.out.print("-------> send sensor data");
-
         _threadPool.submit(new Runnable()
         {
             @Override
@@ -43,7 +41,7 @@ public class SensorDataSender extends AThreadedClient
 
     private void _sendSensorDataInBackground(PutDataRequest data)
     {
-        if (!_isConnected()) return;
+        if (!isConnected()) return;
 
         Wearable.DataApi.putDataItem(_client, data).setResultCallback(new ResultCallback<DataApi.DataItemResult>()
         {

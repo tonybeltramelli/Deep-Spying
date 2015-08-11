@@ -1,5 +1,4 @@
 <resources>
-    <string name="app_name">SWAT mobile</string>
-    <string name="hello_round">Hello Round World!</string>
-    <string name="hello_square">Hello Square World!</string>
+    <string name="app_name">SWAT Mobile</string>
+    <string name="title_activity_main">SWAT Wearable</string>
 </resources>
