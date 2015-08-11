@@ -1,7 +1,6 @@
 package com.tonybeltramelli.swat.mobile;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.wearable.DataApi;
@@ -10,6 +9,7 @@ import com.google.android.gms.wearable.PutDataRequest;
 import com.google.android.gms.wearable.Wearable;
 import com.tonybeltramelli.swat.mobile.common.AThreadedClient;
 import com.tonybeltramelli.swat.mobile.common.Const;
+import com.tonybeltramelli.swat.mobile.common.Out;
 
 /**
  * Created by tbeltramelli on 11/08/15.
@@ -50,7 +50,7 @@ public class SensorDataSender extends AThreadedClient
             @Override
             public void onResult(DataApi.DataItemResult dataItemResult)
             {
-                Log.d(this.getClass().getName(), "Sending sensor data: " + dataItemResult.getStatus().isSuccess());
+                Out.print("Sending sensor data: " + dataItemResult.getStatus().isSuccess());
             }
         });
     }

@@ -1,7 +1,6 @@
 package com.tonybeltramelli.swat.mobile;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.wearable.MessageApi;
@@ -9,6 +8,7 @@ import com.google.android.gms.wearable.Node;
 import com.google.android.gms.wearable.Wearable;
 import com.tonybeltramelli.swat.mobile.common.AThreadedClient;
 import com.tonybeltramelli.swat.mobile.common.Const;
+import com.tonybeltramelli.swat.mobile.common.Out;
 
 import java.util.List;
 
@@ -67,7 +67,7 @@ public class MeasurementController extends AThreadedClient
                 @Override
                 public void onResult(MessageApi.SendMessageResult sendMessageResult)
                 {
-                    Log.d(this.getClass().getName(), "Send control " + path + " to " + target + ": " + sendMessageResult.getStatus().isSuccess());
+                    Out.print("Send control " + path + " to " + target + ": " + sendMessageResult.getStatus().isSuccess());
                 }
             });
         }
