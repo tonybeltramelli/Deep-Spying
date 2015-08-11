@@ -12,72 +12,72 @@ import android.util.Log;
 /**
  * Created by tbeltramelli on 05/08/15.
  */
-public class MotionSensorService extends Service implements SensorEventListener {
-
+public class MotionSensorService extends Service implements SensorEventListener
+{
     private SensorManager _sensorManager;
-
-    private Sensor _accelerometer;
-    private Sensor _gyroscope;
+    private SensorDataSender _sensorDataSender;
 
     @Override
-    public void onCreate() {
+    public void onCreate()
+    {
         super.onCreate();
 
         _sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+        _sensorDataSender = new SensorDataSender(getApplicationContext());
 
-        _accelerometer = _sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-        _gyroscope = _sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
+        _listenTo(Sensor.TYPE_ACCELEROMETER);
+        _listenTo(Sensor.TYPE_GYROSCOPE);
+    }
 
-        _startListening();
+    private void _listenTo(final int TYPE)
+    {
+        Sensor sensor = _sensorManager.getDefaultSensor(TYPE);
+
+        if (!_isSupported(sensor)) return;
+
+        _sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_NORMAL);
     }
 
     @Override
-    public void onSensorChanged(SensorEvent event) {
-        //Log.wtf(this.getClass().getName(), event.sensor.getType() + " " + event.accuracy + " " + event.timestamp + " " + event.values);
-        SensorDataSender.getInstance(this).sendSensorData(event.sensor.getType(), event.accuracy, event.timestamp, event.values);
+    public void onSensorChanged(SensorEvent event)
+    {
+        //Log.d(this.getClass().getName(), event.sensor.getType() + " " + event.accuracy + " " + event.timestamp + " " + event.values);
+        _sensorDataSender.sendSensorData(event.sensor.getType(), event.accuracy, event.timestamp, event.values);
     }
 
     @Override
-    public void onAccuracyChanged(Sensor sensor, int accuracy) {
-
-    }
-
-    private void _startListening()
+    public void onAccuracyChanged(Sensor sensor, int accuracy)
     {
-        if(!(_isSupported(_accelerometer) && _isSupported(_gyroscope))) return;
 
-        _sensorManager.registerListener(this, _accelerometer, SensorManager.SENSOR_DELAY_NORMAL);
-        _sensorManager.registerListener(this, _gyroscope, SensorManager.SENSOR_DELAY_NORMAL);
-    }
-
-    private void _stopListening()
-    {
-        _sensorManager.unregisterListener(this);
     }
 
     private boolean _isSupported(Sensor sensor)
     {
         boolean isSupported = !(sensor == null);
 
-        if (!isSupported)
+        if (isSupported)
+        {
+            Log.d(this.getClass().getName(), "Sensor " + sensor.getName() + " type " + sensor.getType() + " found.");
+        } else
         {
             Log.d(this.getClass().getName(), "Sensor " + sensor.getName() + " type " + sensor.getType() + " not found.");
-        }else{
-            Log.d(this.getClass().getName(), "Sensor " + sensor.getName() + " type " + sensor.getType() + " found.");
         }
 
         return isSupported;
     }
 
     @Override
-    public IBinder onBind(Intent intent) {
+    public IBinder onBind(Intent intent)
+    {
         return null;
     }
 
     @Override
-    public void onDestroy() {
+    public void onDestroy()
+    {
         super.onDestroy();
 
-        _stopListening();
+        _sensorManager.unregisterListener(this);
+        _sensorDataSender.kill();
     }
 }

@@ -10,14 +10,14 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
- * Created by tbeltramelli on 10/08/15.
+ * Created by tbeltramelli on 11/08/15.
  */
-public abstract class ADataManager
+public class AThreadedClient
 {
     protected GoogleApiClient _client;
     protected ExecutorService _threadPool;
 
-    protected ADataManager(Context context)
+    protected AThreadedClient(Context context)
     {
         _client = new GoogleApiClient.Builder(context).addApi(Wearable.API).build();
         _threadPool = Executors.newCachedThreadPool();

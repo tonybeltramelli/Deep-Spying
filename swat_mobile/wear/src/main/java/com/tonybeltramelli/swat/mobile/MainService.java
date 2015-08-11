@@ -10,35 +10,41 @@ import com.tonybeltramelli.swat.mobile.common.Const;
 /**
  * Created by tbeltramelli on 05/08/15.
  */
-public class MeasurementService extends WearableListenerService {
-
+public class MainService extends WearableListenerService
+{
     @Override
-    public void onCreate() {
+    public void onCreate()
+    {
         super.onCreate();
 
-        Log.wtf(this.getClass().getName(), "------> here");
+        Log.d(this.getClass().getName(), "------> here");
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-
-        stopService(new Intent(this, MotionSensorService.class));
-    }
-
-    @Override
-    public void onMessageReceived(MessageEvent messageEvent) {
+    public void onMessageReceived(MessageEvent messageEvent)
+    {
         Log.d(this.getClass().getName(), "Received message: " + messageEvent.getPath());
 
-        switch (messageEvent.getPath()) {
+        switch (messageEvent.getPath())
+        {
             case Const.START_RECORDING:
+                Log.d(this.getClass().getName(), "Start recording");
                 startService(new Intent(this, MotionSensorService.class));
                 break;
             case Const.STOP_RECORDING:
+                Log.d(this.getClass().getName(), "Stop recording");
                 stopService(new Intent(this, MotionSensorService.class));
                 break;
             default:
                 break;
         }
+    }
+
+    @Override
+    public void onDestroy()
+    {
+        super.onDestroy();
+
+        stopService(new Intent(this, MotionSensorService.class));
     }
 }
