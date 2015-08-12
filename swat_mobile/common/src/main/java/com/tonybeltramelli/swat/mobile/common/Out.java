@@ -12,4 +12,10 @@ public class Out
         String caller = new Exception().getStackTrace()[1].getClassName();
         Log.d(caller, message);
     }
+
+    public static void report(String message)
+    {
+        String caller = new Exception().getStackTrace()[1].getClassName();
+        Log.e(caller, message);
+    }
 }

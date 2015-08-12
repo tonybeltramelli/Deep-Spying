@@ -10,6 +10,7 @@ import com.google.android.gms.wearable.DataMap;
 import com.google.android.gms.wearable.DataMapItem;
 import com.google.android.gms.wearable.WearableListenerService;
 import com.tonybeltramelli.swat.mobile.common.Const;
+import com.tonybeltramelli.swat.mobile.data.DataManager;
 
 /**
  * Created by Tony Beltramelli www.tonybeltramelli.com on 11/08/15.
@@ -31,8 +32,6 @@ public class MotionSensorReceiverService extends WearableListenerService
     {
         super.onDataChanged(dataEvents);
 
-        _toast.show();
-
         for (DataEvent dataEvent : dataEvents)
         {
             if (dataEvent.getType() != DataEvent.TYPE_CHANGED) continue;
@@ -41,7 +40,9 @@ public class MotionSensorReceiverService extends WearableListenerService
             Uri uri = dataItem.getUri();
             String path = uri.getPath();
 
-            if (path.startsWith(Const.SENSOR_ROOT)) continue;
+            if (!path.startsWith(Const.SENSOR_ROOT)) continue;
+
+            _toast.show();
 
             int sensorType = Integer.parseInt(uri.getLastPathSegment());
             DataMap dataMap = DataMapItem.fromDataItem(dataItem).getDataMap();

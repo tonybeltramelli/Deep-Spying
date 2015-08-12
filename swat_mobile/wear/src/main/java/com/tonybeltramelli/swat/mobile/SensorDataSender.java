@@ -32,8 +32,6 @@ public class SensorDataSender extends AThreadedClient
                 dataMap.getDataMap().putLong(Const.TIMESTAMP, timestamp);
                 dataMap.getDataMap().putFloatArray(Const.VALUES, values);
 
-
-
                 PutDataRequest putDataRequest = dataMap.asPutDataRequest();
 
                 _sendSensorDataInBackground(putDataRequest);

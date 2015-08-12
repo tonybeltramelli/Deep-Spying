@@ -1,0 +1,137 @@
+package com.tonybeltramelli.swat.mobile.data;
+
+import com.tonybeltramelli.swat.mobile.common.Const;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Map;
+
+/**
+ * Created by Tony Beltramelli www.tonybeltramelli.com on 12/08/15.
+ */
+public class DataStore
+{
+    private HashMap<String, LinkedList<DataPoint>> _data;
+
+    private final int BUFFER_SIZE = 100;
+
+    public DataStore()
+    {
+        _data = new HashMap<String, LinkedList<DataPoint>>();
+    }
+
+    public boolean push(String sensorName, DataPoint dataPoint)
+    {
+        if (!_data.containsKey(sensorName))
+        {
+            _data.put(sensorName, new LinkedList<DataPoint>());
+        }
+
+        boolean isFull = false;
+
+        if(_data.get(sensorName).size() == BUFFER_SIZE)
+        {
+            _data.get(sensorName).clear();
+        }else if(_data.get(sensorName).size() == BUFFER_SIZE - 1)
+        {
+            isFull = true;
+        }
+
+        _data.get(sensorName).addLast(dataPoint);
+
+        return isFull;
+    }
+
+    public String getJSONString() throws JSONException
+    {
+        JSONObject root = new JSONObject();
+        JSONArray data = new JSONArray();
+
+        for (Map.Entry<String, LinkedList<DataPoint>> entry: _data.entrySet())
+        {
+            String key = entry.getKey();
+            LinkedList<DataPoint> value = entry.getValue();
+
+            JSONObject sensor = new JSONObject();
+            JSONArray data_points = new JSONArray();
+
+            for (DataPoint dataPoint: value)
+            {
+                data_points.put(dataPoint.getJSONObject());
+            }
+
+            sensor.put(Const.SENSOR_NAME, key);
+            sensor.put(Const.DATA_POINT, data_points);
+            data.put(sensor);
+        }
+
+        root.put(Const.DATA, data);
+
+        return root.toString();
+    }
+
+    public void clear()
+    {
+        for (Map.Entry<String, LinkedList<DataPoint>> entry: _data.entrySet())
+        {
+            String key = entry.getKey();
+            _data.get(key).clear();
+        }
+    }
+
+    public String getJSONString(String sensorName) throws JSONException
+    {
+        LinkedList<DataPoint> value = _data.get(sensorName);
+
+        JSONObject root = new JSONObject();
+        JSONArray data_points = new JSONArray();
+
+        for (DataPoint dataPoint: value)
+        {
+            data_points.put(dataPoint.getJSONObject());
+        }
+
+        root.put(Const.SENSOR_NAME, sensorName);
+        root.put(Const.DATA_POINT, data_points);
+
+        return root.toString();
+    }
+
+    public String getSize()
+    {
+        String size = _data.size() + "( ";
+        for (Map.Entry<String, LinkedList<DataPoint>> entry: _data.entrySet())
+        {
+            size += entry.getValue().size() + " ";
+        }
+        size += ")";
+        return size;
+    }
+
+    @Override
+    public String toString()
+    {
+        String string = super.toString() + "\n";
+
+        for (Map.Entry<String, LinkedList<DataPoint>> entry: _data.entrySet())
+        {
+            String key = entry.getKey();
+            LinkedList<DataPoint> value = entry.getValue();
+
+            string += key + "[\n";
+
+            for (DataPoint dataPoint: value)
+            {
+                string += " " + dataPoint + "\n";
+            }
+
+            string += "]\n";
+        }
+
+        return string;
+    }
+}

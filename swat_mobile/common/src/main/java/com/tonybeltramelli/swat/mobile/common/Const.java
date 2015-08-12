@@ -11,8 +11,14 @@ public class Const
     //
     public static final String TIMESTAMP = "timestamp";
     public static final String VALUES = "values";
+    public static final String X = "x";
+    public static final String Y = "y";
+    public static final String Z = "z";
+    public static final String DATA = "data";
+    public static final String SENSOR_NAME = "sensor_name";
+    public static final String DATA_POINT = "data_points";
     //
-    public static final String ACCELEROMETER = "Accelerometer";
-    public static final String GYROSCOPE = "Gyroscope";
-    public static final String UNSUPPORTED = "Unsupported";
+    public static final String ACCELEROMETER = "accelerometer";
+    public static final String GYROSCOPE = "gyroscope";
+    public static final String UNSUPPORTED = "unsupported";
 }
