@@ -1,7 +1,7 @@
 package com.tonybeltramelli.swat.mobile.common;
 
 /**
- * Created by tbeltramelli on 10/08/15.
+ * Created by Tony Beltramelli www.tonybeltramelli.com on 10/08/15.
  */
 public class Const
 {

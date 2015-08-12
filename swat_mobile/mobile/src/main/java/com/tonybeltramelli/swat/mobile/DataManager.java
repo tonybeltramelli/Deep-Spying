@@ -1,20 +1,12 @@
 package com.tonybeltramelli.swat.mobile;
 
-import android.content.Context;
 import android.hardware.Sensor;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.wearable.DataMap;
-import com.google.android.gms.wearable.Wearable;
 import com.tonybeltramelli.swat.mobile.common.Const;
 import com.tonybeltramelli.swat.mobile.common.Out;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
 /**
- * Created by tbeltramelli on 10/08/15.
+ * Created by Tony Beltramelli www.tonybeltramelli.com on 10/08/15.
  */
 public class DataManager
 {

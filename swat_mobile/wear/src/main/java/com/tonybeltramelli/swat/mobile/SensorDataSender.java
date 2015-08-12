@@ -12,7 +12,7 @@ import com.tonybeltramelli.swat.mobile.common.Const;
 import com.tonybeltramelli.swat.mobile.common.Out;
 
 /**
- * Created by tbeltramelli on 11/08/15.
+ * Created by Tony Beltramelli www.tonybeltramelli.com on 11/08/15.
  */
 public class SensorDataSender extends AThreadedClient
 {
@@ -31,6 +31,8 @@ public class SensorDataSender extends AThreadedClient
                 PutDataMapRequest dataMap = PutDataMapRequest.create(Const.SENSOR_ROOT + sensorType);
                 dataMap.getDataMap().putLong(Const.TIMESTAMP, timestamp);
                 dataMap.getDataMap().putFloatArray(Const.VALUES, values);
+
+
 
                 PutDataRequest putDataRequest = dataMap.asPutDataRequest();
 

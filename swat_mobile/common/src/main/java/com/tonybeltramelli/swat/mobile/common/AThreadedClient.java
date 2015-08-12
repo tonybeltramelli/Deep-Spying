@@ -10,7 +10,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
- * Created by tbeltramelli on 11/08/15.
+ * Created by Tony Beltramelli www.tonybeltramelli.com on 11/08/15.
  */
 public class AThreadedClient
 {

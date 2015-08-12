@@ -8,21 +8,30 @@ import com.google.android.gms.wearable.DataEventBuffer;
 import com.google.android.gms.wearable.DataItem;
 import com.google.android.gms.wearable.DataMap;
 import com.google.android.gms.wearable.DataMapItem;
-import com.google.android.gms.wearable.Node;
 import com.google.android.gms.wearable.WearableListenerService;
 import com.tonybeltramelli.swat.mobile.common.Const;
 
 /**
- * Created by tbeltramelli on 11/08/15.
+ * Created by Tony Beltramelli www.tonybeltramelli.com on 11/08/15.
  */
 public class MotionSensorReceiverService extends WearableListenerService
 {
+    private Toast _toast;
+
+    @Override
+    public void onCreate()
+    {
+        super.onCreate();
+
+        _toast = Toast.makeText(getApplicationContext(), getResources().getString(R.string.receiving_data_message), Toast.LENGTH_SHORT);
+    }
+
     @Override
     public void onDataChanged(DataEventBuffer dataEvents)
     {
         super.onDataChanged(dataEvents);
 
-        Toast.makeText(getApplicationContext(), "Receive data", Toast.LENGTH_SHORT).show();
+        _toast.show();
 
         for (DataEvent dataEvent : dataEvents)
         {

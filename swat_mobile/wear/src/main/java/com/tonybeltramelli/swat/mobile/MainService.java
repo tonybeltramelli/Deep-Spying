@@ -9,7 +9,7 @@ import com.tonybeltramelli.swat.mobile.common.Const;
 import com.tonybeltramelli.swat.mobile.common.Out;
 
 /**
- * Created by tbeltramelli on 05/08/15.
+ * Created by Tony Beltramelli www.tonybeltramelli.com on 05/08/15.
  */
 public class MainService extends WearableListenerService
 {

@@ -3,7 +3,7 @@ package com.tonybeltramelli.swat.mobile.common;
 import android.util.Log;
 
 /**
- * Created by tbeltramelli on 11/08/15.
+ * Created by Tony Beltramelli www.tonybeltramelli.com on 11/08/15.
  */
 public class Out
 {

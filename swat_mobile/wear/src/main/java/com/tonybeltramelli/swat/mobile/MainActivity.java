@@ -1,14 +1,14 @@
 package com.tonybeltramelli.swat.mobile;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.wearable.view.WatchViewStub;
 import android.widget.TextView;
 
 public class MainActivity extends Activity
 {
-
-    private TextView mTextView;
+    private TextView _textView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -21,8 +21,11 @@ public class MainActivity extends Activity
             @Override
             public void onLayoutInflated(WatchViewStub stub)
             {
-                mTextView = (TextView) stub.findViewById(R.id.text);
+                _textView = (TextView) stub.findViewById(R.id.text);
             }
         });
+
+        startService(new Intent(this, MainService.class));
+        finish();
     }
 }
