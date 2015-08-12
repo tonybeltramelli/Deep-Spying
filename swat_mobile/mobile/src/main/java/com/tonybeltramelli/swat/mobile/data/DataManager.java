@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.hardware.Sensor;
 import android.preference.PreferenceManager;
 
+import com.tonybeltramelli.swat.mobile.SocketClient;
 import com.tonybeltramelli.swat.mobile.common.Const;
 import com.tonybeltramelli.swat.mobile.common.Out;
 
@@ -17,13 +18,16 @@ public class DataManager
     private static DataManager _instance = null;
 
     private DataStore _dataStore;
+    private SocketClient _socketClient;
+
     private String _serverAddress;
-    private String _serverPort;
+    private int _serverPort;
     private Activity _context;
 
     private DataManager()
     {
         _dataStore = new DataStore();
+        _socketClient = new SocketClient();
     }
 
     public static DataManager getInstance()
@@ -56,6 +60,7 @@ public class DataManager
             {
                 String jsonString = _dataStore.getJSONString(sensorName);
                 Out.print("full "+sensorName);
+                _socketClient.send(_serverAddress, _serverPort, jsonString);
             } catch (JSONException e)
             {
                 Out.report(e.getMessage());
@@ -91,6 +96,6 @@ public class DataManager
     public void savePreferences()
     {
         _serverAddress = PreferenceManager.getDefaultSharedPreferences(_context).getString(Const.PREF_KEY_SERVER_ADDRESS, "");
-        _serverPort = PreferenceManager.getDefaultSharedPreferences(_context).getString(Const.PREF_KEY_SERVER_PORT, "");
+        _serverPort = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(_context).getString(Const.PREF_KEY_SERVER_PORT, ""));
     }
 }
