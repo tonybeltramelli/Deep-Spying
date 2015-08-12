@@ -1,13 +1,13 @@
 package com.tonybeltramelli.swat.mobile;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener
+import com.tonybeltramelli.swat.mobile.data.DataManager;
+import com.tonybeltramelli.swat.mobile.preference.APrefActivity;
+
+public class MainActivity extends APrefActivity implements View.OnClickListener
 {
     private MeasurementController _measurementController;
 
@@ -16,6 +16,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        DataManager.getInstance().setContext(this);
 
         Button button = (Button) findViewById(R.id.recording_button);
         button.setOnClickListener(this);
@@ -37,26 +39,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             _measurementController.stopRecording();
             target.setText(getResources().getString(R.string.start_recording_button));
         }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu)
-    {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-        int id = item.getItemId();
-
-        if (id == R.id.action_settings)
-        {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
     @Override

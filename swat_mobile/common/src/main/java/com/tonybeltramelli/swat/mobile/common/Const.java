@@ -21,4 +21,8 @@ public class Const
     public static final String ACCELEROMETER = "accelerometer";
     public static final String GYROSCOPE = "gyroscope";
     public static final String UNSUPPORTED = "unsupported";
+    //
+    public static final String PREF_KEY_SERVER_ADDRESS = "serverAddress";
+    public static final String PREF_KEY_SERVER_PORT = "serverPort";
+    public static final String PREF_KEY_SAVE = "save";
 }

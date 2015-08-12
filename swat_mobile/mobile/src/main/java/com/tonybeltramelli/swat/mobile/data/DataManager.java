@@ -1,6 +1,8 @@
 package com.tonybeltramelli.swat.mobile.data;
 
+import android.app.Activity;
 import android.hardware.Sensor;
+import android.preference.PreferenceManager;
 
 import com.tonybeltramelli.swat.mobile.common.Const;
 import com.tonybeltramelli.swat.mobile.common.Out;
@@ -15,6 +17,9 @@ public class DataManager
     private static DataManager _instance = null;
 
     private DataStore _dataStore;
+    private String _serverAddress;
+    private String _serverPort;
+    private Activity _context;
 
     private DataManager()
     {
@@ -75,5 +80,17 @@ public class DataManager
         }
 
         return sensorName;
+    }
+
+    public void setContext(Activity context)
+    {
+        _context = context;
+        savePreferences();
+    }
+
+    public void savePreferences()
+    {
+        _serverAddress = PreferenceManager.getDefaultSharedPreferences(_context).getString(Const.PREF_KEY_SERVER_ADDRESS, "");
+        _serverPort = PreferenceManager.getDefaultSharedPreferences(_context).getString(Const.PREF_KEY_SERVER_PORT, "");
     }
 }

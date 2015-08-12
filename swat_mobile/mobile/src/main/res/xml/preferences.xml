@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <EditTextPreference android:title="@string/preference_server_address"
+                        android:key="serverAddress"
+                        android:dialogTitle="@string/preference_server_address"
+                        android:defaultValue="192.168.1.10"
+                        android:inputType="textUri"
+                        android:persistent="true" />
+
+    <EditTextPreference android:title="@string/preference_server_port"
+                        android:key="serverPort"
+                        android:dialogTitle="@string/preference_server_port"
+                        android:defaultValue="25500"
+                        android:inputType="number"
+                        android:persistent="true" />
+
+    <Preference android:title="@string/preference_save" android:key="save" />
+
+</PreferenceScreen>

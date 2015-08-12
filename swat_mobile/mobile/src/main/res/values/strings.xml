@@ -4,4 +4,7 @@
     <string name="start_recording_button">Start recording</string>
     <string name="stop_recording_button">Stop recording</string>
     <string name="receiving_data_message">Receiving data...</string>
+    <string name="preference_server_address">Server address</string>
+    <string name="preference_server_port">Server port</string>
+    <string name="preference_save">Save</string>
 </resources>
