@@ -7,4 +7,7 @@
     <string name="preference_server_address">Server address</string>
     <string name="preference_server_port">Server port</string>
     <string name="preference_save">Save</string>
+
+    <string name="default_server_address">192.168.0.20</string>
+    <string name="default_server_port">25500</string>
 </resources>

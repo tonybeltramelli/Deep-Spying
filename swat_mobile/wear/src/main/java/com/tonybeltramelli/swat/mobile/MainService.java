@@ -28,6 +28,7 @@ public class MainService extends WearableListenerService
                 Out.print("Start recording motion sensors");
                 Toast.makeText(getApplicationContext(), "Start recording motion sensors", Toast.LENGTH_SHORT).show();
 
+                SensorDataSender.getInstance(getApplicationContext()).init();
                 startService(new Intent(this, MotionSensorListenerService.class));
                 break;
             case Const.STOP_RECORDING:

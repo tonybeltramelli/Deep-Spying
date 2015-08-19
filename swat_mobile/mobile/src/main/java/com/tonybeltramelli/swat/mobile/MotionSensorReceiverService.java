@@ -3,13 +3,16 @@ package com.tonybeltramelli.swat.mobile;
 import android.net.Uri;
 import android.widget.Toast;
 
+import com.google.android.gms.wearable.Channel;
 import com.google.android.gms.wearable.DataEvent;
 import com.google.android.gms.wearable.DataEventBuffer;
 import com.google.android.gms.wearable.DataItem;
 import com.google.android.gms.wearable.DataMap;
 import com.google.android.gms.wearable.DataMapItem;
+import com.google.android.gms.wearable.Node;
 import com.google.android.gms.wearable.WearableListenerService;
 import com.tonybeltramelli.swat.mobile.common.Const;
+import com.tonybeltramelli.swat.mobile.common.Out;
 import com.tonybeltramelli.swat.mobile.data.DataManager;
 
 /**
@@ -28,29 +31,54 @@ public class MotionSensorReceiverService extends WearableListenerService
     }
 
     @Override
+    public void onPeerDisconnected(Node peer) {
+        Out.print("----> onPeerDisconnected");
+    }
+
+    @Override
+    public void onChannelClosed(Channel channel, int closeReason, int appSpecificErrorCode) {
+
+    }
+
+    @Override
+    public void onInputClosed(Channel channel, int closeReason, int appSpecificErrorCode) {
+    }
+
+    @Override
+    public void onOutputClosed(Channel channel, int closeReason, int appSpecificErrorCode) {
+    }
+
+    @Override
     public void onDataChanged(DataEventBuffer dataEvents)
     {
         super.onDataChanged(dataEvents);
 
         for (DataEvent dataEvent : dataEvents)
         {
-            if (dataEvent.getType() != DataEvent.TYPE_CHANGED) continue;
+            //if (dataEvent.getType() != DataEvent.TYPE_CHANGED) continue;
 
             DataItem dataItem = dataEvent.getDataItem();
             Uri uri = dataItem.getUri();
             String path = uri.getPath();
 
-            if (!path.startsWith(Const.SENSOR_ROOT)) continue;
+            Out.print("---> "+path+" - "+(path.equals(Const.END_SIGNAL)));
 
-            _toast.show();
+            /*
+            if (path.startsWith(Const.SENSOR_ROOT))
+            {
+                _toast.show();
 
-            int sensorType = Integer.parseInt(uri.getLastPathSegment());
-            DataMap dataMap = DataMapItem.fromDataItem(dataItem).getDataMap();
+                int sensorType = Integer.parseInt(uri.getLastPathSegment());
+                DataMap dataMap = DataMapItem.fromDataItem(dataItem).getDataMap();
 
-            long timestamp = dataMap.getLong(Const.TIMESTAMP);
-            float[] values = dataMap.getFloatArray(Const.VALUES);
+                long timestamp = dataMap.getLong(Const.TIMESTAMP);
+                float[] values = dataMap.getFloatArray(Const.VALUES);
 
-            DataManager.getInstance().storeSensorData(sensorType, timestamp, values);
+                DataManager.getInstance().storeSensorData(sensorType, timestamp, values);
+            } else if (path.equals(Const.END_SIGNAL))
+            {
+                DataManager.getInstance().flush();
+            }*/
         }
     }
 }

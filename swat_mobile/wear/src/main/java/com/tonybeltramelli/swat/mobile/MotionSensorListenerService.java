@@ -16,7 +16,6 @@ import com.tonybeltramelli.swat.mobile.common.Out;
 public class MotionSensorListenerService extends Service implements SensorEventListener
 {
     private SensorManager _sensorManager;
-    private SensorDataSender _sensorDataSender;
 
     @Override
     public void onCreate()
@@ -24,7 +23,6 @@ public class MotionSensorListenerService extends Service implements SensorEventL
         super.onCreate();
 
         _sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
-        _sensorDataSender = new SensorDataSender(getApplicationContext());
 
         _listenTo(Sensor.TYPE_ACCELEROMETER);
         _listenTo(Sensor.TYPE_GYROSCOPE);
@@ -42,8 +40,7 @@ public class MotionSensorListenerService extends Service implements SensorEventL
     @Override
     public void onSensorChanged(SensorEvent event)
     {
-        //Out.print(event.sensor.getType() + " " + event.accuracy + " " + event.timestamp + " " + event.values);
-        _sensorDataSender.sendSensorData(event.sensor.getType(), event.accuracy, event.timestamp, event.values);
+        SensorDataSender.getInstance(getApplicationContext()).sendSensorData(event.sensor.getType(), event.accuracy, event.timestamp, event.values);
     }
 
     @Override
@@ -79,6 +76,5 @@ public class MotionSensorListenerService extends Service implements SensorEventL
         super.onDestroy();
 
         _sensorManager.unregisterListener(this);
-        _sensorDataSender.kill();
     }
 }

@@ -46,44 +46,7 @@ public class DataStore
         return isFull;
     }
 
-    public String getJSONString() throws JSONException
-    {
-        JSONObject root = new JSONObject();
-        JSONArray data = new JSONArray();
-
-        for (Map.Entry<String, LinkedList<DataPoint>> entry: _data.entrySet())
-        {
-            String key = entry.getKey();
-            LinkedList<DataPoint> value = entry.getValue();
-
-            JSONObject sensor = new JSONObject();
-            JSONArray data_points = new JSONArray();
-
-            for (DataPoint dataPoint: value)
-            {
-                data_points.put(dataPoint.getJSONObject());
-            }
-
-            sensor.put(Const.SENSOR_NAME, key);
-            sensor.put(Const.DATA_POINT, data_points);
-            data.put(sensor);
-        }
-
-        root.put(Const.DATA, data);
-
-        return root.toString();
-    }
-
-    public void clear()
-    {
-        for (Map.Entry<String, LinkedList<DataPoint>> entry: _data.entrySet())
-        {
-            String key = entry.getKey();
-            _data.get(key).clear();
-        }
-    }
-
-    public String getJSONString(String sensorName) throws JSONException
+    public String getJSONString(int sessionID, String sensorName) throws JSONException
     {
         LinkedList<DataPoint> value = _data.get(sensorName);
 
@@ -95,18 +58,61 @@ public class DataStore
             data_points.put(dataPoint.getJSONObject());
         }
 
+        root.put(Const.SESSION_ID, sessionID);
         root.put(Const.SENSOR_NAME, sensorName);
-        root.put(Const.DATA_POINT, data_points);
+        root.put(Const.DATA_POINTS, data_points);
 
         return root.toString();
     }
 
-    public String getSize()
+    public String getJSONStringTEMP(int sessionID, String sensorName) throws JSONException
+    {
+        LinkedList<DataPoint> value = _data.get(sensorName);
+
+        JSONObject root = new JSONObject();
+        JSONArray data_points = new JSONArray();
+
+        for (DataPoint dataPoint: value)
+        {
+            data_points.put(dataPoint.getJSONObjectTEMP());
+        }
+
+        root.put(Const.SESSION_ID, sessionID);
+        root.put(Const.SENSOR_NAME, sensorName);
+        root.put(Const.DATA_POINTS, data_points);
+
+        return root.toString();
+    }
+
+    public String[] getJSONStrings(int sessionID) throws JSONException
+    {
+        String[] sensorJSONs = new String[_data.size()];
+
+        int i = 0;
+        for (Map.Entry<String, LinkedList<DataPoint>> entry: _data.entrySet())
+        {
+            String sensorName = entry.getKey();
+            sensorJSONs[i++] = getJSONStringTEMP(sessionID, sensorName);
+        }
+
+        return sensorJSONs;
+    }
+
+    public void clear()
+    {
+        for (Map.Entry<String, LinkedList<DataPoint>> entry: _data.entrySet())
+        {
+            String key = entry.getKey();
+            _data.get(key).clear();
+        }
+    }
+
+    public String getSizeReport()
     {
         String size = _data.size() + "( ";
         for (Map.Entry<String, LinkedList<DataPoint>> entry: _data.entrySet())
         {
-            size += entry.getValue().size() + " ";
+            size += "[ "+entry.getKey() + " : " + entry.getValue().size() + " ] ";
         }
         size += ")";
         return size;

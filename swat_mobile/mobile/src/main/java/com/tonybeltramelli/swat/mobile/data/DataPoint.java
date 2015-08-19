@@ -34,7 +34,18 @@ public class DataPoint
     public JSONObject getJSONObject() throws JSONException
     {
         JSONObject root = new JSONObject();
-        root.put(Const.TIMESTAMP, _timestamp);
+        root.put(Const.TIMESTAMP, _timestamp + "_n");
+        root.put(Const.X, _x);
+        root.put(Const.Y, _y);
+        root.put(Const.Z, _z);
+
+        return root;
+    }
+
+    public JSONObject getJSONObjectTEMP() throws JSONException
+    {
+        JSONObject root = new JSONObject();
+        root.put(Const.TIMESTAMP, _timestamp + "_flush");
         root.put(Const.X, _x);
         root.put(Const.Y, _y);
         root.put(Const.Z, _z);

@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.wearable.DataApi;
+import com.google.android.gms.wearable.MessageApi;
 import com.google.android.gms.wearable.PutDataMapRequest;
 import com.google.android.gms.wearable.PutDataRequest;
 import com.google.android.gms.wearable.Wearable;
@@ -16,13 +17,36 @@ import com.tonybeltramelli.swat.mobile.common.Out;
  */
 public class SensorDataSender extends AThreadedClient
 {
-    protected SensorDataSender(Context context)
+    private static SensorDataSender _instance = null;
+
+    private int _dataToSend;
+    private int _dataSent;
+
+    private SensorDataSender(Context context)
     {
         super(context);
     }
 
+    public void init()
+    {
+        _dataToSend = 0;
+        _dataSent = 0;
+    }
+
+    public static SensorDataSender getInstance(Context context)
+    {
+        if (_instance == null)
+        {
+            _instance = new SensorDataSender(context);
+        }
+
+        return _instance;
+    }
+
     public void sendSensorData(final int sensorType, final int accuracy, final long timestamp, final float[] values)
     {
+        _dataToSend += 1;
+
         _threadPool.submit(new Runnable()
         {
             @Override
@@ -34,21 +58,40 @@ public class SensorDataSender extends AThreadedClient
 
                 PutDataRequest putDataRequest = dataMap.asPutDataRequest();
 
-                _sendSensorDataInBackground(putDataRequest);
+                if (!isConnected()) return;
+
+                Wearable.DataApi.putDataItem(_client, putDataRequest).setResultCallback(new ResultCallback<DataApi.DataItemResult>()
+                {
+                    @Override
+                    public void onResult(DataApi.DataItemResult dataItemResult)
+                    {
+                        Out.print("Sent sensor data: " + dataItemResult.getStatus().isSuccess());
+
+                        _dataSent += 1;
+                        if(_dataSent == _dataToSend)
+                        {
+                            _sendEndSignal();
+                        }
+                    }
+                });
             }
         });
     }
 
-    private void _sendSensorDataInBackground(PutDataRequest data)
+    private void _sendEndSignal()
     {
+        init();
+        PutDataMapRequest dataMap = PutDataMapRequest.create(Const.END_SIGNAL);
+        PutDataRequest putDataRequest = dataMap.asPutDataRequest();
+
         if (!isConnected()) return;
 
-        Wearable.DataApi.putDataItem(_client, data).setResultCallback(new ResultCallback<DataApi.DataItemResult>()
+        Wearable.DataApi.putDataItem(_client, putDataRequest).setResultCallback(new ResultCallback<DataApi.DataItemResult>()
         {
             @Override
             public void onResult(DataApi.DataItemResult dataItemResult)
             {
-                Out.print("Sending sensor data: " + dataItemResult.getStatus().isSuccess());
+                Out.print("Sent end signal: " + dataItemResult.getStatus().isSuccess());
             }
         });
     }

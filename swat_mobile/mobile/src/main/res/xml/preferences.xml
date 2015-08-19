@@ -4,14 +4,14 @@
     <EditTextPreference android:title="@string/preference_server_address"
                         android:key="serverAddress"
                         android:dialogTitle="@string/preference_server_address"
-                        android:defaultValue="192.168.1.10"
+                        android:defaultValue="@string/default_server_address"
                         android:inputType="textUri"
                         android:persistent="true" />
 
     <EditTextPreference android:title="@string/preference_server_port"
                         android:key="serverPort"
                         android:dialogTitle="@string/preference_server_port"
-                        android:defaultValue="25500"
+                        android:defaultValue="@string/default_server_port"
                         android:inputType="number"
                         android:persistent="true" />
 
