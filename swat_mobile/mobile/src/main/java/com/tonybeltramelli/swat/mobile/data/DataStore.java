@@ -65,25 +65,6 @@ public class DataStore
         return root.toString();
     }
 
-    public String getJSONStringTEMP(int sessionID, String sensorName) throws JSONException
-    {
-        LinkedList<DataPoint> value = _data.get(sensorName);
-
-        JSONObject root = new JSONObject();
-        JSONArray data_points = new JSONArray();
-
-        for (DataPoint dataPoint: value)
-        {
-            data_points.put(dataPoint.getJSONObjectTEMP());
-        }
-
-        root.put(Const.SESSION_ID, sessionID);
-        root.put(Const.SENSOR_NAME, sensorName);
-        root.put(Const.DATA_POINTS, data_points);
-
-        return root.toString();
-    }
-
     public String[] getJSONStrings(int sessionID) throws JSONException
     {
         String[] sensorJSONs = new String[_data.size()];
@@ -92,7 +73,7 @@ public class DataStore
         for (Map.Entry<String, LinkedList<DataPoint>> entry: _data.entrySet())
         {
             String sensorName = entry.getKey();
-            sensorJSONs[i++] = getJSONStringTEMP(sessionID, sensorName);
+            sensorJSONs[i++] = getJSONString(sessionID, sensorName);
         }
 
         return sensorJSONs;

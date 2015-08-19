@@ -80,14 +80,14 @@ public class DataManager
     {
         try
         {
-            String jsonStrings[] = _dataStore.getJSONStrings(_sessionID);
+            Out.print("flush "+_dataStore.getSizeReport());
 
+            String jsonStrings[] = _dataStore.getJSONStrings(_sessionID);
             for (String jsonString: jsonStrings)
             {
                 _socketClient.send(_serverAddress, _serverPort, jsonString);
             }
 
-            Out.print("flush "+_dataStore.getSizeReport());
             _dataStore.clear();
         } catch (JSONException e)
         {

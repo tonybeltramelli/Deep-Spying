@@ -12,6 +12,9 @@ import com.tonybeltramelli.swat.mobile.common.AThreadedClient;
 import com.tonybeltramelli.swat.mobile.common.Const;
 import com.tonybeltramelli.swat.mobile.common.Out;
 
+import java.security.SecureRandom;
+import java.util.Date;
+
 /**
  * Created by Tony Beltramelli www.tonybeltramelli.com on 11/08/15.
  */
@@ -81,7 +84,7 @@ public class SensorDataSender extends AThreadedClient
     private void _sendEndSignal()
     {
         init();
-        PutDataMapRequest dataMap = PutDataMapRequest.create(Const.END_SIGNAL);
+        PutDataMapRequest dataMap = PutDataMapRequest.create(Const.END_SIGNAL + new Date().getTime());
         PutDataRequest putDataRequest = dataMap.asPutDataRequest();
 
         if (!isConnected()) return;

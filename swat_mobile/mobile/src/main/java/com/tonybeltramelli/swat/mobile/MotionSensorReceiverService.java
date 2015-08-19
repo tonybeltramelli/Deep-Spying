@@ -55,15 +55,12 @@ public class MotionSensorReceiverService extends WearableListenerService
 
         for (DataEvent dataEvent : dataEvents)
         {
-            //if (dataEvent.getType() != DataEvent.TYPE_CHANGED) continue;
+            if (dataEvent.getType() != DataEvent.TYPE_CHANGED) continue;
 
             DataItem dataItem = dataEvent.getDataItem();
             Uri uri = dataItem.getUri();
             String path = uri.getPath();
 
-            Out.print("---> "+path+" - "+(path.equals(Const.END_SIGNAL)));
-
-            /*
             if (path.startsWith(Const.SENSOR_ROOT))
             {
                 _toast.show();
@@ -75,10 +72,10 @@ public class MotionSensorReceiverService extends WearableListenerService
                 float[] values = dataMap.getFloatArray(Const.VALUES);
 
                 DataManager.getInstance().storeSensorData(sensorType, timestamp, values);
-            } else if (path.equals(Const.END_SIGNAL))
+            } else if (path.startsWith(Const.END_SIGNAL))
             {
                 DataManager.getInstance().flush();
-            }*/
+            }
         }
     }
 }

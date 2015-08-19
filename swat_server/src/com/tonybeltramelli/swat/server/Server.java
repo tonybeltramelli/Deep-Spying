@@ -74,8 +74,7 @@ public class Server
         for(int i = 0; i < dataPoints.size(); i ++)
         {
             JSONObject values = (JSONObject) dataPoints.get(i);
-            //long timestamp = ((Number) values.get(Config.TIMESTAMP)).longValue();
-            String timestamp = (String) values.get(Config.TIMESTAMP);
+            long timestamp = ((Number) values.get(Config.TIMESTAMP)).longValue();
             double x = ((Number) values.get(Config.X)).doubleValue();
             double y = ((Number) values.get(Config.Y)).doubleValue();
             double z = ((Number) values.get(Config.Z)).doubleValue();
