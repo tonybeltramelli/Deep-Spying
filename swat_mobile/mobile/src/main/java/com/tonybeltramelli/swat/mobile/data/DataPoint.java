@@ -41,29 +41,4 @@ public class DataPoint
 
         return root;
     }
-
-    public String getSensorName()
-    {
-        return _sensorName;
-    }
-
-    public long getTimestamp()
-    {
-        return _timestamp;
-    }
-
-    public float getX()
-    {
-        return _x;
-    }
-
-    public float getY()
-    {
-        return _y;
-    }
-
-    public float getZ()
-    {
-        return _z;
-    }
 }

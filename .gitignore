@@ -35,3 +35,13 @@ com_crashlytics_export_strings.xml
 local.properties
 crashlytics.properties
 crashlytics-build.properties
+
+#############################################
+# .gitignore for Python and PyCharm project #
+#############################################
+
+__pycache__/
+
+*.py[cod]
+__init__.py
+

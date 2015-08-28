@@ -51,16 +51,16 @@ public class DataStore
         LinkedList<DataPoint> value = _data.get(sensorName);
 
         JSONObject root = new JSONObject();
-        JSONArray data_points = new JSONArray();
+        JSONArray dataPoints = new JSONArray();
 
         for (DataPoint dataPoint: value)
         {
-            data_points.put(dataPoint.getJSONObject());
+            dataPoints.put(dataPoint.getJSONObject());
         }
 
         root.put(Const.SESSION_ID, sessionID);
         root.put(Const.SENSOR_NAME, sensorName);
-        root.put(Const.DATA_POINTS, data_points);
+        root.put(Const.DATA_POINTS, dataPoints);
 
         return root.toString();
     }
