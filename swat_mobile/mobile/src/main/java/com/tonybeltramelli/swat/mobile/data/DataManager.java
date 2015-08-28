@@ -87,11 +87,13 @@ public class DataManager
             {
                 _socketClient.send(_serverAddress, _serverPort, jsonString);
             }
-            _socketClient.send(_serverAddress, _serverPort, Const.END_SIGNAL);
             _dataStore.clear();
         } catch (JSONException e)
         {
             Out.report(e.getMessage());
+        } finally
+        {
+            _socketClient.send(_serverAddress, _serverPort, Const.END_SIGNAL);
         }
     }
 
