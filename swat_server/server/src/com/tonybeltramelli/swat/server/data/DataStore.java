@@ -28,7 +28,7 @@ public class DataStore
         {
             for (Map.Entry<String, LinkedList<DataPoint>> entry: _data.entrySet())
             {
-                String key = entry.getKey();m
+                String key = entry.getKey();
                 _data.get(key).clear();
             }
         }
@@ -84,17 +84,6 @@ public class DataStore
         }
 
         _init();
-    }
-
-    public String getSizeReport()
-    {
-        String size = _data.size() + "( ";
-        for (Map.Entry<String, LinkedList<DataPoint>> entry: _data.entrySet())
-        {
-            size += "[ "+entry.getKey() + " : " + entry.getValue().size() + " ] ";
-        }
-        size += ")";
-        return size;
     }
 
     @Override
