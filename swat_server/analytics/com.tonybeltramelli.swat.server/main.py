@@ -12,4 +12,4 @@ def plot(session_id):
     #UPlot.plot_sensor_data("gyroscope", gyroscope.timestamp, gyroscope.x, gyroscope.y, gyroscope.z)
     UPlot.show()
 
-plot("51733851")
+plot("49896377")

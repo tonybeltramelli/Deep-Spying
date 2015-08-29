@@ -35,7 +35,7 @@ public class DataManager
         _dataStore = new DataStore();
         _socketClient = new SocketClient();
 
-        _sessionID = _generateSessionID();
+        generateSessionID();
     }
 
     public static DataManager getInstance()
@@ -116,12 +116,12 @@ public class DataManager
         return sensorName;
     }
 
-    private int _generateSessionID()
+    public void generateSessionID()
     {
         SecureRandom random = new SecureRandom();
         random.setSeed(new Date().getTime());
 
-        return (int) Math.pow(8, 8) + random.nextInt(99999999 - (int) Math.pow(8, 8));
+        _sessionID = (int) Math.pow(8, 8) + random.nextInt(99999999 - (int) Math.pow(8, 8));
     }
 
     public void setContext(Activity context)

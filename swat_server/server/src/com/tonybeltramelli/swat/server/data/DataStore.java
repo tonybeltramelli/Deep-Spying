@@ -28,7 +28,7 @@ public class DataStore
         {
             for (Map.Entry<String, LinkedList<DataPoint>> entry: _data.entrySet())
             {
-                String key = entry.getKey();
+                String key = entry.getKey();m
                 _data.get(key).clear();
             }
         }

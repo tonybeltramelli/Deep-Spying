@@ -32,6 +32,7 @@ public class MainActivity extends APrefActivity implements View.OnClickListener
 
         if (!_measurementController.isRecording)
         {
+            DataManager.getInstance().generateSessionID();
             _measurementController.startRecording();
             target.setText(getResources().getString(R.string.stop_recording_button));
         } else
