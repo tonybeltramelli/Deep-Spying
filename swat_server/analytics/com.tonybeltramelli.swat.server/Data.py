@@ -109,6 +109,23 @@ class Data:
     def normalize_axis(self, value):
         return value - self.mean
 
+    def draw_mean_signal(self):
+        length = len(self.x)
+        means = np.zeros(length)
+
+        for i in range(0, length):
+            means[i] = (self.x[i] + self.y[i] + self.z[i]) / 3
+
+        import pylab
+        pylab.figure()
+
+        pylab.plot(self.timestamp, means, color='r', label='mean')
+
+        pylab.legend()
+        pylab.xlabel('Time')
+        pylab.ylabel('Value')
+        pylab.show()
+
     def find_peaks(self):
         ratios_x = self.get_peak_to_average_ratios(self.x)
         ratios_y = self.get_peak_to_average_ratios(self.y)
@@ -119,9 +136,7 @@ class Data:
         for i in range(0, len(ratios_x)):
             ratios.append((i, (ratios_x[i] + ratios_y[i] + ratios_z[i]) / 3))
 
-        print len(ratios)
         ratios = ratios[0::50]
-        print len(ratios)
         ratios = sorted(ratios, key=lambda ratio: ratio[1], reverse=True)
 
         import pylab
@@ -137,7 +152,6 @@ class Data:
         pylab.legend()
         pylab.xlabel('Time')
         pylab.ylabel('Value')
-        print "here"
         pylab.show()
 
 
