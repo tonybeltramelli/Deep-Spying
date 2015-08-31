@@ -4,27 +4,27 @@ from View import *
 from Data import *
 
 
-def preprocess(session_id, to_plot=False):
-    gyroscope = Data("../../server/data/{}_gyroscope.csv".format(session_id))
+def preprocess(session_id):
+    view = View()
 
-    if to_plot:
-        view = View()
-        view.plot_sensor_data("raw gyroscope", gyroscope.timestamp, gyroscope.x, gyroscope.y, gyroscope.z)
+    gyroscope = Data(file_path="../../server/data/{}_gyroscope.csv".format(session_id),
+                     sampling_rate=62500,
+                     filter_type="lowpass",
+                     normalize=False,
+                     median_filter_window_size=9,
+                     apply_kalman_filter=True,
+                     view=None)
 
-    gyroscope.apply_median_filter(9)
+    gyroscope.find_peaks()
 
-    if to_plot:
-        view.plot_sensor_data("median filter", gyroscope.timestamp, gyroscope.x, gyroscope.y, gyroscope.z)
-
-    gyroscope.apply_lowpass_filter()
-
-    if to_plot:
-        view.plot_sensor_data("lowpass filter", gyroscope.timestamp, gyroscope.x, gyroscope.y, gyroscope.z)
-
-    gyroscope.apply_kalman_filter()
-
-    if to_plot:
-        view.plot_sensor_data("kalman filter", gyroscope.timestamp, gyroscope.x, gyroscope.y, gyroscope.z)
-        view.show()
+    #accelerometer = Data(file_path="../../server/data/{}_accelerometer.csv".format(session_id),
+    #                     sampling_rate=10000,
+    #                     filter_type="highpass",
+    #                     normalize=True,
+    #                     median_filter_window_size=5,
+    #                     apply_kalman_filter=True,
+    #                     view=view)
 
 preprocess("66181201")
+
+
