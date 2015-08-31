@@ -4,20 +4,27 @@ from View import *
 from Data import *
 
 
-def plot(session_id):
-    accelerometer = Data("../../server/data/{}_accelerometer.csv".format(session_id))
+def preprocess(session_id, to_plot=False):
     gyroscope = Data("../../server/data/{}_gyroscope.csv".format(session_id))
 
-    accelerometer.apply_median_filter(3)
-    accelerometer.align()
-    accelerometer.normalize()
+    if to_plot:
+        view = View()
+        view.plot_sensor_data("raw gyroscope", gyroscope.timestamp, gyroscope.x, gyroscope.y, gyroscope.z)
 
-    gyroscope.apply_median_filter(5)
-    gyroscope.normalize()
+    gyroscope.apply_median_filter(9)
 
-    view = View()
-    view.plot_sensor_data("accelerometer", accelerometer.timestamp, accelerometer.x, accelerometer.y, accelerometer.z)
-    view.plot_sensor_data("gyroscope", gyroscope.timestamp, gyroscope.x, gyroscope.y, gyroscope.z)
-    view.show()
+    if to_plot:
+        view.plot_sensor_data("median filter", gyroscope.timestamp, gyroscope.x, gyroscope.y, gyroscope.z)
 
-plot("49896377")
+    gyroscope.apply_lowpass_filter()
+
+    if to_plot:
+        view.plot_sensor_data("lowpass filter", gyroscope.timestamp, gyroscope.x, gyroscope.y, gyroscope.z)
+
+    gyroscope.apply_kalman_filter()
+
+    if to_plot:
+        view.plot_sensor_data("kalman filter", gyroscope.timestamp, gyroscope.x, gyroscope.y, gyroscope.z)
+        view.show()
+
+preprocess("66181201")

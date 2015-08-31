@@ -34,7 +34,7 @@ public class MotionSensorListenerService extends Service implements SensorEventL
 
         if (!_isSupported(sensor)) return;
 
-        _sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_NORMAL);
+        _sensorManager.registerListener(this, sensor, sensor.getMaxDelay());
     }
 
     @Override
