@@ -9,7 +9,7 @@ from utils.UMath import *
 
 class Data:
 
-    def __init__(self, file_path, sampling_rate, filter_type, normalize=False, median_filter_window_size=None, apply_kalman_filter=False, view=None):
+    def __init__(self, file_path, sampling_rate, filter_type, merge_axis=False, normalize=False, median_filter_window_size=None, apply_kalman_filter=False, view=None):
         data = np.genfromtxt(file_path, delimiter=',', skip_header=1, names=['timestamp', 'x', 'y', 'z'])
 
         self.timestamp = data['timestamp']
@@ -18,16 +18,21 @@ class Data:
         self.y = data['y']
         self.z = data['z']
 
+        self.mean_signal = None
+
         self.view = view
-        self.plot("raw")
+        #self.plot("raw")
 
         if normalize:
             self.normalize()
-            self.plot("normalize")
+            #self.plot("normalize")
+
+        if merge_axis:
+            self.mean_signal = self.get_mean_signal()
 
         if median_filter_window_size is not None:
             self.apply_median_filter(median_filter_window_size)
-            self.plot("median filter")
+            #self.plot("median filter")
 
         if sampling_rate is not None and filter_type is not None:
             self.apply_filter(UMath.get_frequency(sampling_rate), filter_type)
@@ -42,17 +47,26 @@ class Data:
 
     def plot(self, title):
         if self.view is not None:
-            self.view.plot_sensor_data(title, self.timestamp, self.x, self.y, self.z)
+            if self.mean_signal is None:
+                self.view.plot_sensor_data(title, self.timestamp, self.x, self.y, self.z)
+            else:
+                self.view.plot_signal(title, self.timestamp, self.mean_signal)
 
     def apply_median_filter(self, window_size=3):
-        self.x = signal.medfilt(self.x, window_size)
-        self.y = signal.medfilt(self.y, window_size)
-        self.z = signal.medfilt(self.z, window_size)
+        if self.mean_signal is None:
+            self.x = signal.medfilt(self.x, window_size)
+            self.y = signal.medfilt(self.y, window_size)
+            self.z = signal.medfilt(self.z, window_size)
+        else:
+            self.mean_signal = signal.medfilt(self.mean_signal, window_size)
 
     def apply_filter(self, sampling_frequency, filter_type):
-        self.x = self.apply_butter_filter(self.x, sampling_frequency, filter_type)
-        self.y = self.apply_butter_filter(self.y, sampling_frequency, filter_type)
-        self.z = self.apply_butter_filter(self.z, sampling_frequency, filter_type)
+        if self.mean_signal is None:
+            self.x = self.apply_butter_filter(self.x, sampling_frequency, filter_type)
+            self.y = self.apply_butter_filter(self.y, sampling_frequency, filter_type)
+            self.z = self.apply_butter_filter(self.z, sampling_frequency, filter_type)
+        else:
+            self.mean_signal = self.apply_butter_filter(self.mean_signal, sampling_frequency, filter_type)
 
     def apply_butter_filter(self, data, frequency, type, order=6):
         CUTOFF_FREQUENCY = 0.5
@@ -66,14 +80,17 @@ class Data:
         return result
 
     def apply_kalman_filter(self):
-        self.x = self.get_kalman_filter_estimate(self.x)
-        self.y = self.get_kalman_filter_estimate(self.y)
-        self.z = self.get_kalman_filter_estimate(self.z)
+        if self.mean_signal is None:
+            self.x = self.get_kalman_filter_estimate(self.x)
+            self.y = self.get_kalman_filter_estimate(self.y)
+            self.z = self.get_kalman_filter_estimate(self.z)
+        else:
+            self.mean_signal = self.get_kalman_filter_estimate(self.mean_signal)
 
     def get_kalman_filter_estimate(self, data):
         length = len(data)
 
-        PROCESS_VARIANCE_Q = 1e-5
+        PROCESS_VARIANCE_Q = np.var(data) ** 2 #1e-5
         MEASUREMENT_VARIANCE_ESTIMATE = 1e-02
 
         a_posteriori_estimate = np.zeros(length)
@@ -109,22 +126,14 @@ class Data:
     def normalize_axis(self, value):
         return value - self.mean
 
-    def draw_mean_signal(self):
+    def get_mean_signal(self):
         length = len(self.x)
-        means = np.zeros(length)
+        mean = np.zeros(length)
 
         for i in range(0, length):
-            means[i] = (self.x[i] + self.y[i] + self.z[i]) / 3
+            mean[i] = (self.x[i] + self.y[i] + self.z[i]) / 3
 
-        import pylab
-        pylab.figure()
-
-        pylab.plot(self.timestamp, means, color='r', label='mean')
-
-        pylab.legend()
-        pylab.xlabel('Time')
-        pylab.ylabel('Value')
-        pylab.show()
+        return mean
 
     def find_peaks(self):
         ratios_x = self.get_peak_to_average_ratios(self.x)
@@ -153,7 +162,6 @@ class Data:
         pylab.xlabel('Time')
         pylab.ylabel('Value')
         pylab.show()
-
 
     def get_peak_to_average_ratios(self, data):
         root_mean_square = self.get_root_mean_square(data)

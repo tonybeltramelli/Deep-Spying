@@ -20,7 +20,7 @@ class View:
 
         View.plot_sensor_data(basename(file_name), data['timestamp'], data['x'], data['y'], data['z'])
 
-    def plot_sensor_data(self, name, timestamp, x, y, z):
+    def plot_sensor_data(self, title, timestamp, x, y, z):
         pylab.figure()
 
         pylab.plot(timestamp, x, color='r', label='x')
@@ -29,15 +29,26 @@ class View:
 
         pylab.legend()
 
-        pylab.title(name)
+        pylab.title(title)
+        pylab.xlabel('Time')
+        pylab.ylabel('Value')
+
+    def plot_signal(self, title, timestamp, signal):
+        pylab.figure()
+
+        pylab.plot(timestamp, signal, color='m', label="signal")
+
+        pylab.legend()
+
+        pylab.title(title)
         pylab.xlabel('Time')
         pylab.ylabel('Value')
 
     def plot_comparison(self, values, estimate):
         pylab.figure()
 
-        pylab.plot(values, 'r', label='measurements')
-        pylab.plot(estimate, 'b', label='estimate')
+        pylab.plot(values, 'm', label='measurements')
+        pylab.plot(estimate, 'c', label='estimate')
 
         pylab.legend()
 
