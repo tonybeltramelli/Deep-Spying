@@ -11,7 +11,6 @@ def preprocess(session_id):
     gyroscope.segment()
 
     #accelerometer = Accelerometer(session_id, None)
-    #accelerometer.segment()
 
 preprocess("30809189")
 
