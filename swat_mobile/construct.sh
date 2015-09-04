@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# @author Tony Beltramelli
+# www.tonybeltramelli.com
+
 # Handle arguments
 if [ $# -eq 0 ]
 	then
