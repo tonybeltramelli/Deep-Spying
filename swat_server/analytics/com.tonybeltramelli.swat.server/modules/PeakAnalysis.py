@@ -42,8 +42,8 @@ class PeakAnalysis:
             for i in range(0, len(uphill_filtered)):
                 pylab.axvline(uphill_filtered[i], color="r")
 
-            for i in range(0, len(downhill_filtered)):
-                pylab.axvline(downhill_filtered[i], color="b")
+            #for i in range(0, len(downhill_filtered)):
+            #    pylab.axvline(downhill_filtered[i], color="b")
 
             pylab.xlabel('Time')
             pylab.ylabel('Value')

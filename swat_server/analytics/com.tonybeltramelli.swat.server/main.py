@@ -12,5 +12,5 @@ def preprocess(session_id):
 
     #accelerometer = Accelerometer(session_id, None)
 
-preprocess("30809189")
+preprocess("39416350")
 
