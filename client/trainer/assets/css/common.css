@@ -1,8 +1,8 @@
 @charset "UTF-8";
 
 body {
-    font-family: Helvetica, Arial, sans-serif;
-    font-size: 0.9em;
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: 0.9em;
 }
 
 * {
@@ -10,43 +10,65 @@ body {
 }
 
 html, body {
-    height: 100%;
-    min-height: 100%;
+  height: 100%;
+  min-height: 100%;
 }
 
 main .keypad {
-	position: absolute;
+  position: absolute;
 	width: 100%;
 	height: 100%;
 	min-height: 100%;
 	top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
 	font-size: 2em;
 }
 
 main .keypad li {
 	float: left;
-    width: 33.33%;
-    height: 25%;
-    background: #fcfcfc;
-    color: #1caaff;
-    cursor: pointer;
-    text-align: center;
-}
-
-main .keypad li:active, main .keypad li:hover {
-	background: #1caaff;
-	color: #fcfcfc;
+  width: 33.33%;
+  height: 25%;
+  background: #fcfcfc;
+  color: #1caaff;
+  text-align: center;
 }
 
 main .keypad li span {
-	display: block;
-  	border: 1px solid #e2e2e2;
-  	padding-top: 1em;
-  	height: 100%;
-  	font-size: 1.2em;
+  display: block;
+  border: 1px solid #e2e2e2;
+  padding-top: 1em;
+  height: 100%;
+  font-size: 1.2em;
+}
+
+form {
+  width: 280px;
+  padding: 20px;
+  margin: auto;
+}
+
+form input, form button {
+  border-radius: 4px;
+  height: 52px;
+  padding: 10px;
+}
+
+form input {
+  border: 1px solid #e2e2e2;
+  width: 100%;
+  margin: 10px 0;
+  box-sizing: border-box;
+}
+
+form button {
+  border: 0;
+  background: #1caaff;
+  color: #fcfcfc;
+  display: block;
+  margin: 10px auto 0 auto;
+  width: 50%;
 }
 
 
