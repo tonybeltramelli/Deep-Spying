@@ -16,12 +16,12 @@ import java.net.Socket;
 /**
  * @author Tony Beltramelli www.tonybeltramelli.com - created 23/07/15
  */
-public class Server
+public class TCPSocketServer implements IServer
 {
     private ServerSocket _listener;
     private DataStore _dataStore;
 
-    public Server(int port) throws IOException
+    public TCPSocketServer(int port) throws IOException
     {
         _dataStore = new DataStore();
 
@@ -29,6 +29,7 @@ public class Server
         _listener.setReuseAddress(true);
     }
 
+    @Override
     public void listen() throws IOException
     {
         Socket socket = _listener.accept();
@@ -72,6 +73,7 @@ public class Server
         }
     }
 
+    @Override
     public void close() throws IOException
     {
         _listener.close();

@@ -5,7 +5,8 @@ package com.tonybeltramelli.swat.server;
  */
 public class Const
 {
-    public static final int SERVER_PORT = 25500;
+    public static final int TCP_SOCKET_SERVER_PORT = 25500;
+    public static final int HTTP_SERVER_PORT = 8000;
     //
     public static final String TIMESTAMP = "timestamp";
     public static final String X = "x";

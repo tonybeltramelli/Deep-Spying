@@ -27,7 +27,7 @@ function main ()
 		$("main").show();
 	});
 
-	$(".keypad li").on("mousedown", function(e){
+	$(".keypad li").on("touchstart", function(e){
 		timestamp = Date.now();
 
 		e.stopPropagation();
@@ -42,7 +42,7 @@ function main ()
 		send(timestamp, label);
 	});
 
-	$(".keypad li").on("mouseup", function(e){
+	$(".keypad li").on("touchend", function(e){
 		$(this).css({
 			background: "#fcfcfc",
 			color: "#1caaff"
