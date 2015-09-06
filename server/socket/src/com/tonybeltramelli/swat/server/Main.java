@@ -15,64 +15,10 @@ public class Main {
     {
         System.out.println(InetAddress.getLocalHost().getHostAddress());
 
-        TCPSocketServerThread tcpSocketServerThread = new TCPSocketServerThread();
-        tcpSocketServerThread.start();
+        TCPSocketServer tcpSocketServer = new TCPSocketServer(Const.TCP_SOCKET_SERVER_PORT);
+        tcpSocketServer.start();
 
-        HTTPServerThread httpServerThread = new HTTPServerThread();
-        httpServerThread.start();
-    }
-
-    static private class TCPSocketServerThread extends Thread
-    {
-        @Override
-        public void run()
-        {
-            super.run();
-
-            try
-            {
-                TCPSocketServer tcpSocketServer = new TCPSocketServer(Const.TCP_SOCKET_SERVER_PORT);
-                try
-                {
-                    while(true)
-                    {
-                        tcpSocketServer.listen();
-                    }
-                } finally
-                {
-                    tcpSocketServer.close();
-                }
-            } catch(IOException e)
-            {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    static private class HTTPServerThread extends Thread
-    {
-        @Override
-        public void run()
-        {
-            super.run();
-
-            try
-            {
-                HTTPServer httpServer = new HTTPServer(Const.HTTP_SERVER_PORT);
-                try
-                {
-                    while(true)
-                    {
-                        httpServer.listen();
-                    }
-                } finally
-                {
-                    httpServer.close();
-                }
-            } catch(IOException e)
-            {
-                e.printStackTrace();
-            }
-        }
+        HTTPServer httpServer = new HTTPServer(Const.HTTP_SERVER_PORT);
+        httpServer.start();
     }
 }

@@ -16,7 +16,7 @@ import java.net.Socket;
 /**
  * @author Tony Beltramelli www.tonybeltramelli.com - created 23/07/15
  */
-public class TCPSocketServer implements IServer
+public class TCPSocketServer extends Thread implements IServer
 {
     private ServerSocket _listener;
     private DataStore _dataStore;
@@ -27,6 +27,32 @@ public class TCPSocketServer implements IServer
 
         _listener = new ServerSocket(port);
         _listener.setReuseAddress(true);
+    }
+
+    @Override
+    public void run()
+    {
+        super.run();
+
+        try
+        {
+            try
+            {
+                while(true)
+                {
+                    listen();
+                }
+            } catch(IOException e)
+            {
+                e.printStackTrace();
+            } finally
+            {
+                close();
+            }
+        } catch(IOException e)
+        {
+            e.printStackTrace();
+        }
     }
 
     @Override

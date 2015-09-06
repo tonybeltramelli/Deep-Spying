@@ -14,13 +14,25 @@ import java.util.concurrent.Executors;
 /**
  * @author Tony Beltramelli www.tonybeltramelli.com - created 05/09/15
  */
-public class HTTPServer implements IServer, HttpHandler
+public class HTTPServer extends Thread implements IServer, HttpHandler
 {
     private HttpServer _listener;
 
     public HTTPServer(int port) throws IOException
     {
         _listener = HttpServer.create(new InetSocketAddress(port), 0);
+    }
+
+    @Override
+    public void run()
+    {
+        try
+        {
+            listen();
+        } catch(IOException e)
+        {
+            e.printStackTrace();
+        }
     }
 
     @Override
