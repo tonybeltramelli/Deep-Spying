@@ -1,6 +1,5 @@
 package com.tonybeltramelli.swat.server;
 
-import com.tonybeltramelli.swat.server.network.HTTPServer;
 import com.tonybeltramelli.swat.server.network.TCPSocketServer;
 
 import java.io.IOException;
@@ -18,7 +17,7 @@ public class Main {
         TCPSocketServer tcpSocketServer = new TCPSocketServer(Const.TCP_SOCKET_SERVER_PORT);
         tcpSocketServer.start();
 
-        HTTPServer httpServer = new HTTPServer(Const.HTTP_SERVER_PORT);
-        httpServer.start();
+        //HTTPServer httpServer = new HTTPServer(Const.HTTP_SERVER_PORT);
+        //httpServer.start();
     }
 }

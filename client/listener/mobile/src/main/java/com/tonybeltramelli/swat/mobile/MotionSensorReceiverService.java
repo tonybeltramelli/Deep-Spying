@@ -32,20 +32,22 @@ public class MotionSensorReceiverService extends WearableListenerService
 
     @Override
     public void onPeerDisconnected(Node peer) {
-        Out.print("----> onPeerDisconnected");
+        Out.print("onPeerDisconnected");
     }
 
     @Override
     public void onChannelClosed(Channel channel, int closeReason, int appSpecificErrorCode) {
-
+        Out.print("onChannelClosed");
     }
 
     @Override
     public void onInputClosed(Channel channel, int closeReason, int appSpecificErrorCode) {
+        Out.print("onInputClosed");
     }
 
     @Override
     public void onOutputClosed(Channel channel, int closeReason, int appSpecificErrorCode) {
+        Out.print("onOutputClosed");
     }
 
     @Override

@@ -12,10 +12,12 @@ public class Const
     public static final String X = "x";
     public static final String Y = "y";
     public static final String Z = "z";
+    public static final String LABEL = "label";
     public static final String SENSOR_NAME = "sensor_name";
     public static final String DATA_POINTS = "data_points";
     public static final String SESSION_ID = "session_ID";
     //
+    public static final String START_SIGNAL = "/start/";
     public static final String END_SIGNAL = "/end/";
     //
     public static final String DATA_OUT_PATH = "data/" + SESSION_ID + "_" + SENSOR_NAME + ".csv";

@@ -5,7 +5,7 @@ import android.hardware.Sensor;
 import android.preference.PreferenceManager;
 
 import com.tonybeltramelli.swat.mobile.R;
-import com.tonybeltramelli.swat.mobile.SocketClient;
+import com.tonybeltramelli.swat.mobile.socket.SocketClient;
 import com.tonybeltramelli.swat.mobile.common.Const;
 import com.tonybeltramelli.swat.mobile.common.Out;
 
@@ -13,7 +13,6 @@ import org.json.JSONException;
 
 import java.security.SecureRandom;
 import java.util.Date;
-import java.util.Map;
 
 /**
  * Created by Tony Beltramelli www.tonybeltramelli.com on 10/08/15.
@@ -93,7 +92,15 @@ public class DataManager
             Out.report(e.getMessage());
         } finally
         {
-            _socketClient.send(_serverAddress, _serverPort, Const.END_SIGNAL);
+            /*Handler handler = new Handler();
+            handler.postDelayed(new Runnable()
+            {
+                public void run()
+                {
+                    _socketClient.send(_serverAddress, _serverPort, Const.END_SIGNAL);
+                }
+            }, 1000);*/
+            _socketClient.send(_serverAddress, _serverPort, Const.END_SIGNAL, Thread.MIN_PRIORITY);
         }
     }
 

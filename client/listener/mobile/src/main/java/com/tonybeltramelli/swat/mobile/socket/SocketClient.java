@@ -1,17 +1,10 @@
-package com.tonybeltramelli.swat.mobile;
+package com.tonybeltramelli.swat.mobile.socket;
 
-import android.content.Context;
-
-import com.google.android.gms.wearable.PutDataMapRequest;
-import com.google.android.gms.wearable.PutDataRequest;
-import com.tonybeltramelli.swat.mobile.common.AThreadedClient;
-import com.tonybeltramelli.swat.mobile.common.Const;
 import com.tonybeltramelli.swat.mobile.common.Out;
 
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.net.UnknownHostException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -21,14 +14,22 @@ import java.util.concurrent.Executors;
 public class SocketClient
 {
     private ExecutorService _threadPool;
+    private SocketClientThreadFactory _threadFactory;
 
     public SocketClient()
     {
         _threadPool = Executors.newCachedThreadPool();
+        _threadFactory = new SocketClientThreadFactory();
     }
 
     public void send(final String address, final int port, final String data)
     {
+        send(address, port, data, Thread.NORM_PRIORITY);
+    }
+
+    public void send(final String address, final int port, final String data, int priority)
+    {
+        _threadFactory.setPriority(priority);
         _threadPool.submit(new Runnable()
         {
             @Override

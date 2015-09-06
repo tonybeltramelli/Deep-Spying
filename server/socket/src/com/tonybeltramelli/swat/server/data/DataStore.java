@@ -15,7 +15,7 @@ import java.util.Map;
  */
 public class DataStore
 {
-    private HashMap<String, LinkedList<DataPoint>> _data;
+    private HashMap<String, LinkedList<ADataPoint>> _data;
 
     public DataStore()
     {
@@ -26,7 +26,7 @@ public class DataStore
     {
         if(_data != null)
         {
-            for (Map.Entry<String, LinkedList<DataPoint>> entry: _data.entrySet())
+            for (Map.Entry<String, LinkedList<ADataPoint>> entry: _data.entrySet())
             {
                 String key = entry.getKey();
                 _data.get(key).clear();
@@ -34,14 +34,14 @@ public class DataStore
         }
 
         _data = null;
-        _data = new HashMap<String, LinkedList<DataPoint>>();
+        _data = new HashMap<String, LinkedList<ADataPoint>>();
     }
 
-    public void push(String filePath, DataPoint dataPoint)
+    public void push(String filePath, ADataPoint dataPoint)
     {
         if (!_data.containsKey(filePath))
         {
-            _data.put(filePath, new LinkedList<DataPoint>());
+            _data.put(filePath, new LinkedList<ADataPoint>());
         }
 
         _data.get(filePath).addLast(dataPoint);
@@ -49,10 +49,10 @@ public class DataStore
 
     public void save() throws Exception
     {
-        for (Map.Entry<String, LinkedList<DataPoint>> entry: _data.entrySet())
+        for (Map.Entry<String, LinkedList<ADataPoint>> entry: _data.entrySet())
         {
             String filePath = entry.getKey();
-            LinkedList<DataPoint> dataPoints = entry.getValue();
+            LinkedList<ADataPoint> dataPoints = entry.getValue();
             Collections.sort(dataPoints);
 
             File file = new File(filePath);
@@ -73,7 +73,7 @@ public class DataStore
                 bufferedWriter.newLine();
             }
 
-            for(DataPoint dataPoint: dataPoints)
+            for(ADataPoint dataPoint: dataPoints)
             {
                 bufferedWriter.write(dataPoint.getCSVLine());
                 bufferedWriter.newLine();
@@ -91,14 +91,14 @@ public class DataStore
     {
         String string = super.toString() + "\n";
 
-        for (Map.Entry<String, LinkedList<DataPoint>> entry: _data.entrySet())
+        for (Map.Entry<String, LinkedList<ADataPoint>> entry: _data.entrySet())
         {
             String key = entry.getKey();
-            LinkedList<DataPoint> value = entry.getValue();
+            LinkedList<ADataPoint> value = entry.getValue();
 
             string += key + "[\n";
 
-            for (DataPoint dataPoint: value)
+            for (ADataPoint dataPoint: value)
             {
                 string += " " + dataPoint + "\n";
             }

@@ -8,6 +8,7 @@ public class Const
     public static final String START_RECORDING = "/start";
     public static final String STOP_RECORDING = "/stop";
     public static final String SENSOR_ROOT = "/sensor/";
+    public static final String START_SIGNAL = "/start/";
     public static final String END_SIGNAL = "/end/";
     //
     public static final String TIMESTAMP = "timestamp";

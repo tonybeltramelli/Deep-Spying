@@ -1,7 +1,7 @@
 package com.tonybeltramelli.swat.server.network;
 
 import com.tonybeltramelli.swat.server.Const;
-import com.tonybeltramelli.swat.server.data.DataPoint;
+import com.tonybeltramelli.swat.server.data.SensorDataPoint;
 import com.tonybeltramelli.swat.server.data.DataStore;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -93,7 +93,7 @@ public class TCPSocketServer extends Thread implements IServer
         for(int i = 0; i < dataPoints.size(); i ++)
         {
             JSONObject values = (JSONObject) dataPoints.get(i);
-            DataPoint dataPoint = new DataPoint(values);
+            SensorDataPoint dataPoint = new SensorDataPoint(values);
 
             _dataStore.push(filePath, dataPoint);
         }
