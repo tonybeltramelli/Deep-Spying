@@ -74,7 +74,7 @@ public class MotionSensorReceiverService extends WearableListenerService
                 float[] values = dataMap.getFloatArray(Const.VALUES);
 
                 DataManager.getInstance().storeSensorData(sensorType, timestamp, values);
-            } else if (path.startsWith(Const.END_SIGNAL))
+            } else if (path.startsWith(Const.END_SESSION))
             {
                 DataManager.getInstance().flush();
             }

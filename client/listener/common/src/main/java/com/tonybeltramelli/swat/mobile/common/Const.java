@@ -5,11 +5,11 @@ package com.tonybeltramelli.swat.mobile.common;
  */
 public class Const
 {
-    public static final String START_RECORDING = "/start";
-    public static final String STOP_RECORDING = "/stop";
+    public static final String START_RECORDING = "/start_recording";
+    public static final String STOP_RECORDING = "/stop_recording";
     public static final String SENSOR_ROOT = "/sensor/";
-    public static final String START_SIGNAL = "/start/";
-    public static final String END_SIGNAL = "/end/";
+    public static final String START_SESSION = "/start_session/";
+    public static final String END_SESSION = "/end_session/";
     //
     public static final String TIMESTAMP = "timestamp";
     public static final String VALUES = "values";

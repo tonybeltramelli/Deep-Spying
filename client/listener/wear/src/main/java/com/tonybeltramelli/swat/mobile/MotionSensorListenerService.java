@@ -40,7 +40,8 @@ public class MotionSensorListenerService extends Service implements SensorEventL
     @Override
     public void onSensorChanged(SensorEvent event)
     {
-        SensorDataSender.getInstance(getApplicationContext()).sendSensorData(event.sensor.getType(), event.accuracy, event.timestamp, event.values);
+        long timestamp = System.currentTimeMillis();
+        SensorDataSender.getInstance(getApplicationContext()).sendSensorData(event.sensor.getType(), timestamp, event.values);
     }
 
     @Override

@@ -13,7 +13,7 @@ public class LabelDataPoint extends ADataPoint
     public LabelDataPoint(JSONObject values)
     {
         _timestamp = ((Number) values.get(Const.TIMESTAMP)).longValue();
-        _label = ((String) values.get(Const.LABEL));
+        _label = (String) values.get(Const.LABEL);
     }
 
     @Override
@@ -26,5 +26,11 @@ public class LabelDataPoint extends ADataPoint
     public String getCSVLine()
     {
         return _timestamp + "," + _label;
+    }
+
+    @Override
+    public String getCSVHeader()
+    {
+        return Const.CSV_HEADER_LABEL;
     }
 }

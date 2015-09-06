@@ -13,4 +13,4 @@ class Accelerometer(Sensor):
         self.process_variance_q = 1e-02
         self.measurement_variance_estimate = 1e-01
 
-        Sensor.process(self, merge_axis=True)
+        Sensor.process(self, merge_axis=False)

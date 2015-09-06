@@ -46,7 +46,7 @@ public class DataStore
         return isFull;
     }
 
-    public String getJSONString(int sessionID, String sensorName) throws JSONException
+    public String getJSONString(String sensorName) throws JSONException
     {
         LinkedList<DataPoint> value = _data.get(sensorName);
 
@@ -58,14 +58,13 @@ public class DataStore
             dataPoints.put(dataPoint.getJSONObject());
         }
 
-        root.put(Const.SESSION_ID, sessionID);
         root.put(Const.SENSOR_NAME, sensorName);
         root.put(Const.DATA_POINTS, dataPoints);
 
         return root.toString();
     }
 
-    public String[] getJSONStrings(int sessionID) throws JSONException
+    public String[] getJSONStrings() throws JSONException
     {
         String[] sensorJSONs = new String[_data.size()];
 
@@ -73,7 +72,7 @@ public class DataStore
         for (Map.Entry<String, LinkedList<DataPoint>> entry: _data.entrySet())
         {
             String sensorName = entry.getKey();
-            sensorJSONs[i++] = getJSONString(sessionID, sensorName);
+            sensorJSONs[i++] = getJSONString(sensorName);
         }
 
         return sensorJSONs;

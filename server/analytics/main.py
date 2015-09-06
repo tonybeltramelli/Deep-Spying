@@ -4,13 +4,14 @@ from modules.View import *
 from modules.sensor.Gyroscope import *
 from modules.sensor.Accelerometer import *
 
+
 def preprocess(session_id):
     view = View()
 
-    gyroscope = Gyroscope(session_id, None)
-    gyroscope.segment()
+    gyroscope = Gyroscope(session_id, view)
+    #gyroscope.segment()
 
-    #accelerometer = Accelerometer(session_id, None)
+    accelerometer = Accelerometer(session_id, view)
 
-preprocess("39416350")
+preprocess("55687865")
 

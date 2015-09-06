@@ -52,9 +52,17 @@ function main ()
 
 function send(timestamp, label)
 {
+	var data = {
+		sensor_name: "labels",
+		data_points:[{
+			timestamp: timestamp,
+			label: label
+		}]
+	};
+
 	$.ajax({
 		url: serverAddress+":"+serverPort,
 		type: "POST",
-		data: "{timestamp: "+timestamp+", label: "+label+"}"
+		data: JSON.stringify(data)
 	});
 }

@@ -31,4 +31,10 @@ public class SensorDataPoint extends ADataPoint
     {
         return _timestamp + "," + _x + "," + _y + "," + _z;
     }
+
+    @Override
+    public String getCSVHeader()
+    {
+        return Const.CSV_HEADER_SENSOR;
+    }
 }

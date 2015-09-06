@@ -46,7 +46,7 @@ public class SensorDataSender extends AThreadedClient
         return _instance;
     }
 
-    public void sendSensorData(final int sensorType, final int accuracy, final long timestamp, final float[] values)
+    public void sendSensorData(final int sensorType, final long timestamp, final float[] values)
     {
         _dataToSend += 1;
 
@@ -84,7 +84,7 @@ public class SensorDataSender extends AThreadedClient
     private void _sendEndSignal()
     {
         init();
-        PutDataMapRequest dataMap = PutDataMapRequest.create(Const.END_SIGNAL + new Date().getTime());
+        PutDataMapRequest dataMap = PutDataMapRequest.create(Const.END_SESSION + new Date().getTime());
         PutDataRequest putDataRequest = dataMap.asPutDataRequest();
 
         if (!isConnected()) return;

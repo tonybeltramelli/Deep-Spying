@@ -1,5 +1,7 @@
 package com.tonybeltramelli.swat.server;
 
+import com.tonybeltramelli.swat.server.data.DataStore;
+import com.tonybeltramelli.swat.server.network.HTTPServer;
 import com.tonybeltramelli.swat.server.network.TCPSocketServer;
 
 import java.io.IOException;
@@ -14,10 +16,12 @@ public class Main {
     {
         System.out.println(InetAddress.getLocalHost().getHostAddress());
 
-        TCPSocketServer tcpSocketServer = new TCPSocketServer(Const.TCP_SOCKET_SERVER_PORT);
+        DataStore dataStore = new DataStore();
+
+        TCPSocketServer tcpSocketServer = new TCPSocketServer(Const.TCP_SOCKET_SERVER_PORT, dataStore);
         tcpSocketServer.start();
 
-        //HTTPServer httpServer = new HTTPServer(Const.HTTP_SERVER_PORT);
-        //httpServer.start();
+        HTTPServer httpServer = new HTTPServer(Const.HTTP_SERVER_PORT, dataStore);
+        httpServer.start();
     }
 }

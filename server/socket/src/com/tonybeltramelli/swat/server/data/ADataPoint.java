@@ -17,6 +17,10 @@ public abstract class ADataPoint implements Comparable<ADataPoint>
         return _timestamp;
     }
 
+    public String getCSVHeader() {
+        return "";
+    }
+
     @Override
     public int compareTo(ADataPoint dataPoint)
     {

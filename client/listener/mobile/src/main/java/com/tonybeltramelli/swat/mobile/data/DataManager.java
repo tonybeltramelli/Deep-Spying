@@ -2,6 +2,7 @@ package com.tonybeltramelli.swat.mobile.data;
 
 import android.app.Activity;
 import android.hardware.Sensor;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 
 import com.tonybeltramelli.swat.mobile.R;
@@ -27,14 +28,13 @@ public class DataManager
     private String _serverAddress;
     private int _serverPort;
     private Activity _context;
-    private int _sessionID;
 
     private DataManager()
     {
         _dataStore = new DataStore();
         _socketClient = new SocketClient();
 
-        generateSessionID();
+        startSession();
     }
 
     public static DataManager getInstance()
@@ -65,7 +65,7 @@ public class DataManager
         {
             try
             {
-                String jsonString = _dataStore.getJSONString(_sessionID, sensorName);
+                String jsonString = _dataStore.getJSONString(sensorName);
                 Out.print("full "+sensorName+" -> "+_dataStore.getSizeReport());
                 _socketClient.send(_serverAddress, _serverPort, jsonString);
             } catch (JSONException e)
@@ -81,7 +81,7 @@ public class DataManager
         {
             Out.print("flush "+_dataStore.getSizeReport());
 
-            String jsonStrings[] = _dataStore.getJSONStrings(_sessionID);
+            String jsonStrings[] = _dataStore.getJSONStrings();
             for (String jsonString: jsonStrings)
             {
                 _socketClient.send(_serverAddress, _serverPort, jsonString);
@@ -92,15 +92,14 @@ public class DataManager
             Out.report(e.getMessage());
         } finally
         {
-            /*Handler handler = new Handler();
+            Handler handler = new Handler();
             handler.postDelayed(new Runnable()
             {
                 public void run()
                 {
-                    _socketClient.send(_serverAddress, _serverPort, Const.END_SIGNAL);
+                    _socketClient.send(_serverAddress, _serverPort, Const.END_SESSION, Thread.MIN_PRIORITY);
                 }
-            }, 1000);*/
-            _socketClient.send(_serverAddress, _serverPort, Const.END_SIGNAL, Thread.MIN_PRIORITY);
+            }, 1000);
         }
     }
 
@@ -123,12 +122,9 @@ public class DataManager
         return sensorName;
     }
 
-    public void generateSessionID()
+    public void startSession()
     {
-        SecureRandom random = new SecureRandom();
-        random.setSeed(new Date().getTime());
-
-        _sessionID = (int) Math.pow(8, 8) + random.nextInt(99999999 - (int) Math.pow(8, 8));
+        _socketClient.send(_serverAddress, _serverPort, Const.START_SESSION, Thread.MAX_PRIORITY);
     }
 
     public void setContext(Activity context)
