@@ -33,10 +33,40 @@ class View:
         pylab.xlabel('Time')
         pylab.ylabel('Value')
 
+    def plot_sensor_data_and_label(self, title, timestamp, x, y, z, label_timestamp, label):
+        pylab.figure()
+
+        pylab.plot(timestamp, x, color='r', label='x')
+        pylab.plot(timestamp, y, color='g', label='y')
+        pylab.plot(timestamp, z, color='b', label='z')
+
+        for i in range(0, len(label_timestamp)):
+            pylab.axvline(label_timestamp[i], color="k", label="{}: key {}".format(i, label[i]))
+
+        pylab.legend()
+
+        pylab.title(title)
+        pylab.xlabel('Time')
+        pylab.ylabel('Value')
+
     def plot_signal(self, title, timestamp, signal):
         pylab.figure()
 
         pylab.plot(timestamp, signal, color='m', label="signal")
+
+        pylab.legend()
+
+        pylab.title(title)
+        pylab.xlabel('Time')
+        pylab.ylabel('Value')
+
+    def plot_signal_and_label(self, title, timestamp, signal, label_timestamp, label):
+        pylab.figure()
+
+        pylab.plot(timestamp, signal, color='m', label='signal')
+
+        for i in range(0, len(label_timestamp)):
+            pylab.axvline(label_timestamp[i], color="k", label="{}: key {}".format(i, label[i]))
 
         pylab.legend()
 

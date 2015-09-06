@@ -143,6 +143,8 @@ class Sensor:
         return mean
 
     def segment(self):
+        self.mean_signal = self.get_mean_signal()
+
         p = PeakAnalysis()
         p.segment(self.mean_signal, True)
 

@@ -4,8 +4,8 @@ from Sensor import *
 
 
 class Accelerometer(Sensor):
-    def __init__(self, session_id, view):
-        Sensor.__init__(self, file_path="../../server/data/{}_accelerometer.csv".format(session_id), view=view)
+    def __init__(self, path, view):
+        Sensor.__init__(self, file_path="{}accelerometer.csv".format(path), view=view)
 
         self.sampling_rate = 10000
         self.median_filter_window_size = 5

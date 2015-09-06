@@ -38,7 +38,7 @@ function main ()
 			color: "#fcfcfc"
 		});
 
-		var label = $(this).find("span").text();
+		var label = $(this).find("span").text().charCodeAt(0);
 		send(timestamp, label);
 	});
 

@@ -8,12 +8,12 @@ import org.json.simple.JSONObject;
  */
 public class LabelDataPoint extends ADataPoint
 {
-    private String _label;
+    private int _label;
 
     public LabelDataPoint(JSONObject values)
     {
         _timestamp = ((Number) values.get(Const.TIMESTAMP)).longValue();
-        _label = (String) values.get(Const.LABEL);
+        _label = ((Number) values.get(Const.LABEL)).intValue();
     }
 
     @Override

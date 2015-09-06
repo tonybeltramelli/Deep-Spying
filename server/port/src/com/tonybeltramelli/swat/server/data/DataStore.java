@@ -24,7 +24,7 @@ public class DataStore
     private HashMap<String, LinkedList<ADataPoint>> _data;
 
     private int _sessionID;
-    private boolean _isRecording = false;
+    private boolean _isRecording;
 
     public DataStore()
     {
@@ -33,6 +33,8 @@ public class DataStore
 
     private void _init()
     {
+        _isRecording = false;
+
         if(_data != null)
         {
             for (Map.Entry<String, LinkedList<ADataPoint>> entry: _data.entrySet())
@@ -58,8 +60,6 @@ public class DataStore
 
     public void save() throws Exception
     {
-        _isRecording = false;
-
         for (Map.Entry<String, LinkedList<ADataPoint>> entry: _data.entrySet())
         {
             String filePath = entry.getKey();
