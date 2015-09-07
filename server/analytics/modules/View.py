@@ -41,7 +41,7 @@ class View:
         pylab.plot(timestamp, z, color='b', label='z')
 
         for i in range(0, len(label_timestamp)):
-            pylab.axvline(label_timestamp[i], color="k", label="{}: key {}".format(i, label[i]))
+            pylab.axvline(label_timestamp[i], color="k", label="{}: key {}".format(i, label[i]), ls='dashed')
 
         pylab.legend()
 
@@ -66,7 +66,7 @@ class View:
         pylab.plot(timestamp, signal, color='m', label='signal')
 
         for i in range(0, len(label_timestamp)):
-            pylab.axvline(label_timestamp[i], color="k", label="{}: key {}".format(i, label[i]))
+            pylab.axvline(label_timestamp[i], color="k", label="{}: key {}".format(i, label[i]), ls='dashed')
 
         pylab.legend()
 

@@ -10,7 +10,9 @@ from posixpath import basename
 
 class Sensor:
     def __init__(self, file_path, view=None):
-        data = np.genfromtxt(file_path, delimiter=',', skip_header=1, names=['timestamp', 'x', 'y', 'z'])
+        data = np.genfromtxt(file_path, delimiter=',', skip_header=1,
+                             names=['timestamp', 'x', 'y', 'z'],
+                             dtype=[('timestamp', long), ('x', float), ('y', float), ('z', float)])
 
         self.timestamp = data['timestamp']
 
@@ -142,9 +144,34 @@ class Sensor:
 
         return mean
 
-    def segment(self):
+    def automatic_segmentation(self):
         self.mean_signal = self.get_mean_signal()
 
         p = PeakAnalysis()
         p.segment(self.mean_signal, True)
 
+    def label_segmentation(self, session_id, label_timestamps, labels):
+        output_file = open('../data/{}_samples.csv'.format(session_id), 'w')
+
+        for i in range(0, len(label_timestamps)):
+            center_timestamp_index = (np.abs(self.timestamp - label_timestamps[i])).argmin()
+
+            x_sample = self.get_data_slice(self.x, center_timestamp_index)
+            y_sample = self.get_data_slice(self.y, center_timestamp_index)
+            z_sample = self.get_data_slice(self.z, center_timestamp_index)
+
+            output_file.write("label {}\n".format(labels[i]))
+            output_file.write("x,y,z\n")
+
+            for j in range(0, len(x_sample)):
+                line = "{},{},{}\n".format(x_sample[j], y_sample[j], z_sample[j])
+                output_file.write(line)
+
+            output_file.write("\n")
+        output_file.close()
+
+    def get_data_slice(self, data, center_index, window_size=100):
+        left_samples = data[center_index - (window_size / 2):center_index]
+        right_samples = data[center_index:center_index + (window_size / 2)]
+
+        return np.hstack((left_samples, right_samples))

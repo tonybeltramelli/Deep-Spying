@@ -26,7 +26,7 @@ class PeakAnalysis:
                  (((ratios + np.roll(ratios, -5)) / 2) < 0.1)
 
         uphill = self.filter_from_peak_position(peak, uphill, -1)
-        uphill_filtered = self.filter_interval(0, 190, uphill).flatten()
+        #uphill_filtered = self.filter_interval(0, 190, uphill).flatten()
 
         downhill = self.filter_from_peak_position(peak, downhill, 1)
         downhill_filtered = self.filter_interval(len(ratios) - 1, -170, downhill).flatten()
@@ -39,8 +39,8 @@ class PeakAnalysis:
             pylab.plot(peak.nonzero()[0], ratios[peak], 'go')
             pylab.plot(downhill.nonzero()[0], ratios[downhill], 'bo')
 
-            for i in range(0, len(uphill_filtered)):
-                pylab.axvline(uphill_filtered[i], color="r")
+            #for i in range(0, len(uphill_filtered)):
+            #    pylab.axvline(uphill_filtered[i], color="r")
 
             #for i in range(0, len(downhill_filtered)):
             #    pylab.axvline(downhill_filtered[i], color="b")
