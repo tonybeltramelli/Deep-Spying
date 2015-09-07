@@ -5,7 +5,7 @@ from Sensor import *
 
 class Gyroscope(Sensor):
     def __init__(self, path, view):
-        Sensor.__init__(self, file_path="{}gyroscope.csv".format(path), view=view)
+        Sensor.__init__(self, base_path=path, file_path="{}gyroscope.csv".format(path), view=view)
 
         self.sampling_rate = 62500
         self.median_filter_window_size = 9
