@@ -37,6 +37,5 @@ class Main:
         classifier.evaluate("{}38895187_labelled.data".format(Path.FEATURE_PATH))
 
 main = Main()
-#main.process_all()
-#main.train()
-main.process("69141736")
+main.process_all()
+main.train()
