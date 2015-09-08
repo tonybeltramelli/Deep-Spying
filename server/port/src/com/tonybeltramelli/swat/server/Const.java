@@ -20,7 +20,7 @@ public class Const
     public static final String START_SESSION = "/start_session/";
     public static final String END_SESSION = "/end_session/";
     //
-    public static final String DATA_OUT_PATH = "../data/" + SESSION_ID + "_" + SENSOR_NAME + ".csv";
+    public static final String DATA_OUT_PATH = "../data/raw/" + SESSION_ID + "_" + SENSOR_NAME + ".csv";
     public static final String CSV_HEADER_SENSOR = Const.TIMESTAMP + "," + Const.X + "," + Const.Y + "," + Const.Z;
     public static final String CSV_HEADER_LABEL = Const.TIMESTAMP + "," + Const.LABEL;
 }

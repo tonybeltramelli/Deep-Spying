@@ -9,7 +9,7 @@ from posixpath import basename
 
 
 class Sensor:
-    def __init__(self, base_path, file_path, view=None):
+    def __init__(self, file_path, view=None):
         data = np.genfromtxt(file_path, delimiter=',', skip_header=1,
                              names=['timestamp', 'x', 'y', 'z'],
                              dtype=[('timestamp', long), ('x', float), ('y', float), ('z', float)])
@@ -17,8 +17,6 @@ class Sensor:
         print "Processing {}".format(file_path)
 
         self.timestamp = data['timestamp']
-
-        self.base_path = base_path
 
         self.x = data['x']
         self.y = data['y']
@@ -154,8 +152,8 @@ class Sensor:
         p = PeakAnalysis()
         p.segment(self.mean_signal, True)
 
-    def segment_from_labels(self, label_timestamps, labels, factor=100):
-        output_file = open("{}samples.data".format(self.base_path), 'w')
+    def segment_from_labels(self, label_timestamps, labels, output_path, factor=100):
+        output_file = open("{}labelled.data".format(output_path), 'w')
 
         if self.view is not None:
             self.view.plot_sensor_data_and_label("{} segmentation".format(self.name), self.timestamp, self.x, self.y, self.z, label_timestamps, labels)
@@ -168,8 +166,8 @@ class Sensor:
             y_sample = self.get_data_slice(self.y, center_timestamp_index)
             z_sample = self.get_data_slice(self.z, center_timestamp_index)
 
-            if self.view is not None:
-                self.view.plot_sensor_data("{} key {}".format(self.name, labels[i]), timestamp_sample, x_sample, y_sample, z_sample)
+            #if self.view is not None:
+            #    self.view.plot_sensor_data("{} key {}".format(self.name, labels[i]), timestamp_sample, x_sample, y_sample, z_sample)
 
             output_file.write("label:{}\n".format(labels[i]))
 
