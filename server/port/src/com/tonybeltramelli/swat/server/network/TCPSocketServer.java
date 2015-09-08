@@ -63,7 +63,7 @@ public class TCPSocketServer extends Thread implements IServer
             BufferedReader input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             String data = input.readLine();
 
-            System.out.println(data);
+            System.out.println(Const.getDataSnapshot(data));
 
             if(data.equals(Const.START_SESSION))
             {

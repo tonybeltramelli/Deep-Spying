@@ -38,4 +38,5 @@ class Main:
 
 main = Main()
 #main.process_all()
-main.train()
+#main.train()
+main.process("69141736")

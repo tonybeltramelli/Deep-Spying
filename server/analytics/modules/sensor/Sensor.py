@@ -158,6 +158,11 @@ class Sensor:
         if self.view is not None:
             self.view.plot_sensor_data_and_label("{} segmentation".format(self.name), self.timestamp, self.x, self.y, self.z, label_timestamps, labels)
 
+        import pylab
+        f, axes = pylab.subplots(4, 2, sharex='col', sharey='row')
+
+        axes = [axes[0, 0], axes[1, 0], axes[2, 0], axes[3, 0], axes[0, 1], axes[1, 1], axes[2, 1], axes[3, 1]]
+
         for i in range(0, len(label_timestamps)):
             center_timestamp_index = (np.abs(self.timestamp - label_timestamps[i])).argmin()
 
@@ -168,6 +173,13 @@ class Sensor:
 
             #if self.view is not None:
             #    self.view.plot_sensor_data("{} key {}".format(self.name, labels[i]), timestamp_sample, x_sample, y_sample, z_sample)
+
+            import pylab
+
+            axes[i].plot(x_sample, color='r', label='x')
+            axes[i].plot(y_sample, color='g', label='y')
+            axes[i].plot(z_sample, color='b', label='z')
+            axes[i].set_title("{} key {}".format(self.name, labels[i]))
 
             output_file.write("label:{}\n".format(labels[i]))
 

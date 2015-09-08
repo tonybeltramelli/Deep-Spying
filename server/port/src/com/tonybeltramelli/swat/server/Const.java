@@ -23,4 +23,12 @@ public class Const
     public static final String DATA_OUT_PATH = "../data/raw/" + SESSION_ID + "_" + SENSOR_NAME + ".csv";
     public static final String CSV_HEADER_SENSOR = Const.TIMESTAMP + "," + Const.X + "," + Const.Y + "," + Const.Z;
     public static final String CSV_HEADER_LABEL = Const.TIMESTAMP + "," + Const.LABEL;
+    //
+    public static final String getDataSnapshot(String data)
+    {
+        int length = data.length();
+        int max = 50;
+        return data.substring(0, length < max ? length : max) + (length < max ? "" : "...");
+    }
+
 }

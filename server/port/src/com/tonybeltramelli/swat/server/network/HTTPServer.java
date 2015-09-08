@@ -3,6 +3,7 @@ package com.tonybeltramelli.swat.server.network;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
+import com.tonybeltramelli.swat.server.Const;
 import com.tonybeltramelli.swat.server.data.DataStore;
 import com.tonybeltramelli.swat.server.data.LabelDataPoint;
 
@@ -56,7 +57,7 @@ public class HTTPServer extends Thread implements IServer, HttpHandler
         BufferedReader input = new BufferedReader(new InputStreamReader(httpExchange.getRequestBody()));
         String data = input.readLine();
 
-        System.out.println(data);
+        System.out.println(Const.getDataSnapshot(data));
 
         try {
             _dataStore.store(data, LabelDataPoint.class);
