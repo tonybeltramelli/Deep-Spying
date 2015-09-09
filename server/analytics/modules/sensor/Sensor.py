@@ -27,7 +27,7 @@ class Sensor:
         file_name = basename(file_path)
         self.name = file_name[file_name.find("_") + 1:file_name.find(".")]
 
-        self.sampling_rate = None
+        self.sampling_bias = None
         self.filter_type = None
         self.median_filter_window_size = None
         self.process_variance_q = None
@@ -47,8 +47,8 @@ class Sensor:
             self.apply_median_filter(self.median_filter_window_size)
             self.plot("median filter")
 
-        if self.sampling_rate is not None and self.filter_type is not None:
-            self.apply_filter(UMath.get_frequency(self.sampling_rate), self.filter_type)
+        if self.sampling_bias is not None and self.filter_type is not None:
+            self.apply_filter(UMath.get_frequency(self.sampling_bias), self.filter_type)
             self.plot("{} filter".format(self.filter_type))
 
         self.apply_kalman_filter()

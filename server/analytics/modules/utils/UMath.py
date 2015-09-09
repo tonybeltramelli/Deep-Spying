@@ -8,5 +8,5 @@ class UMath:
         return range_min + (((x - x_min) * (range_max - range_min)) / (x_max - x_min))
 
     @staticmethod
-    def get_frequency(sampling_rate_ms):
-        return 1 / (sampling_rate_ms * 1e-06)
+    def get_frequency(sampling_rate_micro_sec):
+        return 1 / (sampling_rate_micro_sec * 1e-06)

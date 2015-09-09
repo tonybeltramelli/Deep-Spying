@@ -28,7 +28,7 @@ class Main:
         gyroscope = Gyroscope(data_path, view)
         gyroscope.segment_from_labels(label.timestamp, label.label, output_path)
 
-        #accelerometer = Accelerometer(data_path, view)
+        accelerometer = Accelerometer(data_path, view)
 
     def train(self):
         classifier = Classifier()
@@ -37,5 +37,6 @@ class Main:
         classifier.evaluate("{}38895187_labelled.data".format(Path.FEATURE_PATH))
 
 main = Main()
-main.process_all()
-main.train()
+#main.process_all()
+#main.train()
+main.process("69141736")

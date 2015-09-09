@@ -87,5 +87,15 @@ class View:
 
         pylab.show()
 
+    def get_subplot_axes(self):
+        f, axes = pylab.subplots(2, 4, sharex='col', sharey='row')
+        return [axes[0, 0], axes[0, 1], axes[0, 2], axes[0, 3], axes[1, 0], axes[1, 1], axes[1, 2], axes[1, 3]]
+
+    def subplot(self, axis, x, y, z, label):
+        axis.plot(x, color='r', label='x')
+        axis.plot(y, color='g', label='y')
+        axis.plot(z, color='b', label='z')
+        axis.set_title("{} key {}".format(self.name, label))
+
     def show(self):
         pylab.show()
