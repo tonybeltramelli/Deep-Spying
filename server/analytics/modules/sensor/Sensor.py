@@ -152,7 +152,7 @@ class Sensor:
         p = PeakAnalysis()
         p.segment(self.mean_signal, True)
 
-    def segment_from_labels(self, label_timestamps, labels, output_path, factor=100):
+    def segment_from_labels(self, label_timestamps, labels, output_path, factor=100, separator=","):
         output_file = open("{}labelled.data".format(output_path), 'w')
 
         if self.view is not None:
@@ -176,7 +176,7 @@ class Sensor:
                 y_value = '{0:.16f}'.format(y_sample[j] * factor)
                 z_value = '{0:.16f}'.format(z_sample[j] * factor)
 
-                line = "{}\n{}\n{}\n".format(x_value, y_value, z_value)
+                line = "{}{}{}{}{}\n".format(x_value, separator, y_value, separator, z_value)
                 output_file.write(line)
 
             output_file.write("\n")

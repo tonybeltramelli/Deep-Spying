@@ -34,8 +34,17 @@ class Main:
         classifier = Recurrent()
         classifier.build_data_set(Path.FEATURE_PATH)
         classifier.train_model()
-        classifier.evaluate("{}38895187_labelled.data".format(Path.FEATURE_PATH))
+
+    def evaluate(self):
+        classifier = Recurrent()
+        classifier.evaluate("{}81495415_labelled.data".format(Path.FEATURE_PATH))
+        classifier.evaluate("{}33916838_labelled.data".format(Path.FEATURE_PATH))
+        classifier.evaluate("{}41991669_labelled.data".format(Path.FEATURE_PATH))
+        classifier.evaluate("{}43186773_labelled.data".format("{}feature_old/".format(Path.BASE_PATH)))
+        classifier.evaluate("{}96390069_labelled.data".format("{}feature_old/".format(Path.BASE_PATH)))
+        classifier.evaluate("{}69141736_labelled.data".format("{}feature_old/".format(Path.BASE_PATH)))
 
 main = Main()
-main.process("69141736")
-#main.train()
+main.process_all()
+main.train()
+main.evaluate()
