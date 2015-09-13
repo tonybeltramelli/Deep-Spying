@@ -4,8 +4,8 @@ from modules.View import *
 from modules.sensor.Gyroscope import *
 from modules.sensor.Accelerometer import *
 from modules.label.Label import *
-from modules.classifier.Classifier import *
 from modules.Path import *
+from modules.classifier.Recurrent import *
 
 import os
 
@@ -21,7 +21,7 @@ class Main:
         data_path = Path.get_path(Path.RAW_PATH, session_id)
         output_path = Path.get_path(Path.FEATURE_PATH, session_id)
 
-        view = View()
+        view = None#View()
 
         label = Label(data_path)
 
@@ -31,11 +31,11 @@ class Main:
         accelerometer = Accelerometer(data_path, view)
 
     def train(self):
-        classifier = Classifier()
+        classifier = Recurrent()
         classifier.build_data_set(Path.FEATURE_PATH)
         classifier.train_model()
         classifier.evaluate("{}38895187_labelled.data".format(Path.FEATURE_PATH))
 
 main = Main()
-main.process_all()
-main.train()
+main.process("69141736")
+#main.train()
