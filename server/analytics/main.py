@@ -28,7 +28,7 @@ class Main:
         gyroscope.segment_from_labels(label.timestamp, label.label, output_path)
 
         accelerometer = Accelerometer(data_path, view)
-        accelerometer.adapt(gyroscope.timestamp)
+        accelerometer.fit(gyroscope.timestamp)
 
     def train(self):
         classifier = Recurrent()

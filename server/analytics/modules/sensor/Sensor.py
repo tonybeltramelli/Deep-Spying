@@ -192,7 +192,7 @@ class Sensor:
 
         return np.hstack((left_samples, right_samples))
 
-    def adapt(self, target_timestamps):
+    def fit(self, target_timestamps):
         merged_timestamps = sorted(set(np.concatenate((target_timestamps, self.timestamp))))
 
         self.x = self.adapt_values(self.x, target_timestamps, merged_timestamps)
