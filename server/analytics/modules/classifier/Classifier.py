@@ -31,7 +31,7 @@ class Classifier:
 
         self.parse(data)
 
-    def train_model(self, iteration=100):
+    def train_model(self, iteration=10):
         trainer = self.get_trainer()
 
         for i in range(0, iteration):
@@ -50,7 +50,7 @@ class Classifier:
             predicted_label = self.get_label_from_binary_position(np.argmax(prediction))
             expected_label = key[key.find(":") + 1:]
 
-            print "Predict: {}, expected: {}".format(predicted_label, expected_label)
+            print "Predict: {}, expected: {} {}".format(predicted_label, expected_label, "OK" if predicted_label == expected_label else "")
 
     def get_data_set_metadata(self, data):
         input_counter = 0
