@@ -9,7 +9,6 @@ from modules.classifier.Recurrent import *
 
 import os
 
-
 class Main:
     def process_all(self):
         for entry in os.listdir(Path.RAW_PATH):
@@ -29,6 +28,7 @@ class Main:
         gyroscope.segment_from_labels(label.timestamp, label.label, output_path)
 
         accelerometer = Accelerometer(data_path, view)
+        accelerometer.adapt(gyroscope.timestamp)
 
     def train(self):
         classifier = Recurrent()
@@ -43,6 +43,7 @@ class Main:
         classifier.evaluate("{}69141736_labelled.data".format(Path.FEATURE_PATH))
 
 main = Main()
-main.process_all()
-main.train()
-main.evaluate()
+#main.process_all()
+main.process("69141736")
+#main.train()
+#main.evaluate()

@@ -2,6 +2,7 @@ __author__ = 'Tony Beltramelli www.tonybeltramelli.com - 04/09/2015'
 
 import numpy as np
 import scipy.signal as signal
+from pandas import *
 
 from ..PeakAnalysis import *
 from ..utils.UMath import *
@@ -190,3 +191,39 @@ class Sensor:
         right_samples = data[center_index:center_index + (window_size / 2)]
 
         return np.hstack((left_samples, right_samples))
+
+    def adapt(self, target_timestamps):
+        merged_timestamps = sorted(set(np.concatenate((target_timestamps, self.timestamp))))
+
+        self.x = self.adapt_values(self.x, target_timestamps, merged_timestamps)
+        self.y = self.adapt_values(self.y, target_timestamps, merged_timestamps)
+        self.z = self.adapt_values(self.z, target_timestamps, merged_timestamps)
+        self.timestamp = target_timestamps
+
+    def adapt_values(self, data, target_timestamps, merged_timestamps):
+        timelink = {}
+        for i in range(0, len(self.timestamp)):
+            timelink[self.timestamp[i]] = data[i]
+
+        length = len(merged_timestamps)
+        values = np.zeros(length)
+        values[:] = np.NaN
+
+        for i in range(0, length):
+            timekey = merged_timestamps[i]
+
+            if timekey in timelink:
+                values[i] = timelink[timekey]
+
+        s = Series(data=values)
+        s = s.interpolate()
+
+        values = []
+        for i in range(0, length):
+            timekey = merged_timestamps[i]
+
+            if timekey in target_timestamps:
+                values.append(s[i])
+
+        return values
+
