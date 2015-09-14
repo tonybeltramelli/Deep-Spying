@@ -2,11 +2,10 @@ __author__ = 'Tony Beltramelli www.tonybeltramelli.com - 04/09/2015'
 
 import numpy as np
 import scipy.signal as signal
-from pandas import *
 
-from ..PeakAnalysis import *
 from ..utils.UMath import *
 from posixpath import basename
+from pandas import Series
 
 
 class Sensor:
@@ -146,51 +145,6 @@ class Sensor:
             mean[i] = (self.x[i] + self.y[i] + self.z[i]) / 3
 
         return mean
-
-    def segment_heuristically(self):
-        self.mean_signal = self.get_mean_signal()
-
-        p = PeakAnalysis()
-        p.segment(self.mean_signal, True)
-
-    def segment_from_labels(self, label_timestamps, labels, output_path, factor=100, separator=","):
-        output_file = open("{}labelled.data".format(output_path), 'w')
-
-        if self.view is not None:
-            self.view.plot_sensor_data_and_label("{} segmentation".format(self.name), self.timestamp, self.x, self.y, self.z, label_timestamps, labels)
-
-        for i in range(0, len(label_timestamps)):
-            center_timestamp_index = (np.abs(self.timestamp - label_timestamps[i])).argmin()
-
-            timestamp_sample = self.get_data_slice(self.timestamp, center_timestamp_index)
-            x_sample = self.get_data_slice(self.x, center_timestamp_index)
-            y_sample = self.get_data_slice(self.y, center_timestamp_index)
-            z_sample = self.get_data_slice(self.z, center_timestamp_index)
-
-            #if self.view is not None:
-            #    self.view.plot_sensor_data("{} key {}".format(self.name, labels[i]), timestamp_sample, x_sample, y_sample, z_sample)
-
-            output_file.write("label:{}\n".format(labels[i]))
-
-            for j in range(0, len(x_sample)):
-                x_value = '{0:.16f}'.format(x_sample[j] * factor)
-                y_value = '{0:.16f}'.format(y_sample[j] * factor)
-                z_value = '{0:.16f}'.format(z_sample[j] * factor)
-
-                line = "{}{}{}{}{}\n".format(x_value, separator, y_value, separator, z_value)
-                output_file.write(line)
-
-            output_file.write("\n")
-        output_file.close()
-
-        if self.view is not None:
-            self.view.show()
-
-    def get_data_slice(self, data, center_index, window_size=100):
-        left_samples = data[center_index - (window_size / 2):center_index]
-        right_samples = data[center_index:center_index + (window_size / 2)]
-
-        return np.hstack((left_samples, right_samples))
 
     def fit(self, target_timestamps):
         merged_timestamps = sorted(set(np.concatenate((target_timestamps, self.timestamp))))

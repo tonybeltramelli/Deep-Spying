@@ -1,10 +1,11 @@
 __author__ = 'Tony Beltramelli www.tonybeltramelli.com - 25/08/2015'
 
 from modules.View import *
+from modules.Path import *
 from modules.sensor.Gyroscope import *
 from modules.sensor.Accelerometer import *
 from modules.label.Label import *
-from modules.Path import *
+from modules.feature.FeatureExtractor import *
 from modules.classifier.Recurrent import *
 
 import os
@@ -25,10 +26,12 @@ class Main:
         label = Label(data_path)
 
         gyroscope = Gyroscope(data_path, view)
-        gyroscope.segment_from_labels(label.timestamp, label.label, output_path)
 
         accelerometer = Accelerometer(data_path, view)
         accelerometer.fit(gyroscope.timestamp)
+
+        feature_extractor = FeatureExtractor(gyroscope, accelerometer, output_path, view)
+        feature_extractor.segment_from_labels(label.timestamp, label.label)
 
     def train(self):
         classifier = Recurrent()
