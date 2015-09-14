@@ -31,7 +31,7 @@ class Classifier:
 
         self.parse(data)
 
-    def train_model(self, iteration=10):
+    def train_model(self, iteration=50):
         trainer = self.get_trainer()
 
         for i in range(0, iteration):

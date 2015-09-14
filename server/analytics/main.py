@@ -43,6 +43,6 @@ class Main:
         classifier.evaluate("{}69141736_labelled.data".format(Path.FEATURE_PATH))
 
 main = Main()
-#main.process_all()
-#main.train()
+main.process_all()
+main.train()
 main.evaluate()
