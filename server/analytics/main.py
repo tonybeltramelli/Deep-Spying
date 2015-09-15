@@ -38,17 +38,19 @@ class Main:
         classifier = Recurrent()
         classifier.build_data_set(Path.FEATURE_PATH)
         classifier.train_model()
+        classifier.output_weighted_mean_errors("{}errors.png".format(Path.FIGURE_PATH))
 
     def evaluate(self):
         classifier = Recurrent()
-        classifier.evaluate("{}99153211_labelled.data".format(Path.FEATURE_PATH))
-        #classifier.evaluate("{}69141736_labelled.data".format(Path.FEATURE_PATH))
-        #classifier.evaluate("{}95524026_labelled.data".format(Path.FEATURE_PATH))
-        #classifier.evaluate("{}79053509_labelled.data".format(Path.FEATURE_PATH))
-        #classifier.evaluate("{}99153211_labelled.data".format(Path.FEATURE_PATH))
+
+        for entry in os.listdir(Path.FEATURE_PATH):
+            if entry.find(".data") != -1:
+                classifier.evaluate("{}{}".format(Path.FEATURE_PATH, entry))
+
+        classifier.output_confusion_matrix("{}confusion_matrix.png".format(Path.FIGURE_PATH))
 
 main = Main()
 #main.process_all()
-#main.process("99153211")
+main.process("69141736")
 #main.train()
-main.evaluate()
+#main.evaluate()

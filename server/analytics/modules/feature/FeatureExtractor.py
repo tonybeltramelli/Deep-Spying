@@ -23,6 +23,11 @@ class FeatureExtractor:
         output_file = open("{}labelled.data".format(self.output_path), 'w')
         segments = []
 
+        import pylab
+        f, axes = pylab.subplots(2, 4, sharex='col', sharey='row')
+
+        axes = [axes[0, 0], axes[0, 1], axes[0, 2], axes[0, 3], axes[1, 0], axes[1, 1], axes[1, 2], axes[1, 3]]
+
         for i in range(0, len(label_timestamps)):
             center_timestamp_index = (np.abs(sensor.timestamp - label_timestamps[i])).argmin()
 
@@ -32,6 +37,11 @@ class FeatureExtractor:
             x_sample = self.get_data_slice(sensor.x, center_timestamp_index)
             y_sample = self.get_data_slice(sensor.y, center_timestamp_index)
             z_sample = self.get_data_slice(sensor.z, center_timestamp_index)
+
+            axes[i].plot(x_sample, color='r', label='x')
+            axes[i].plot(y_sample, color='g', label='y')
+            axes[i].plot(z_sample, color='b', label='z')
+            axes[i].set_title("key {}".format(labels[i]))
 
             output_file.write("label:{}\n".format(labels[i]))
 
@@ -46,6 +56,8 @@ class FeatureExtractor:
             output_file.write("\n")
         output_file.close()
 
+        self.view.save("{}{}_unique_segments.png".format(Path.FIGURE_PATH, sensor.id))
+
         print "Save features in {}".format(output_file.name)
 
         if self.view is not None:
@@ -54,11 +66,14 @@ class FeatureExtractor:
                                                  sensor.timestamp, sensor.x, sensor.y, sensor.z,
                                                  label_timestamps, labels)
 
-            self.view.plot_sensor_data_and_segment(title.title(),
+            self.view.save("{}{}_{}.png".format(Path.FIGURE_PATH, sensor.id, title.replace(" ", "_")))
+
+            self.view.plot_sensor_data_and_segment("{} segments".format(sensor.name).title(),
                                                    sensor.timestamp, sensor.x, sensor.y, sensor.z,
                                                    segments, labels)
 
-            self.view.save("{}{}_{}.png".format(Path.FIGURE_PATH, sensor.id, title.replace(" ", "_")))
+            self.view.save("{}{}_{}.png".format(Path.FIGURE_PATH, sensor.id,
+                                                "{} segments".format(sensor.name).replace(" ", "_")))
             #self.view.show()
 
     def get_data_slice(self, data, center_index, window_size=100):

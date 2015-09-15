@@ -55,6 +55,15 @@ class View:
         pylab.xlabel('Time')
         pylab.ylabel('Value')
 
+    def plot_data(self, title, data, xlabel, ylabel):
+        self.big_figure()
+
+        pylab.plot(data, color='m')
+
+        pylab.title(title)
+        pylab.xlabel(xlabel)
+        pylab.ylabel(ylabel)
+
     def plot_signal_and_label(self, title, timestamp, signal, label_timestamp, label):
         pylab.figure()
 
@@ -117,7 +126,7 @@ class View:
 
         for i, vi in enumerate(matrix):
             for j, vj in enumerate(vi):
-                pylab.text(j-.1, i+.1, vj, fontsize=14)
+                pylab.text(j-.1, i+.1, "%.2f" % vj, fontsize=14)
 
         pylab.colorbar()
 

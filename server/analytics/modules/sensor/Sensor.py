@@ -66,7 +66,7 @@ class Sensor:
             else:
                 self.view.plot_signal(title.title(), self.timestamp, self.mean_signal)
 
-        self.view.save("{}{}_{}.png".format(Path.FIGURE_PATH, self.id, title.replace(" ", "_")))
+            self.view.save("{}{}_{}.png".format(Path.FIGURE_PATH, self.id, title.replace(" ", "_")))
 
     def apply_median_filter(self, window_size=3):
         if self.mean_signal is None:

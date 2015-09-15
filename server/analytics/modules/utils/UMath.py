@@ -25,15 +25,15 @@ class UMath:
         return 1 / (sampling_rate_micro_sec * 1e-06)
 
     @staticmethod
-    def get_entropy(values):
+    def entropy(values):
         h = 0
         for x in values:
             h += x * log(x) if x > 0 else 0
         return h * -1
 
     @staticmethod
-    def get_reliability(values):
-        return 1 - ((1 / log(len(values))) * UMath.get_entropy(values))
+    def reliability(values):
+        return 1 - ((1 / log(len(values))) * UMath.entropy(values))
 
     @staticmethod
     def get_denominator(d):

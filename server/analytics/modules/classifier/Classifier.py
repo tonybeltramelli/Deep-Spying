@@ -8,7 +8,6 @@ from pybrain.tools.xml.networkwriter import NetworkWriter
 from pybrain.tools.xml.networkreader import NetworkReader
 from ..View import *
 from ..utils.UMath import *
-from ..Path import Path
 
 
 class Classifier:
@@ -36,21 +35,28 @@ class Classifier:
 
     def train_model(self, iteration=2):
         trainer = self.get_trainer()
+        self.errors = np.zeros(iteration)
 
         for i in range(0, iteration):
             error = trainer.train()
             trainer.trainEpochs()
             print "Training {}/{} -> error: {}".format(i + 1, iteration, error)
+            self.errors[i] = error
 
         self.serialize("neural_net.xml")
 
-    def output_results(self, path):
+    def output_weighted_mean_errors(self, path):
+        self.view.plot_data("Training", self.errors, "Iteration", "Weighted mean error")
+        #self.view.show()
+        self.view.save(path)
+
+    def output_confusion_matrix(self, path):
         matrix = self.convert_to_matrix(self.confusion_matrix)
-        #matrix = UMath.normalize_array(matrix)
+        matrix = UMath.normalize_array(matrix)
 
         self.view.plot_confusion_matrix(matrix, self.LABELS)
         #self.view.show()
-        self.view.save("{}{}_confusion_matrix.png".format(Path.FIGURE_PATH, Path.get_id(path)))
+        self.view.save(path)
 
     def get_data_set_metadata(self, data):
         input_counter = 0
@@ -97,7 +103,6 @@ class Classifier:
         confusion_matrix = np.zeros((length, length))
 
         i = 0
-        j = 0
         for row in dictionary:
             j = 0
             for column in dictionary:

@@ -58,7 +58,7 @@ class Recurrent(Classifier):
             else:
                 negatives.append(expected_label)
 
-            reliabilities.append(UMath.get_reliability([x / sum(predictions) for x in predictions]))
+            reliabilities.append(UMath.reliability([x / sum(predictions) for x in predictions]))
 
             print "predict: {}, expect: {} {}".format(predicted_label, expected_label, "OK" if predicted_label == expected_label else "")
 
@@ -66,13 +66,14 @@ class Recurrent(Classifier):
         false_negatives = self.get_false_positives(negatives, positives)
 
         precision = true_positives / len(samples)
-        recall = true_positives / (true_positives + false_negatives)
+        recall = true_positives / UMath.get_denominator(true_positives + false_negatives)
         f1_score = 2 * (precision * recall) / UMath.get_denominator(precision + recall)
         reliability = sum(reliabilities) / len(reliabilities)
 
+        performance = f1_score, precision, recall, reliability
         print "f1_score: {} (precision: {}, recall: {}), reliability: {}".format(f1_score, precision, recall, reliability)
 
-        self.output_results(path)
+        return performance
 
     def get_false_positives(self, negatives, true_positives):
         unique_false_negatives = set(true_positives) & set(negatives)
