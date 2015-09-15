@@ -46,7 +46,7 @@ class Classifier:
 
     def output_results(self, path):
         matrix = self.convert_to_matrix(self.confusion_matrix)
-        matrix = UMath.normalize_array(matrix)
+        #matrix = UMath.normalize_array(matrix)
 
         self.view.plot_confusion_matrix(matrix, self.LABELS)
         #self.view.show()

@@ -63,7 +63,7 @@ class Recurrent(Classifier):
             print "predict: {}, expect: {} {}".format(predicted_label, expected_label, "OK" if predicted_label == expected_label else "")
 
         true_positives = float(len(positives))
-        false_negatives = float(len(set(positives) & set(negatives)))
+        false_negatives = self.get_false_positives(negatives, positives)
 
         precision = true_positives / len(samples)
         recall = true_positives / (true_positives + false_negatives)
@@ -73,6 +73,17 @@ class Recurrent(Classifier):
         print "f1_score: {} (precision: {}, recall: {}), reliability: {}".format(f1_score, precision, recall, reliability)
 
         self.output_results(path)
+
+    def get_false_positives(self, negatives, true_positives):
+        unique_false_negatives = set(true_positives) & set(negatives)
+        false_negatives = 0
+
+        for x in unique_false_negatives:
+            for y in negatives:
+                if x == y:
+                    false_negatives += 1
+
+        return float(false_negatives)
 
     def get_samples(self, data):
         samples = {}
