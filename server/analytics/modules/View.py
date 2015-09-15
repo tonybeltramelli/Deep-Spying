@@ -74,6 +74,24 @@ class View:
         pylab.xlabel('Time')
         pylab.ylabel('Value')
 
+    def plot_sensor_data_and_segment(self, title, timestamp, x, y, z, segment, label):
+        pylab.figure()
+
+        pylab.plot(timestamp, x, color='r', label='x')
+        pylab.plot(timestamp, y, color='g', label='y')
+        pylab.plot(timestamp, z, color='b', label='z')
+
+        for i in range(0, len(segment)):
+            pylab.axvline(segment[i][0], color="c", ls='dashed')
+            pylab.axvline(segment[i][1], color="k", label="{}: key {}".format(i, label[i]), ls='dashed')
+            pylab.axvline(segment[i][2], color="m", ls='dashed')
+
+        pylab.legend()
+
+        pylab.title(title)
+        pylab.xlabel('Time')
+        pylab.ylabel('Value')
+
     def plot_comparison(self, values, estimate):
         pylab.figure()
 

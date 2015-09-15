@@ -38,6 +38,9 @@ class Recurrent(Classifier):
         negatives = []
         reliabilities = []
 
+        predicted_labels = []
+        expected_labels = []
+
         for key, sample in samples.iteritems():
             self.deserialize("neural_net.xml")
 
@@ -50,6 +53,9 @@ class Recurrent(Classifier):
 
             predicted_label = self.get_label_from_binary_position(np.argmax(predictions))
             expected_label = key[key.find(":") + 1:]
+
+            predicted_labels.append(predicted_label)
+            expected_labels.append(expected_label)
 
             if predicted_label == expected_label:
                 positives.append(expected_label)

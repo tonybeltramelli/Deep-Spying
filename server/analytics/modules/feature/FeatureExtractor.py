@@ -16,26 +16,21 @@ class FeatureExtractor:
 
     def segment_from_labels(self, label_timestamps, labels):
         self.segment_sensor_from_labels(self.gyroscope, label_timestamps, labels, factor=100)
-        self.segment_sensor_from_labels(self.accelerometer, label_timestamps, labels, factor=10)
+        #self.segment_sensor_from_labels(self.accelerometer, label_timestamps, labels, factor=10)
 
     def segment_sensor_from_labels(self, sensor, label_timestamps, labels, factor, separator=","):
-        if self.view is not None:
-            self.view.plot_sensor_data_and_label("{} segmentation".format(sensor.name),
-                                                 sensor.timestamp, sensor.x, sensor.y, sensor.z,
-                                                 label_timestamps, labels)
-
-        output_file = open("{}{}_labelled.data".format(self.output_path, sensor.name), 'w')
+        output_file = open("{}_labelled.data".format(self.output_path), 'w')
+        segments = []
 
         for i in range(0, len(label_timestamps)):
             center_timestamp_index = (np.abs(sensor.timestamp - label_timestamps[i])).argmin()
 
             timestamp_sample = self.get_data_slice(sensor.timestamp, center_timestamp_index)
+            segments.append((timestamp_sample[:1], label_timestamps[i], timestamp_sample[len(timestamp_sample) - 1:]))
+
             x_sample = self.get_data_slice(sensor.x, center_timestamp_index)
             y_sample = self.get_data_slice(sensor.y, center_timestamp_index)
             z_sample = self.get_data_slice(sensor.z, center_timestamp_index)
-
-            #if self.view is not None:
-            #    self.view.plot_sensor_data("{} key {}".format(sensor.name, labels[i]), timestamp_sample, x_sample, y_sample, z_sample)
 
             output_file.write("label:{}\n".format(labels[i]))
 
@@ -53,6 +48,13 @@ class FeatureExtractor:
         print "Save features in {}".format(output_file.name)
 
         if self.view is not None:
+            self.view.plot_sensor_data_and_label("{} segmentation".format(sensor.name),
+                                                 sensor.timestamp, sensor.x, sensor.y, sensor.z,
+                                                 label_timestamps, labels)
+
+            self.view.plot_sensor_data_and_segment("{} segmentation".format(sensor.name),
+                                                 sensor.timestamp, sensor.x, sensor.y, sensor.z,
+                                                 segments, labels)
             self.view.show()
 
     def get_data_slice(self, data, center_index, window_size=100):

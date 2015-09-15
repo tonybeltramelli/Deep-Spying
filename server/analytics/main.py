@@ -11,6 +11,9 @@ from modules.classifier.Recurrent import *
 import os
 
 class Main:
+    def __init__(self):
+        self.view = View()
+
     def process_all(self):
         for entry in os.listdir(Path.RAW_PATH):
             if entry.find("e.csv") != -1:
@@ -21,16 +24,14 @@ class Main:
         data_path = Path.get_path(Path.RAW_PATH, session_id)
         output_path = Path.get_path(Path.FEATURE_PATH, session_id)
 
-        view = None#View()
-
         label = Label(data_path)
 
-        gyroscope = Gyroscope(data_path, view)
+        gyroscope = Gyroscope(data_path, self.view)
 
-        accelerometer = Accelerometer(data_path, view)
+        accelerometer = Accelerometer(data_path, self.view)
         accelerometer.fit(gyroscope.timestamp)
 
-        feature_extractor = FeatureExtractor(gyroscope, accelerometer, output_path, view)
+        feature_extractor = FeatureExtractor(gyroscope, accelerometer, output_path, self.view)
         feature_extractor.segment_from_labels(label.timestamp, label.label)
 
     def train(self):
@@ -40,13 +41,15 @@ class Main:
 
     def evaluate(self):
         classifier = Recurrent()
-        classifier.evaluate("{}33916838_labelled.data".format(Path.FEATURE_PATH))
-        classifier.evaluate("{}41991669_labelled.data".format(Path.FEATURE_PATH))
-        classifier.evaluate("{}96390069_labelled.data".format(Path.FEATURE_PATH))
-        classifier.evaluate("{}69141736_labelled.data".format(Path.FEATURE_PATH))
+        #classifier.evaluate("{}33916838_labelled.data".format(Path.FEATURE_PATH))
+        #classifier.evaluate("{}41991669_labelled.data".format(Path.FEATURE_PATH))
+        #classifier.evaluate("{}96390069_labelled.data".format(Path.FEATURE_PATH))
+        #classifier.evaluate("{}69141736_labelled.data".format(Path.FEATURE_PATH))
+        #classifier.evaluate("{}95241147_gyroscope_labelled.data".format(Path.FEATURE_PATH))
+        #classifier.evaluate("{}79150102_gyroscope_labelled.data".format(Path.FEATURE_PATH))
 
 main = Main()
 #main.process_all()
-main.process("69141736")
+main.process("92375260")
 #main.train()
 #main.evaluate()
