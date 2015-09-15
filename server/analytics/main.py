@@ -41,15 +41,14 @@ class Main:
 
     def evaluate(self):
         classifier = Recurrent()
-        #classifier.evaluate("{}33916838_labelled.data".format(Path.FEATURE_PATH))
-        #classifier.evaluate("{}41991669_labelled.data".format(Path.FEATURE_PATH))
-        #classifier.evaluate("{}96390069_labelled.data".format(Path.FEATURE_PATH))
+        classifier.evaluate("{}99153211_labelled.data".format(Path.FEATURE_PATH))
         #classifier.evaluate("{}69141736_labelled.data".format(Path.FEATURE_PATH))
-        #classifier.evaluate("{}95241147_gyroscope_labelled.data".format(Path.FEATURE_PATH))
-        #classifier.evaluate("{}79150102_gyroscope_labelled.data".format(Path.FEATURE_PATH))
+        #classifier.evaluate("{}95524026_labelled.data".format(Path.FEATURE_PATH))
+        #classifier.evaluate("{}79053509_labelled.data".format(Path.FEATURE_PATH))
+        #classifier.evaluate("{}99153211_labelled.data".format(Path.FEATURE_PATH))
 
 main = Main()
 #main.process_all()
-main.process("92375260")
+#main.process("99153211")
 #main.train()
-#main.evaluate()
+main.evaluate()

@@ -4,8 +4,8 @@ import numpy as np
 import scipy.signal as signal
 
 from ..utils.UMath import *
-from posixpath import basename
 from pandas import Series
+from ..Path import Path
 
 
 class Sensor:
@@ -24,8 +24,8 @@ class Sensor:
 
         self.view = view
 
-        file_name = basename(file_path)
-        self.name = file_name[file_name.find("_") + 1:file_name.find(".")]
+        self.name = Path.get_sensor_name(file_path)
+        self.id = Path.get_id(file_path)
 
         self.sampling_bias = None
         self.filter_type = None
@@ -54,17 +54,19 @@ class Sensor:
         self.apply_kalman_filter()
         self.plot("kalman filter")
 
-        if self.view is not None:
-            self.view.show()
+        #if self.view is not None:
+            #self.view.show()
 
     def plot(self, title):
         title = "{} {}".format(self.name, title)
 
         if self.view is not None:
             if self.mean_signal is None:
-                self.view.plot_sensor_data(title, self.timestamp, self.x, self.y, self.z)
+                self.view.plot_sensor_data(title.title(), self.timestamp, self.x, self.y, self.z)
             else:
-                self.view.plot_signal(title, self.timestamp, self.mean_signal)
+                self.view.plot_signal(title.title(), self.timestamp, self.mean_signal)
+
+        self.view.save("{}{}_{}.png".format(Path.FIGURE_PATH, self.id, title.replace(" ", "_")))
 
     def apply_median_filter(self, window_size=3):
         if self.mean_signal is None:

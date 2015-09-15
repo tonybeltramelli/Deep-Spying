@@ -1,6 +1,7 @@
 __author__ = 'Tony Beltramelli www.tonybeltramelli.com - 14/09/2015'
 
 from PeakAnalysis import *
+from ..Path import Path
 
 
 class FeatureExtractor:
@@ -19,7 +20,7 @@ class FeatureExtractor:
         #self.segment_sensor_from_labels(self.accelerometer, label_timestamps, labels, factor=10)
 
     def segment_sensor_from_labels(self, sensor, label_timestamps, labels, factor, separator=","):
-        output_file = open("{}_labelled.data".format(self.output_path), 'w')
+        output_file = open("{}labelled.data".format(self.output_path), 'w')
         segments = []
 
         for i in range(0, len(label_timestamps)):
@@ -48,14 +49,17 @@ class FeatureExtractor:
         print "Save features in {}".format(output_file.name)
 
         if self.view is not None:
-            self.view.plot_sensor_data_and_label("{} segmentation".format(sensor.name),
+            title = "{} segmentation".format(sensor.name)
+            self.view.plot_sensor_data_and_label(title.title(),
                                                  sensor.timestamp, sensor.x, sensor.y, sensor.z,
                                                  label_timestamps, labels)
 
-            self.view.plot_sensor_data_and_segment("{} segmentation".format(sensor.name),
-                                                 sensor.timestamp, sensor.x, sensor.y, sensor.z,
-                                                 segments, labels)
-            self.view.show()
+            self.view.plot_sensor_data_and_segment(title.title(),
+                                                   sensor.timestamp, sensor.x, sensor.y, sensor.z,
+                                                   segments, labels)
+
+            self.view.save("{}{}_{}.png".format(Path.FIGURE_PATH, sensor.id, title.replace(" ", "_")))
+            #self.view.show()
 
     def get_data_slice(self, data, center_index, window_size=100):
         left_samples = data[center_index - (window_size / 2):center_index]

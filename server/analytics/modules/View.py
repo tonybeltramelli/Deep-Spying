@@ -2,16 +2,11 @@ __author__ = 'Tony Beltramelli www.tonybeltramelli.com - 25/08/2015'
 
 import numpy as np
 import pylab
+
 from posixpath import basename
 
 
 class View:
-
-    def plot(self, session_id):
-        View.plot_sensor_data_from_file("../../server/data/{}_accelerometer.csv".format(session_id))
-        View.plot_sensor_data_from_file("../../server/data/{}_gyroscope.csv".format(session_id))
-        View.show()
-
     def plot_sensor_data_from_file(self, file_path):
         data = np.genfromtxt(file_path, delimiter=',', skip_header=1, names=['timestamp', 'x', 'y', 'z'])
 
@@ -21,7 +16,7 @@ class View:
         View.plot_sensor_data(basename(file_name), data['timestamp'], data['x'], data['y'], data['z'])
 
     def plot_sensor_data(self, title, timestamp, x, y, z):
-        pylab.figure()
+        self.big_figure()
 
         pylab.plot(timestamp, x, color='r', label='x')
         pylab.plot(timestamp, y, color='g', label='y')
@@ -34,7 +29,7 @@ class View:
         pylab.ylabel('Value')
 
     def plot_sensor_data_and_label(self, title, timestamp, x, y, z, label_timestamp, label):
-        pylab.figure()
+        self.big_figure()
 
         pylab.plot(timestamp, x, color='r', label='x')
         pylab.plot(timestamp, y, color='g', label='y')
@@ -75,7 +70,7 @@ class View:
         pylab.ylabel('Value')
 
     def plot_sensor_data_and_segment(self, title, timestamp, x, y, z, segment, label):
-        pylab.figure()
+        self.big_figure()
 
         pylab.plot(timestamp, x, color='r', label='x')
         pylab.plot(timestamp, y, color='g', label='y')
@@ -115,5 +110,29 @@ class View:
         axis.plot(z, color='b', label='z')
         axis.set_title("{} key {}".format(self.name, label))
 
+    def plot_confusion_matrix(self, matrix, labels):
+        pylab.figure()
+        pylab.imshow(matrix, interpolation='nearest', cmap=pylab.cm.jet)
+        pylab.title("Confusion Matrix")
+
+        for i, vi in enumerate(matrix):
+            for j, vj in enumerate(vi):
+                pylab.text(j-.1, i+.1, vj, fontsize=14)
+
+        pylab.colorbar()
+
+        classes = np.arange(len(labels))
+        pylab.xticks(classes, labels)
+        pylab.yticks(classes, labels)
+
+        pylab.ylabel('Expected label')
+        pylab.xlabel('Predicted label')
+
+    def big_figure(self):
+        pylab.figure(figsize=(18, 9.5))
+
     def show(self):
         pylab.show()
+
+    def save(self, name):
+        pylab.savefig(name, bbox_inches='tight')

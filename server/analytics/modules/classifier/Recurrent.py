@@ -5,7 +5,7 @@ from pybrain.datasets import SequentialDataSet
 from pybrain.supervised.trainers import RPropMinusTrainer
 from pybrain.structure.modules import *
 from Classifier import *
-from ..utils.UMath import *
+
 
 
 class Recurrent(Classifier):
@@ -38,9 +38,6 @@ class Recurrent(Classifier):
         negatives = []
         reliabilities = []
 
-        predicted_labels = []
-        expected_labels = []
-
         for key, sample in samples.iteritems():
             self.deserialize("neural_net.xml")
 
@@ -49,13 +46,12 @@ class Recurrent(Classifier):
                 prediction = self.neural_net.activate(values)
                 predictions = [sum(x) for x in zip(predictions, prediction)]
 
-            predictions = [UMath.normalize(0, 1, x, min(predictions), max(predictions)) for x in predictions]
+            predictions = UMath.normalize_array(predictions)
 
             predicted_label = self.get_label_from_binary_position(np.argmax(predictions))
             expected_label = key[key.find(":") + 1:]
 
-            predicted_labels.append(predicted_label)
-            expected_labels.append(expected_label)
+            self.confusion_matrix[expected_label][predicted_label] += 1
 
             if predicted_label == expected_label:
                 positives.append(expected_label)
@@ -75,6 +71,8 @@ class Recurrent(Classifier):
         reliability = sum(reliabilities) / len(reliabilities)
 
         print "f1_score: {} (precision: {}, recall: {}), reliability: {}".format(f1_score, precision, recall, reliability)
+
+        self.output_results(path)
 
     def get_samples(self, data):
         samples = {}

@@ -2,17 +2,23 @@ __author__ = 'Tony Beltramelli www.tonybeltramelli.com - 07/09/2015'
 
 import numpy as np
 import os
+import collections
 
 from pybrain.tools.xml.networkwriter import NetworkWriter
 from pybrain.tools.xml.networkreader import NetworkReader
+from ..View import *
+from ..utils.UMath import *
+from ..Path import Path
 
 
 class Classifier:
-    #LABELS = ["1", "3", "*", "#"]
-    LABELS = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "*", "#"]
+    LABELS = ["1", "3", "*", "#"]
+    #LABELS = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "*", "#"]
 
     def __init__(self):
+        self.view = View()
         self.classes = self.get_binary_classes(self.LABELS)
+        self.confusion_matrix = self.get_confusion_matrix(self.LABELS)
         self.data_set = None
         self.neural_net = None
 
@@ -20,18 +26,15 @@ class Classifier:
         for entry in os.listdir(data_path):
             if entry.find(".data") != -1:
                 file_path = "{}{}".format(data_path, entry)
-                self.consume(file_path)
+                data = open(file_path, 'r')
 
-    def consume(self, file_path):
-        data = open(file_path, 'r')
+                if not self.data_set:
+                    self.build(data)
+                    data.seek(0)
 
-        if not self.data_set:
-            self.build(data)
-            data.seek(0)
+                self.parse(data)
 
-        self.parse(data)
-
-    def train_model(self, iteration=50):
+    def train_model(self, iteration=2):
         trainer = self.get_trainer()
 
         for i in range(0, iteration):
@@ -41,16 +44,13 @@ class Classifier:
 
         self.serialize("neural_net.xml")
 
-    def evaluate(self, path):
-        data = open(path, 'r')
-        samples = self.get_samples(data)
+    def output_results(self, path):
+        matrix = self.convert_to_matrix(self.confusion_matrix)
+        matrix = UMath.normalize_array(matrix)
 
-        for key, value in samples.iteritems():
-            prediction = self.neural_net.activate(value)
-            predicted_label = self.get_label_from_binary_position(np.argmax(prediction))
-            expected_label = key[key.find(":") + 1:]
-
-            print "Predict: {}, expected: {} {}".format(predicted_label, expected_label, "OK" if predicted_label == expected_label else "")
+        self.view.plot_confusion_matrix(matrix, self.LABELS)
+        #self.view.show()
+        self.view.save("{}{}_confusion_matrix.png".format(Path.FIGURE_PATH, Path.get_id(path)))
 
     def get_data_set_metadata(self, data):
         input_counter = 0
@@ -80,6 +80,32 @@ class Classifier:
             classes[label_set[i]] = bin_classes
 
         return classes
+
+    def get_confusion_matrix(self, label_set):
+        expected_labels = collections.OrderedDict()
+
+        for expected_label in label_set:
+            expected_labels[expected_label] = collections.OrderedDict()
+
+            for predicted_label in label_set:
+                expected_labels[expected_label][predicted_label] = 0.0
+
+        return expected_labels
+
+    def convert_to_matrix(self, dictionary):
+        length = len(dictionary)
+        confusion_matrix = np.zeros((length, length))
+
+        i = 0
+        j = 0
+        for row in dictionary:
+            j = 0
+            for column in dictionary:
+                confusion_matrix[i][j] = dictionary[row][column]
+                j += 1
+            i += 1
+
+        return confusion_matrix
 
     def get_label_from_binary_position(self, index):
         for key, value in self.classes.iteritems():

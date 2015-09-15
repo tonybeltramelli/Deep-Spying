@@ -2,12 +2,23 @@ __author__ = 'Tony Beltramelli www.tonybeltramelli.com - 29/08/2015'
 
 from math import *
 
+import numpy as np
+
 
 class UMath:
 
     @staticmethod
     def normalize(range_min, range_max, x, x_min, x_max):
         return range_min + (((x - x_min) * (range_max - range_min)) / (x_max - x_min))
+
+    @staticmethod
+    def normalize_array(a):
+        dimension = len(np.array(a).shape)
+
+        if dimension == 1:
+            return [UMath.normalize(0, 1, x, min(a), max(a)) for x in a]
+        elif dimension == 2:
+            return [[UMath.normalize(0, 1, y, np.amin(a), np.amax(a)) for y in x] for x in a]
 
     @staticmethod
     def get_frequency(sampling_rate_micro_sec):
