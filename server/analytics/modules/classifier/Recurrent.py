@@ -7,7 +7,6 @@ from pybrain.structure.modules import *
 from Classifier import *
 
 
-
 class Recurrent(Classifier):
     def build(self, data):
         input_number, output_number = self.get_data_set_metadata(data)
@@ -34,9 +33,7 @@ class Recurrent(Classifier):
         data = open(path, 'r')
         samples = self.get_samples(data)
 
-        positives = []
-        negatives = []
-        reliabilities = []
+        self.relevance.new_assessment(len(samples))
 
         for key, sample in samples.iteritems():
             self.deserialize("neural_net.xml")
@@ -51,40 +48,9 @@ class Recurrent(Classifier):
             predicted_label = self.get_label_from_binary_position(np.argmax(predictions))
             expected_label = key[key.find(":") + 1:]
 
-            self.confusion_matrix[expected_label][predicted_label] += 1
+            self.relevance.update(predicted_label, expected_label, predictions)
 
-            if predicted_label == expected_label:
-                positives.append(expected_label)
-            else:
-                negatives.append(expected_label)
-
-            reliabilities.append(UMath.reliability([x / sum(predictions) for x in predictions]))
-
-            print "predict: {}, expect: {} {}".format(predicted_label, expected_label, "OK" if predicted_label == expected_label else "")
-
-        true_positives = float(len(positives))
-        false_negatives = self.get_false_positives(negatives, positives)
-
-        precision = true_positives / len(samples)
-        recall = true_positives / UMath.get_denominator(true_positives + false_negatives)
-        f1_score = 2 * (precision * recall) / UMath.get_denominator(precision + recall)
-        reliability = sum(reliabilities) / len(reliabilities)
-
-        performance = f1_score, precision, recall, reliability
-        print "f1_score: {} (precision: {}, recall: {}), reliability: {}".format(f1_score, precision, recall, reliability)
-
-        return performance
-
-    def get_false_positives(self, negatives, true_positives):
-        unique_false_negatives = set(true_positives) & set(negatives)
-        false_negatives = 0
-
-        for x in unique_false_negatives:
-            for y in negatives:
-                if x == y:
-                    false_negatives += 1
-
-        return float(false_negatives)
+        self.relevance.compute()
 
     def get_samples(self, data):
         samples = {}

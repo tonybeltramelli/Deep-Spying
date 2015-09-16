@@ -2,11 +2,11 @@ __author__ = 'Tony Beltramelli www.tonybeltramelli.com - 07/09/2015'
 
 import numpy as np
 import os
-import collections
 
 from pybrain.tools.xml.networkwriter import NetworkWriter
 from pybrain.tools.xml.networkreader import NetworkReader
 from ..View import *
+from RelevanceAssessment import *
 from ..utils.UMath import *
 
 
@@ -17,10 +17,10 @@ class Classifier:
     def __init__(self):
         self.view = View(False, True)
         self.classes = self.get_binary_classes(self.LABELS)
-        self.confusion_matrix = self.get_confusion_matrix(self.LABELS)
         self.data_set = None
         self.neural_net = None
         self.errors = None
+        self.relevance = RelevanceAssessment()
 
     def build_data_set(self, data_path):
         for entry in os.listdir(data_path):
@@ -34,7 +34,7 @@ class Classifier:
 
                 self.parse(data)
 
-    def train_model(self, iteration=2):
+    def train_model(self, iteration=50):
         trainer = self.get_trainer()
         self.errors = np.zeros(iteration)
 
@@ -52,8 +52,7 @@ class Classifier:
         self.view.save(path)
 
     def output_confusion_matrix(self, path):
-        matrix = self.convert_to_matrix(self.confusion_matrix)
-        matrix = UMath.normalize_array(matrix)
+        matrix = self.relevance.get_confusion_matrix()
 
         self.view.plot_confusion_matrix(matrix, self.LABELS)
         self.view.show()
@@ -85,31 +84,6 @@ class Classifier:
             classes[label_set[i]] = bin_classes
 
         return classes
-
-    def get_confusion_matrix(self, label_set):
-        expected_labels = collections.OrderedDict()
-
-        for expected_label in label_set:
-            expected_labels[expected_label] = collections.OrderedDict()
-
-            for predicted_label in label_set:
-                expected_labels[expected_label][predicted_label] = 0.0
-
-        return expected_labels
-
-    def convert_to_matrix(self, dictionary):
-        length = len(dictionary)
-        confusion_matrix = np.zeros((length, length))
-
-        i = 0
-        for row in dictionary:
-            j = 0
-            for column in dictionary:
-                confusion_matrix[i][j] = dictionary[row][column]
-                j += 1
-            i += 1
-
-        return confusion_matrix
 
     def get_label_from_binary_position(self, index):
         for key, value in self.classes.iteritems():

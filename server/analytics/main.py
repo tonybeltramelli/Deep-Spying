@@ -30,7 +30,7 @@ class Main:
         accelerometer.fit(gyroscope.timestamp)
 
         feature_extractor = FeatureExtractor(output_path, self.view)
-        feature_extractor.segment_from_labels([gyroscope, accelerometer], label)
+        feature_extractor.segment_from_labels([gyroscope], label)
 
     def train(self):
         classifier = Recurrent()
@@ -46,6 +46,9 @@ class Main:
                 classifier.evaluate("{}{}".format(Path.FEATURE_PATH, entry))
 
         classifier.output_confusion_matrix("{}confusion_matrix.png".format(Path.FIGURE_PATH))
+
+        f1_score, precision, recall, reliability = classifier.relevance.get_mean()
+        print "Mean -> f1_score: {} (precision: {}, recall: {}), reliability: {}".format(f1_score, precision, recall, reliability)
 
 main = Main()
 main.process_all()
