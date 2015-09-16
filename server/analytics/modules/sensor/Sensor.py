@@ -33,6 +33,7 @@ class Sensor:
         self.process_variance_q = None
         self.measurement_variance_estimate = None
         self.mean_signal = None
+        self.scaling_factor = 1.0
 
     def process(self, merge_axis=False):
         self.plot("raw")

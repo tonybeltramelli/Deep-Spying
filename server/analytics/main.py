@@ -12,7 +12,7 @@ import os
 
 class Main:
     def __init__(self):
-        self.view = View()
+        self.view = None #View()
 
     def process_all(self):
         for entry in os.listdir(Path.RAW_PATH):
@@ -25,11 +25,8 @@ class Main:
         output_path = Path.get_path(Path.FEATURE_PATH, session_id)
 
         label = Label(data_path)
-
         gyroscope = Gyroscope(data_path, self.view)
-
         accelerometer = Accelerometer(data_path, self.view)
-        accelerometer.fit(gyroscope.timestamp)
 
         feature_extractor = FeatureExtractor(gyroscope, accelerometer, output_path, self.view)
         feature_extractor.segment_from_labels(label.timestamp, label.label)
@@ -50,7 +47,7 @@ class Main:
         classifier.output_confusion_matrix("{}confusion_matrix.png".format(Path.FIGURE_PATH))
 
 main = Main()
-#main.process_all()
-main.process("69141736")
+main.process_all()
+#main.process("69141736")
 #main.train()
 #main.evaluate()

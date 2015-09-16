@@ -38,3 +38,7 @@ class UMath:
     @staticmethod
     def get_denominator(d):
         return 1.0 if d == 0.0 else d
+
+    @staticmethod
+    def scale(vector, scalar):
+        return [x * scalar for x in vector]

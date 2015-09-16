@@ -11,8 +11,8 @@ from ..utils.UMath import *
 
 
 class Classifier:
-    LABELS = ["1", "3", "*", "#"]
-    #LABELS = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "*", "#"]
+    #LABELS = ["1", "3", "*", "#"]
+    LABELS = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "*", "#"]
 
     def __init__(self):
         self.view = View()
@@ -33,7 +33,7 @@ class Classifier:
 
                 self.parse(data)
 
-    def train_model(self, iteration=2):
+    def train_model(self, iteration=100):
         trainer = self.get_trainer()
         self.errors = np.zeros(iteration)
 
