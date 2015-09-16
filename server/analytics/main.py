@@ -27,9 +27,10 @@ class Main:
         label = Label(data_path)
         gyroscope = Gyroscope(data_path, self.view)
         accelerometer = Accelerometer(data_path, self.view)
+        accelerometer.fit(gyroscope.timestamp)
 
-        feature_extractor = FeatureExtractor(gyroscope, accelerometer, output_path, self.view)
-        feature_extractor.segment_from_labels(label.timestamp, label.label)
+        feature_extractor = FeatureExtractor(output_path, self.view)
+        feature_extractor.segment_from_labels([gyroscope, accelerometer], label)
 
     def train(self):
         classifier = Recurrent()
@@ -49,5 +50,5 @@ class Main:
 main = Main()
 main.process_all()
 #main.process("69141736")
-#main.train()
-#main.evaluate()
+main.train()
+main.evaluate()

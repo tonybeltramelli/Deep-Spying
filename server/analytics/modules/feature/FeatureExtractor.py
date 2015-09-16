@@ -6,9 +6,7 @@ from ..Path import Path
 
 
 class FeatureExtractor:
-    def __init__(self, gyroscope, accelerometer, output_path, view):
-        self.gyroscope = gyroscope
-        self.accelerometer = accelerometer
+    def __init__(self, output_path, view):
         self.output_path = output_path
         self.view = view
 
@@ -16,16 +14,14 @@ class FeatureExtractor:
         p = PeakAnalysis()
         p.segment(signal, True)
 
-    def segment_from_labels(self, label_timestamps, labels):
-        self.accelerometer.fit(self.gyroscope.timestamp)
+    def segment_from_labels(self, sensors, label, separator=","):
+        label_timestamps = label.timestamp
+        labels = label.label
 
-        self.segment_sensor_from_labels(label_timestamps, labels)
-
-    def segment_sensor_from_labels(self, label_timestamps, labels, separator=","):
         output_file = open("{}labelled.data".format(self.output_path), 'w')
 
         for i in range(0, len(label_timestamps)):
-            features = self.get_features((self.gyroscope, self.accelerometer), label_timestamps[i])
+            features = self.get_features(sensors, label_timestamps[i])
 
             output_file.write("label:{}\n".format(labels[i]))
 
@@ -44,8 +40,8 @@ class FeatureExtractor:
 
         print "Save features in {}".format(output_file.name)
 
-        self.plot_segmentation(self.gyroscope, label_timestamps, labels)
-        #self.plot_segmentation(self.accelerometer, label_timestamps, labels)
+        for sensor in sensors:
+            self.plot_segmentation(sensor, label_timestamps, labels)
 
     def plot_segmentation(self, sensor, label_timestamps, labels):
         title = "{} segmentation".format(sensor.name)

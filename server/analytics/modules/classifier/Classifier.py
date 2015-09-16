@@ -20,6 +20,7 @@ class Classifier:
         self.confusion_matrix = self.get_confusion_matrix(self.LABELS)
         self.data_set = None
         self.neural_net = None
+        self.errors = None
 
     def build_data_set(self, data_path):
         for entry in os.listdir(data_path):
@@ -33,7 +34,7 @@ class Classifier:
 
                 self.parse(data)
 
-    def train_model(self, iteration=100):
+    def train_model(self, iteration=2):
         trainer = self.get_trainer()
         self.errors = np.zeros(iteration)
 
@@ -59,22 +60,20 @@ class Classifier:
         self.view.save(path)
 
     def get_data_set_metadata(self, data):
-        input_counter = 0
-        output_counter = 0
+        input_number = 0
         labels = []
 
         for line in data:
             line = line.rstrip()
 
             if line.find(":") != -1:
-                output_counter += 1
                 labels.append(line[line.find(":") + 1:])
-            elif line.find(".") != -1:
-                input_counter += 1
+            elif line.find(",") != -1 and input_number == 0:
+                input_number = line.count(",") + 1
 
-        labels = list(set(labels))
+        output_number = len(list(set(labels)))
 
-        return (input_counter / output_counter), len(labels)
+        return input_number, output_number
 
     def get_binary_classes(self, label_set):
         classes = {}

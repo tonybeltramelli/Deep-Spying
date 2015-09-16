@@ -12,8 +12,8 @@ class Recurrent(Classifier):
     def build(self, data):
         input_number, output_number = self.get_data_set_metadata(data)
 
-        self.data_set = SequentialDataSet(3, len(self.LABELS))
-        self.neural_net = buildNetwork(3, 5, len(self.LABELS), hiddenclass=LSTMLayer, recurrent=True, outputbias=False)
+        self.data_set = SequentialDataSet(input_number, len(self.LABELS))
+        self.neural_net = buildNetwork(input_number, 5, len(self.LABELS), hiddenclass=LSTMLayer, recurrent=True, outputbias=False)
 
     def parse(self, data):
         label = ""
