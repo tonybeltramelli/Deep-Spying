@@ -12,7 +12,7 @@ import os
 
 class Main:
     def __init__(self):
-        self.view = None #View()
+        self.view = View(False, False)
 
     def process_all(self):
         for entry in os.listdir(Path.RAW_PATH):

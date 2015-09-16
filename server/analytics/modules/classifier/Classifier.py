@@ -15,7 +15,7 @@ class Classifier:
     LABELS = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "*", "#"]
 
     def __init__(self):
-        self.view = View()
+        self.view = View(False, True)
         self.classes = self.get_binary_classes(self.LABELS)
         self.confusion_matrix = self.get_confusion_matrix(self.LABELS)
         self.data_set = None
@@ -47,7 +47,7 @@ class Classifier:
 
     def output_weighted_mean_errors(self, path):
         self.view.plot_data("Training", self.errors, "Iteration", "Weighted mean error")
-        #self.view.show()
+        self.view.show()
         self.view.save(path)
 
     def output_confusion_matrix(self, path):
@@ -55,7 +55,7 @@ class Classifier:
         matrix = UMath.normalize_array(matrix)
 
         self.view.plot_confusion_matrix(matrix, self.LABELS)
-        #self.view.show()
+        self.view.show()
         self.view.save(path)
 
     def get_data_set_metadata(self, data):

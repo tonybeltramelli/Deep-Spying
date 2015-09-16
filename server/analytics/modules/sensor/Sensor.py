@@ -55,19 +55,17 @@ class Sensor:
         self.apply_kalman_filter()
         self.plot("kalman filter")
 
-        #if self.view is not None:
-            #self.view.show()
+        self.view.show()
 
     def plot(self, title):
         title = "{} {}".format(self.name, title)
 
-        if self.view is not None:
-            if self.mean_signal is None:
-                self.view.plot_sensor_data(title.title(), self.timestamp, self.x, self.y, self.z)
-            else:
-                self.view.plot_signal(title.title(), self.timestamp, self.mean_signal)
+        if self.mean_signal is None:
+            self.view.plot_sensor_data(title.title(), self.timestamp, self.x, self.y, self.z)
+        else:
+            self.view.plot_signal(title.title(), self.timestamp, self.mean_signal)
 
-            self.view.save("{}{}_{}.png".format(Path.FIGURE_PATH, self.id, title.replace(" ", "_")))
+        self.view.save("{}{}_{}.png".format(Path.FIGURE_PATH, self.id, title.replace(" ", "_")))
 
     def apply_median_filter(self, window_size=3):
         if self.mean_signal is None:

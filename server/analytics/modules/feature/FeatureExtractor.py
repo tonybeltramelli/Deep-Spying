@@ -44,15 +44,12 @@ class FeatureExtractor:
 
         print "Save features in {}".format(output_file.name)
 
-        if self.view is not None:
-            self.plot_segmentation(self.gyroscope, label_timestamps, labels)
-            self.plot_segmentation(self.accelerometer, label_timestamps, labels)
+        self.plot_segmentation(self.gyroscope, label_timestamps, labels)
+        #self.plot_segmentation(self.accelerometer, label_timestamps, labels)
 
     def plot_segmentation(self, sensor, label_timestamps, labels):
         title = "{} segmentation".format(sensor.name)
-        self.view.plot_sensor_data_and_label(title.title(),
-                                             sensor.timestamp, sensor.x, sensor.y, sensor.z,
-                                             label_timestamps, labels)
+        self.view.plot_sensor_data_and_label(title.title(), sensor.timestamp, sensor.x, sensor.y, sensor.z, label_timestamps, labels)
 
         self.view.save("{}{}_{}.png".format(Path.FIGURE_PATH, sensor.id, title.replace(" ", "_")))
 
