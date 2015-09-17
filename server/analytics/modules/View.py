@@ -163,7 +163,7 @@ class View:
 
         for i, vi in enumerate(matrix):
             for j, vj in enumerate(vi):
-                pylab.text(j-.1, i+.1, "%.2f" % vj, fontsize=14)
+                pylab.text(j, i+.1, "%.1f" % vj, fontsize=12)
 
         pylab.colorbar()
 

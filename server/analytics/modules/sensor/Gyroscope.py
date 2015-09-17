@@ -13,7 +13,6 @@ class Gyroscope(Sensor):
         self.process_variance_q = 1e-05
         self.measurement_variance_estimate = 1e-02
         self.scaling_factor = 100
-        self.use_for_feature_extraction = True
 
         Sensor.process(self, merge_axis=False)
 

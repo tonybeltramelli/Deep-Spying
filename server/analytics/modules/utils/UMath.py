@@ -9,16 +9,20 @@ class UMath:
 
     @staticmethod
     def normalize(range_min, range_max, x, x_min, x_max):
-        return range_min + (((x - x_min) * (range_max - range_min)) / (x_max - x_min))
+        return range_min + (((x - x_min) * (range_max - range_min)) * (1 / (x_max - x_min)))
 
     @staticmethod
-    def normalize_array(a):
+    def normalize_array(a, range_min=0, range_max=1):
         dimension = len(np.array(a).shape)
 
         if dimension == 1:
-            return [UMath.normalize(0, 1, x, min(a), max(a)) for x in a]
+            amin = min(a)
+            amax = max(a)
+            return [UMath.normalize(range_min, range_max, x, amin, amax) for x in a]
         elif dimension == 2:
-            return [[UMath.normalize(0, 1, y, np.amin(a), np.amax(a)) for y in x] for x in a]
+            amin = np.amin(a)
+            amax = np.amax(a)
+            return [[UMath.normalize(range_min, range_max, y, amin, amax) for y in x] for x in a]
 
     @staticmethod
     def get_frequency(sampling_rate_micro_sec):

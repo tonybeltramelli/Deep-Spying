@@ -10,6 +10,7 @@ from modules.classifier.Recurrent import *
 
 import os
 
+
 class Main:
     def __init__(self):
         self.view = View(False, False)
@@ -30,7 +31,7 @@ class Main:
         accelerometer.fit(gyroscope.timestamp)
 
         feature_extractor = FeatureExtractor(output_path, self.view)
-        feature_extractor.segment_from_labels([gyroscope], label)
+        feature_extractor.segment_from_labels([gyroscope, accelerometer], label)
 
     def train(self):
         classifier = Recurrent()

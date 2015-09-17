@@ -20,7 +20,7 @@ class Classifier:
         self.data_set = None
         self.neural_net = None
         self.errors = None
-        self.relevance = RelevanceAssessment()
+        self.relevance = RelevanceAssessment(self.LABELS)
 
     def build_data_set(self, data_path):
         for entry in os.listdir(data_path):
@@ -40,7 +40,6 @@ class Classifier:
 
         for i in range(0, iteration):
             error = trainer.train()
-            trainer.trainEpochs()
             print "Training {}/{} -> error: {}".format(i + 1, iteration, error)
             self.errors[i] = error
 

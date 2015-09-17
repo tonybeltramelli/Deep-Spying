@@ -59,16 +59,19 @@ class FeatureExtractor:
 
         for i in range(0, len(sensors)):
             sensor = sensors[i]
-            if not sensor.use_for_feature_extraction:
-                continue
+            sensor.normalize()
 
-            x_sample = self.get_data_slice(sensor.x, center_timestamp_index)
-            y_sample = self.get_data_slice(sensor.y, center_timestamp_index)
-            z_sample = self.get_data_slice(sensor.z, center_timestamp_index)
+            if sensor.mean_signal is None:
+                x_sample = self.get_data_slice(sensor.x, center_timestamp_index)
+                y_sample = self.get_data_slice(sensor.y, center_timestamp_index)
+                z_sample = self.get_data_slice(sensor.z, center_timestamp_index)
 
-            features.append(UMath.scale(x_sample, sensor.scaling_factor))
-            features.append(UMath.scale(y_sample, sensor.scaling_factor))
-            features.append(UMath.scale(z_sample, sensor.scaling_factor))
+                features.append(x_sample)
+                features.append(y_sample)
+                features.append(z_sample)
+            else:
+                mean_sample = self.get_data_slice(sensor.mean_signal, center_timestamp_index)
+                features.append(mean_sample)
 
         return features
 

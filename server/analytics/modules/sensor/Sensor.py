@@ -38,8 +38,8 @@ class Sensor:
     def process(self, merge_axis=False):
         self.plot("raw")
 
-        self.normalize()
-        self.plot("normalize")
+        self.calibrate()
+        self.plot("calibration")
 
         if merge_axis:
             self.mean_signal = self.get_mean_signal()
@@ -77,13 +77,13 @@ class Sensor:
 
     def apply_filter(self, sampling_frequency, filter_type):
         if self.mean_signal is None:
-            self.x = self.apply_butter_filter(self.x, sampling_frequency, filter_type)
-            self.y = self.apply_butter_filter(self.y, sampling_frequency, filter_type)
-            self.z = self.apply_butter_filter(self.z, sampling_frequency, filter_type)
+            self.x = self.apply_butterworth_filter(self.x, sampling_frequency, filter_type)
+            self.y = self.apply_butterworth_filter(self.y, sampling_frequency, filter_type)
+            self.z = self.apply_butterworth_filter(self.z, sampling_frequency, filter_type)
         else:
-            self.mean_signal = self.apply_butter_filter(self.mean_signal, sampling_frequency, filter_type)
+            self.mean_signal = self.apply_butterworth_filter(self.mean_signal, sampling_frequency, filter_type)
 
-    def apply_butter_filter(self, data, frequency, type, order=6):
+    def apply_butterworth_filter(self, data, frequency, type, order=6):
         CUTOFF_FREQUENCY = 0.5
 
         critical = 0.5 * frequency
@@ -126,17 +126,18 @@ class Sensor:
         return a_posteriori_estimate
 
     def normalize(self):
-        self.mean = np.mean(self.x)
-        self.x = map(self.normalize_axis, self.x)
+        self.x = UMath.normalize_array(self.x, -1.0, 1.0)
+        self.y = UMath.normalize_array(self.y, -1.0, 1.0)
+        self.z = UMath.normalize_array(self.z, -1.0, 1.0)
 
-        self.mean = np.mean(self.y)
-        self.y = map(self.normalize_axis, self.y)
+    def calibrate(self):
+        self.x = self.calibrate_axis(self.x)
+        self.y = self.calibrate_axis(self.y)
+        self.z = self.calibrate_axis(self.z)
 
-        self.mean = np.mean(self.z)
-        self.z = map(self.normalize_axis, self.z)
-
-    def normalize_axis(self, value):
-        return value - self.mean
+    def calibrate_axis(self, data):
+        mean = np.mean(data)
+        return [x - mean for x in data]
 
     def get_mean_signal(self):
         length = len(self.x)
@@ -150,9 +151,13 @@ class Sensor:
     def fit(self, target_timestamps):
         merged_timestamps = sorted(set(np.concatenate((target_timestamps, self.timestamp))))
 
-        self.x = self.adapt_values(self.x, target_timestamps, merged_timestamps)
-        self.y = self.adapt_values(self.y, target_timestamps, merged_timestamps)
-        self.z = self.adapt_values(self.z, target_timestamps, merged_timestamps)
+        if self.mean_signal is None:
+            self.x = self.adapt_values(self.x, target_timestamps, merged_timestamps)
+            self.y = self.adapt_values(self.y, target_timestamps, merged_timestamps)
+            self.z = self.adapt_values(self.z, target_timestamps, merged_timestamps)
+        else:
+            self.mean_signal = self.adapt_values(self.mean_signal, target_timestamps, merged_timestamps)
+
         self.timestamp = target_timestamps
 
     def adapt_values(self, data, target_timestamps, merged_timestamps):
