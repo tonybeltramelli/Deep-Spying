@@ -13,19 +13,24 @@ byte ip[] = { 192, 168, 0, 177 };
 byte serverAddress[] = { 192, 168, 0, 20 };
 int serverPort = 8000;
 
+KeyLoggingTrainer trainer = KeyLoggingTrainer();
+
 void setup()
 {
-  KeyLoggingTrainer trainer = KeyLoggingTrainer(mac, ip);
-  
   Serial.begin(9600);
   while (!Serial);
-  delay(1000);
   
-  trainer.setReferenceTime(trainer.sendData(serverAddress, serverPort, "d", false));
-  trainer.sendData(serverAddress, serverPort, trainer.getJSON("a"), true);
+  trainer.setup(mac, ip);
+  
+  delay(2000);
+  
+  String timestamp = trainer.sendData(serverAddress, serverPort, "d", false);
+  Serial.println("reference timestamp: "+timestamp);
+  trainer.setReferenceTime(timestamp);
 }
 
 void loop()
-{
+{ 
+  trainer.sendData(serverAddress, serverPort, trainer.getJSON("a"), true);
+  delay(5000);
 }
-

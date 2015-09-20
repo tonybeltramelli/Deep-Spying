@@ -71,7 +71,7 @@ public class HTTPServer extends Thread implements IServer, HttpHandler
         responseHeaders.set("Access-Control-Allow-Origin", "*");
         responseHeaders.set("Content-Type", "text/plain");
 
-        String response = String.valueOf("#" + new Date().getTime()) + "#";
+        String response = "#" + String.valueOf(new Date().getTime()) + "#";
         httpExchange.sendResponseHeaders(200, response.length());
         OutputStream responseBody = httpExchange.getResponseBody();
         responseBody.write(response.getBytes());

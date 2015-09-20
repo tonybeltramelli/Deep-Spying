@@ -12,7 +12,7 @@
 class KeyLoggingTrainer
 {
 	public:
-		KeyLoggingTrainer(byte mac[], byte ip[]);
+		void setup(byte mac[], byte ip[]);
 		String sendData(byte serverAddress[], int port, String data, boolean ignoreResponse);
 		String getJSON(String label);
 		void setReferenceTime(String timestamp);

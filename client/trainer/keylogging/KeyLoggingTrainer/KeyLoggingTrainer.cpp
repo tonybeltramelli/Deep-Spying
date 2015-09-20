@@ -4,13 +4,13 @@
   
 #include "KeyLoggingTrainer.h"
 
-KeyLoggingTrainer::KeyLoggingTrainer(byte mac[], byte ip[])
+void KeyLoggingTrainer::setup(byte mac[], byte ip[])
 {
 	Ethernet.begin(mac, ip);
 
-	delay(1000);
+  Serial.begin(9600);
+  while (!Serial);
 
-	_startingTime = millis();
 	_referenceTime = 0;
 }
 
@@ -46,7 +46,11 @@ String KeyLoggingTrainer::sendData(byte serverAddress[], int port, String data, 
       if (c == '#')
       {
         startRecording = !startRecording;
-        if(!startRecording) _client.stop();
+        if(!startRecording)
+        {
+          _startingTime = millis();
+          _client.stop();
+        }
       }
     }
   }
@@ -57,16 +61,20 @@ String KeyLoggingTrainer::sendData(byte serverAddress[], int port, String data, 
 
 void KeyLoggingTrainer::setReferenceTime(String timestamp)
 {
-  int HEAD_LENGTH = 6;
-  
+  int headLength = 5;
   char length = timestamp.length();
+
+  while(timestamp[headLength] == '0')
+  {
+    headLength += 1;
+  }
 
   _head = "";
   String tail = "";
   
   for(int i = 0; i < length; i++)
   {
-    if(i < HEAD_LENGTH)
+    if(i < headLength)
     {
       _head += timestamp[i];
     }else{
@@ -79,7 +87,10 @@ void KeyLoggingTrainer::setReferenceTime(String timestamp)
 
 String KeyLoggingTrainer::getJSON(String label)
 {
-  String data = "{\"sensor_name\":\"labels\",\"data_points\":[{\"timestamp\":" + _getTimestamp();
+  String timestamp = _getTimestamp();
+  Serial.println("timestamp: " + timestamp);
+
+  String data = "{\"sensor_name\":\"labels\",\"data_points\":[{\"timestamp\":" + timestamp;
   data = data + ",\"label\":\"" + label + "\"}]}";
   
   return data;
@@ -87,5 +98,8 @@ String KeyLoggingTrainer::getJSON(String label)
 
 String KeyLoggingTrainer::_getTimestamp()
 {
-  return _head + String(_referenceTime);
+  unsigned long currentTime = millis();
+  unsigned long diff = _referenceTime + currentTime - _startingTime;
+
+  return _head + String(diff);
 }
