@@ -53,6 +53,7 @@ form input, form button {
   border-radius: 4px;
   height: 52px;
   padding: 10px;
+  font: inherit;
 }
 
 form input {
