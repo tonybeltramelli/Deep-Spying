@@ -1,3 +1,7 @@
+/*
+	@author Tony Beltramelli www.tonybeltramelli.com - created 05/09/15
+*/
+
 $(document).ready(function(){main();});
 
 var LOCAL_SERVER_ADDRESS = "swat:serverAddress";
@@ -63,6 +67,7 @@ function send(timestamp, label)
 	$.ajax({
 		url: serverAddress+":"+serverPort,
 		type: "POST",
-		data: JSON.stringify(data)
+		data: JSON.stringify(data),
+		contentType: "text/plain"
 	});
 }

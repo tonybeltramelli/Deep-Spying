@@ -1,5 +1,6 @@
 package com.tonybeltramelli.swat.server.network;
 
+import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
@@ -13,6 +14,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.util.concurrent.Executors;
+import java.util.Date;
 
 /**
  * @author Tony Beltramelli www.tonybeltramelli.com - created 05/09/15
@@ -60,16 +62,20 @@ public class HTTPServer extends Thread implements IServer, HttpHandler
         System.out.println(Const.getDataSnapshot(data));
 
         try {
-            _dataStore.store(data, LabelDataPoint.class);
+            if(data.length() > 1) _dataStore.store(data, LabelDataPoint.class);
         } catch(Exception e) {
             e.printStackTrace();
         }
 
-        String response = "200 (Success)\n";
+        Headers responseHeaders = httpExchange.getResponseHeaders();
+        responseHeaders.set("Access-Control-Allow-Origin", "*");
+        responseHeaders.set("Content-Type", "text/plain");
+
+        String response = String.valueOf("#" + new Date().getTime()) + "#";
         httpExchange.sendResponseHeaders(200, response.length());
-        OutputStream os = httpExchange.getResponseBody();
-        os.write(response.getBytes());
-        os.close();
+        OutputStream responseBody = httpExchange.getResponseBody();
+        responseBody.write(response.getBytes());
+        responseBody.close();
     }
 
     @Override
