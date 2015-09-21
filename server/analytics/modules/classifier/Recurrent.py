@@ -8,10 +8,10 @@ from Classifier import *
 
 
 class Recurrent(Classifier):
-    def build_data_set(self):
+    def get_training_set(self):
         input_number, output_number = self.meta_data
 
-        self.training_set = SequentialDataSet(input_number, len(self.LABELS))
+        return SequentialDataSet(input_number, len(self.LABELS))
 
     def build_neural_net(self, multi_hidden_layers=False):
         input_number, output_number = self.meta_data
@@ -35,46 +35,8 @@ class Recurrent(Classifier):
             self.neural_net.addConnection(FullConnection(lstm2, output))
             self.neural_net.sortModules()
 
-    def get_trainer(self):
-        return RPropMinusTrainer(self.neural_net, dataset=self.training_set)
+    def get_trainer(self, data_set):
+        if not self.neural_net:
+            self.build_neural_net()
 
-    def evaluate(self, path):
-        data = open(path, 'r')
-        samples = self.get_samples(data)
-
-        self.relevance.new_assessment(len(samples))
-
-        for key, sample in samples.iteritems():
-            self.deserialize("neural_net.xml")
-
-            predictions = np.zeros(len(self.LABELS))
-            for values in sample:
-                prediction = self.neural_net.activate(values)
-                predictions = [sum(x) for x in zip(predictions, prediction)]
-
-            predictions = UMath.normalize_array(predictions)
-
-            predicted_label = self.get_label_from_binary_position(np.argmax(predictions))
-            expected_label = key[key.find(":") + 1:]
-
-            self.relevance.update(predicted_label, expected_label, predictions)
-
-        self.relevance.compute()
-
-    def get_samples(self, data):
-        samples = {}
-        expected_label = ""
-        index = 0
-
-        for line in data:
-            line = line.rstrip()
-
-            if line.find(":") != -1:
-                index += 1
-                expected_label = "{}:{}".format(index, line[line.find(":") + 1:])
-                samples[expected_label] = []
-            elif line.find(".") != -1:
-                values = line.split(",")
-                samples[expected_label].append(values)
-
-        return samples
+        return RPropMinusTrainer(self.neural_net, dataset=data_set)
