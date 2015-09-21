@@ -2,6 +2,7 @@ __author__ = 'Tony Beltramelli www.tonybeltramelli.com - 07/09/2015'
 
 import numpy as np
 import os
+import random
 
 from pybrain.tools.xml.networkwriter import NetworkWriter
 from pybrain.tools.xml.networkreader import NetworkReader
@@ -17,24 +18,63 @@ class Classifier:
     def __init__(self):
         self.view = View(False, True)
         self.classes = self.get_binary_classes(self.LABELS)
-        self.data_set = None
+        self.training_set = None
         self.neural_net = None
         self.errors = None
         self.relevance = RelevanceAssessment(self.LABELS)
+        self.samples = []
+        self.meta_data = None
 
-    def build_data_set(self, data_path):
+    def retrieve_samples(self, data_path):
+        self.samples = []
+        input_number = 0
+        labels = []
+
         for entry in os.listdir(data_path):
             if entry.find(".data") != -1:
                 file_path = "{}{}".format(data_path, entry)
                 data = open(file_path, 'r')
 
-                if not self.data_set:
-                    self.build(data)
-                    data.seek(0)
+                label = ""
+                sample = []
+                data_points = None
 
-                self.parse(data)
+                for line in data:
+                    line = line.rstrip()
 
-    def train_model(self, iteration=50):
+                    if line.find(":") != -1:
+                        label = line[line.find(":") + 1:]
+                        labels.append(label)
+
+                        if data_points:
+                            sample.append(data_points)
+                        data_points = []
+                    elif line.find(".") != -1:
+                        values = line.split(",")
+                        data_points.append({"values": values, "label": label})
+
+                        if input_number == 0:
+                            input_number = len(values)
+
+                if data_points and len(data_points) > 0:
+                    sample.append(data_points)
+
+                self.samples.append(sample)
+
+        output_number = len(list(set(labels)))
+
+        self.meta_data = (input_number, output_number)
+
+    def fill_data_set(self, k=1):
+        if k != 1:
+            random.shuffle(self.samples)
+
+        for sample in self.samples:
+            for data_points in sample:
+                for data_point in data_points:
+                    self.training_set.addSample(data_point["values"], self.classes[data_point["label"]])
+
+    def train_model(self, iteration=10):
         trainer = self.get_trainer()
         self.errors = np.zeros(iteration)
 
@@ -45,8 +85,12 @@ class Classifier:
 
         self.serialize("neural_net.xml")
 
-    def output_weighted_mean_errors(self, path):
-        self.view.plot_data("Training", self.errors, "Iteration", "Weighted mean error")
+    def k_fold_cross_validate(self, data_path, k=10):
+        #subdataset =
+        print self.data_set
+
+    def output_least_square_mean_errors(self, path):
+        self.view.plot_data("Training", self.errors, "Iteration", "Least square mean error")
         self.view.show()
         self.view.save(path)
 
@@ -56,22 +100,6 @@ class Classifier:
         self.view.plot_confusion_matrix(matrix, self.LABELS)
         self.view.show()
         self.view.save(path)
-
-    def get_data_set_metadata(self, data):
-        input_number = 0
-        labels = []
-
-        for line in data:
-            line = line.rstrip()
-
-            if line.find(":") != -1:
-                labels.append(line[line.find(":") + 1:])
-            elif line.find(",") != -1 and input_number == 0:
-                input_number = line.count(",") + 1
-
-        output_number = len(list(set(labels)))
-
-        return input_number, output_number
 
     def get_binary_classes(self, label_set):
         classes = {}

@@ -35,9 +35,11 @@ class Main:
 
     def train(self):
         classifier = Recurrent()
-        classifier.build_data_set(Path.FEATURE_PATH)
-        classifier.train_model()
-        classifier.output_weighted_mean_errors("{}errors.png".format(Path.FIGURE_PATH))
+        classifier.retrieve_samples(Path.FEATURE_PATH)
+        classifier.fill_data_set()
+        #classifier.k_fold_cross_validate()
+        #classifier.train_model()
+        #classifier.output_least_square_mean_errors("{}errors.png".format(Path.FIGURE_PATH))
 
     def evaluate(self):
         classifier = Recurrent()
@@ -47,12 +49,10 @@ class Main:
                 classifier.evaluate("{}{}".format(Path.FEATURE_PATH, entry))
 
         classifier.output_confusion_matrix("{}confusion_matrix.png".format(Path.FIGURE_PATH))
-
-        f1_score, precision, recall, reliability = classifier.relevance.get_mean()
-        print "Mean -> f1_score: {} (precision: {}, recall: {}), reliability: {}".format(f1_score, precision, recall, reliability)
+        classifier.relevance.output_statistics("Run 1", "{}statistics.md".format(Path.STATS_PATH))
 
 main = Main()
-main.process_all()
+#main.process_all()
 #main.process("69141736")
 main.train()
-main.evaluate()
+#main.evaluate()

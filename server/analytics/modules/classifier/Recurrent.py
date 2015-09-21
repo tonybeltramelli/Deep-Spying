@@ -3,31 +3,40 @@ __author__ = 'Tony Beltramelli www.tonybeltramelli.com - 13/09/2015'
 from pybrain.tools.shortcuts import buildNetwork
 from pybrain.datasets import SequentialDataSet
 from pybrain.supervised.trainers import RPropMinusTrainer
-from pybrain.structure.modules import *
+from pybrain.structure import *
 from Classifier import *
 
 
 class Recurrent(Classifier):
-    def build(self, data):
-        input_number, output_number = self.get_data_set_metadata(data)
+    def build_data_set(self):
+        input_number, output_number = self.meta_data
 
-        self.data_set = SequentialDataSet(input_number, len(self.LABELS))
-        self.neural_net = buildNetwork(input_number, 9, len(self.LABELS), hiddenclass=LSTMLayer, recurrent=True, outputbias=False)
+        self.training_set = SequentialDataSet(input_number, len(self.LABELS))
 
-    def parse(self, data):
-        label = ""
+    def build_neural_net(self, multi_hidden_layers=False):
+        input_number, output_number = self.meta_data
 
-        for line in data:
-            line = line.rstrip()
+        if not multi_hidden_layers:
+            self.neural_net = buildNetwork(input_number, 9, len(self.LABELS), hiddenclass=LSTMLayer, recurrent=True, outputbias=False)
+        else:
+            input = LinearLayer(input_number)
+            output = LinearLayer(len(self.LABELS))
+            lstm1 = LSTMLayer(5)
+            lstm2 = LSTMLayer(9)
 
-            if line.find(":") != -1:
-                label = line[line.find(":") + 1:]
-            elif line.find(".") != -1:
-                values = line.split(",")
-                self.data_set.addSample(values, self.classes[label])
+            self.neural_net = RecurrentNetwork()
+            self.neural_net.addInputModule(input)
+            self.neural_net.addModule(lstm1)
+            self.neural_net.addModule(lstm2)
+            self.neural_net.addOutputModule(output)
+
+            self.neural_net.addConnection(FullConnection(input, lstm1))
+            self.neural_net.addConnection(FullConnection(lstm1, lstm2))
+            self.neural_net.addConnection(FullConnection(lstm2, output))
+            self.neural_net.sortModules()
 
     def get_trainer(self):
-        return RPropMinusTrainer(self.neural_net, dataset=self.data_set)
+        return RPropMinusTrainer(self.neural_net, dataset=self.training_set)
 
     def evaluate(self, path):
         data = open(path, 'r')

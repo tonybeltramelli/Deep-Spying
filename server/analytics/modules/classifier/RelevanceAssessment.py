@@ -53,13 +53,25 @@ class RelevanceAssessment:
         self.total_recall.append(recall)
         self.total_reliability.append(reliability)
 
-    def get_mean(self):
-        f1_score = np.mean(self.total_f1_score)
-        precision = np.mean(self.total_precision)
-        recall = np.mean(self.total_recall)
-        reliability = np.mean(self.total_reliability)
+    def output_statistics(self, title, path):
+        output_file = open(path, 'a')
+        output_file.write("#{} \n".format(title))
 
-        return f1_score, precision, recall, reliability
+        output_file.write("* F1 score: {}\n".format(self.get_statistics(self.total_f1_score)))
+        output_file.write("* Precision: {}\n".format(self.get_statistics(self.total_precision)))
+        output_file.write("* Recall: {}\n".format(self.get_statistics(self.total_recall)))
+        output_file.write("* Reliability: {}\n".format(self.get_statistics(self.total_reliability)))
+
+        output_file.write("\n")
+        output_file.close()
+
+    def get_statistics(self, data):
+        min = np.amin(data)
+        max = np.amax(data)
+        mean = np.mean(data)
+        stddev = np.std(data)
+
+        return "min: {}, max: {}, mean: {}, stddev: {}".format(min, max, mean, stddev)
 
     def get_false_positives(self, negatives, true_positives):
         unique_false_negatives = set(true_positives) & set(negatives)
