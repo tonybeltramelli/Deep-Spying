@@ -37,7 +37,7 @@ class Main:
         classifier = Recurrent()
         classifier.retrieve_samples(Path.FEATURE_PATH)
 
-        classifier.train_model(2)
+        classifier.train_model(100)
         classifier.relevance.output_least_square_mean_errors("{}errors.png".format(Path.RESULT_PATH))
 
     def evaluate(self):
@@ -58,8 +58,8 @@ class Main:
         classifier.relevance.output_compared_plot("{}progression.png".format(Path.RESULT_PATH))
 
 main = Main()
-main.process_all()
+#main.process_all()
 #main.process("69141736")
-main.train()
+#main.train()
 main.evaluate()
 #main.cross_validation()

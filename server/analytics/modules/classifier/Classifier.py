@@ -1,12 +1,10 @@
 __author__ = 'Tony Beltramelli www.tonybeltramelli.com - 07/09/2015'
 
-import numpy as np
 import os
 import random
 
 from pybrain.tools.xml.networkwriter import NetworkWriter
 from pybrain.tools.xml.networkreader import NetworkReader
-from ..View import *
 from RelevanceAssessment import *
 from ..utils.UMath import *
 
@@ -111,12 +109,7 @@ class Classifier:
         for key, sample in data_set.iteritems():
             self.deserialize("neural_net.xml")
 
-            predictions = np.zeros(len(self.LABELS))
-            for values in sample:
-                prediction = self.neural_net.activate(values)
-                predictions = [sum(x) for x in zip(predictions, prediction)]
-
-            predictions = UMath.normalize_array(predictions)
+            predictions = self.get_predictions(sample)
 
             predicted_label = self.get_label_from_binary_position(np.argmax(predictions))
             expected_label = key[key.find(":") + 1:]
