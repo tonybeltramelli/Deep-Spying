@@ -7,8 +7,7 @@ class Path:
     BASE_PATH = "../data/"
     RAW_PATH = "{}raw/".format(BASE_PATH)
     FEATURE_PATH = "{}feature/".format(BASE_PATH)
-    FIGURE_PATH = "{}figure/".format(BASE_PATH)
-    STATS_PATH = "{}stats/".format(BASE_PATH)
+    RESULT_PATH = "{}result/".format(BASE_PATH)
 
     @staticmethod
     def get_path(root, variable):

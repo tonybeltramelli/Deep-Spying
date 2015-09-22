@@ -8,11 +8,6 @@ from Classifier import *
 
 
 class Recurrent(Classifier):
-    def get_training_set(self):
-        input_number, output_number = self.meta_data
-
-        return SequentialDataSet(input_number, len(self.LABELS))
-
     def build_neural_net(self, multi_hidden_layers=False):
         input_number, output_number = self.meta_data
 
@@ -35,7 +30,12 @@ class Recurrent(Classifier):
             self.neural_net.addConnection(FullConnection(lstm2, output))
             self.neural_net.sortModules()
 
-    def get_trainer(self, data_set):
+    def get_new_data_set(self):
+        input_number, output_number = self.meta_data
+
+        return SequentialDataSet(input_number, len(self.LABELS))
+
+    def get_new_trainer(self, data_set):
         if not self.neural_net:
             self.build_neural_net()
 

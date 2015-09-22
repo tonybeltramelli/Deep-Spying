@@ -1,31 +1,33 @@
 __author__ = 'Tony Beltramelli www.tonybeltramelli.com - 16/09/2015'
 
 from ..utils.UMath import *
+from modules.View import *
 
 import collections
 
 
 class RelevanceAssessment:
     def __init__(self, labels):
-        self.collection_size = 0
-        self.positives = None
-        self.negatives = None
-        self.reliabilities = None
+        self.labels = labels
+        self.view = View(False, True)
 
-        self.total_f1_score = []
-        self.total_precision = []
-        self.total_recall = []
-        self.total_reliability = []
-
-        self.confusion_matrix = self.build_confusion_matrix(labels)
-
-    def new_assessment(self, collection_size):
-        self.collection_size = collection_size
         self.positives = []
         self.negatives = []
         self.reliabilities = []
 
-    def update(self, predicted_label, expected_label, predictions):
+        self.errors = []
+
+        self.all_f1_score = []
+        self.all_precision = []
+        self.all_recall = []
+        self.all_reliability = []
+
+        self.confusion_matrix = self.build_confusion_matrix(labels)
+
+    def update_training(self, error):
+        self.errors.append(error)
+
+    def update_evaluation(self, predicted_label, expected_label, predictions):
         self.confusion_matrix[expected_label][predicted_label] += 1
 
         if predicted_label == expected_label:
@@ -37,33 +39,25 @@ class RelevanceAssessment:
 
         print "predict: {}, expect: {} {}".format(predicted_label, expected_label, "OK" if predicted_label == expected_label else "")
 
-    def compute(self):
+    def compute(self, collection_size):
         true_positives = float(len(self.positives))
         false_negatives = self.get_false_positives(self.negatives, self.positives)
 
-        precision = true_positives / self.collection_size
+        precision = true_positives / collection_size
         recall = true_positives / UMath.get_denominator(true_positives + false_negatives)
         f1_score = 2 * (precision * recall) / UMath.get_denominator(precision + recall)
         reliability = np.mean(self.reliabilities)
 
         print "f1_score: {} (precision: {}, recall: {}), reliability: {}".format(f1_score, precision, recall, reliability)
 
-        self.total_f1_score.append(f1_score)
-        self.total_precision.append(precision)
-        self.total_recall.append(recall)
-        self.total_reliability.append(reliability)
+        self.all_f1_score.append(f1_score)
+        self.all_precision.append(precision)
+        self.all_recall.append(recall)
+        self.all_reliability.append(reliability)
 
-    def output_statistics(self, title, path):
-        output_file = open(path, 'a')
-        output_file.write("#{} \n".format(title))
-
-        output_file.write("* F1 score: {}\n".format(self.get_statistics(self.total_f1_score)))
-        output_file.write("* Precision: {}\n".format(self.get_statistics(self.total_precision)))
-        output_file.write("* Recall: {}\n".format(self.get_statistics(self.total_recall)))
-        output_file.write("* Reliability: {}\n".format(self.get_statistics(self.total_reliability)))
-
-        output_file.write("\n")
-        output_file.close()
+        self.positives = []
+        self.negatives = []
+        self.reliabilities = []
 
     def get_statistics(self, data):
         min = np.amin(data)
@@ -112,3 +106,36 @@ class RelevanceAssessment:
             i += 1
 
         return confusion_matrix
+
+    def output_compared_plot(self, path):
+        data = [self.errors, self.all_f1_score, self.all_precision, self.all_recall, self.all_reliability]
+        colors = ['m', 'c', 'g', 'b', 'r']
+        labels = ["Least square mean error", "F1 score", "Precision", "Recall", "Reliability"]
+
+        self.view.plot_data("K-fold cross-validation", data, "Iteration", "Amplitude", colors, labels)
+        self.view.show()
+        self.view.save(path)
+
+    def output_statistics(self, path):
+        output_file = open(path, 'a')
+        output_file.write("#Statistics \n")
+
+        output_file.write("* F1 score: {}\n".format(self.get_statistics(self.all_f1_score)))
+        output_file.write("* Precision: {}\n".format(self.get_statistics(self.all_precision)))
+        output_file.write("* Recall: {}\n".format(self.get_statistics(self.all_recall)))
+        output_file.write("* Reliability: {}\n".format(self.get_statistics(self.all_reliability)))
+
+        output_file.write("\n")
+        output_file.close()
+
+    def output_least_square_mean_errors(self, path):
+        self.view.plot_data("Training", [self.errors], "Iteration", "Least square mean error")
+        self.view.show()
+        self.view.save(path)
+
+    def output_confusion_matrix(self, path):
+        matrix = self.get_confusion_matrix()
+
+        self.view.plot_confusion_matrix(matrix, self.labels)
+        self.view.show()
+        self.view.save(path)

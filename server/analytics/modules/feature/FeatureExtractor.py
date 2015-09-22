@@ -47,7 +47,7 @@ class FeatureExtractor:
         title = "{} segmentation".format(sensor.name)
         self.view.plot_sensor_data_and_label(title.title(), sensor.timestamp, sensor.x, sensor.y, sensor.z, label_timestamps, labels)
 
-        self.view.save("{}{}_{}.png".format(Path.FIGURE_PATH, sensor.id, title.replace(" ", "_")))
+        self.view.save("{}{}_{}.png".format(Path.RESULT_PATH, sensor.id, title.replace(" ", "_")))
 
         self.view.show()
 

@@ -71,13 +71,22 @@ class View:
         pylab.xlabel('Time')
         pylab.ylabel('Value')
 
-    def plot_data(self, title, data, xlabel, ylabel):
+    def plot_data(self, title, data, xlabel, ylabel, colors=None, labels=None):
         if not self.to_save and not self.to_show:
             return
 
         self.big_figure()
 
-        pylab.plot(data, color='m')
+        for i in range(0, len(data)):
+            color = 'm' if colors is None else colors[i]
+
+            if labels is None:
+                pylab.plot(data[i], color=color)
+            else:
+                pylab.plot(data[i], color=color, label=labels[i])
+
+        if labels is not None:
+            pylab.legend()
 
         pylab.title(title)
         pylab.xlabel(xlabel)
@@ -163,7 +172,7 @@ class View:
 
         for i, vi in enumerate(matrix):
             for j, vj in enumerate(vi):
-                pylab.annotate(str(vj), xy=(j, i), horizontalalignment='center', verticalalignment='center', fontsize=9)
+                pylab.annotate("%.1f" % vj, xy=(j, i), horizontalalignment='center', verticalalignment='center', fontsize=9)
 
         pylab.colorbar()
 

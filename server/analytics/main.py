@@ -37,19 +37,29 @@ class Main:
         classifier = Recurrent()
         classifier.retrieve_samples(Path.FEATURE_PATH)
 
-        classifier.train_model()
-        classifier.output_least_square_mean_errors("{}errors.png".format(Path.FIGURE_PATH))
+        classifier.train_model(2)
+        classifier.relevance.output_least_square_mean_errors("{}errors.png".format(Path.RESULT_PATH))
 
     def evaluate(self):
         classifier = Recurrent()
         classifier.retrieve_samples(Path.FEATURE_PATH)
 
         classifier.evaluate()
-        classifier.output_confusion_matrix("{}confusion_matrix.png".format(Path.FIGURE_PATH))
-        classifier.relevance.output_statistics("Run 1", "{}statistics.md".format(Path.STATS_PATH))
+        classifier.relevance.output_confusion_matrix("{}confusion_matrix.png".format(Path.RESULT_PATH))
+        classifier.relevance.output_statistics("{}statistics.md".format(Path.RESULT_PATH))
+
+    def cross_validation(self):
+        classifier = Recurrent()
+        classifier.retrieve_samples(Path.FEATURE_PATH)
+
+        classifier.k_fold_cross_validate(10)
+        classifier.relevance.output_confusion_matrix("{}confusion_matrix.png".format(Path.RESULT_PATH))
+        classifier.relevance.output_statistics("{}statistics.md".format(Path.RESULT_PATH))
+        classifier.relevance.output_compared_plot("{}progression.png".format(Path.RESULT_PATH))
 
 main = Main()
-#main.process_all()
+main.process_all()
 #main.process("69141736")
 main.train()
 main.evaluate()
+#main.cross_validation()
