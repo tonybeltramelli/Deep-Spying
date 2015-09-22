@@ -31,7 +31,7 @@ class Main:
         accelerometer = Accelerometer(data_path, self.view)
         accelerometer.fit(gyroscope.timestamp)
 
-        feature_extractor = FeatureExtractor(output_path, self.view, True)
+        feature_extractor = FeatureExtractor(output_path, self.view, use_statistical_features=False)
         feature_extractor.segment_from_labels([gyroscope, accelerometer], label)
 
     def train(self):

@@ -60,12 +60,12 @@ class RelevanceAssessment:
         self.reliabilities = []
 
     def get_statistics(self, data):
-        min = np.amin(data)
-        max = np.amax(data)
+        amin = np.amin(data)
         mean = np.mean(data)
+        amax = np.amax(data)
         stddev = np.std(data)
 
-        return "min: {}, max: {}, mean: {}, stddev: {}".format(min, max, mean, stddev)
+        return "min: {}, mean: {}, max: {}, stddev: {}".format(amin, mean, amax, stddev)
 
     def get_false_positives(self, negatives, true_positives):
         unique_false_negatives = set(true_positives) & set(negatives)
@@ -134,6 +134,8 @@ class RelevanceAssessment:
         output_file.write("* Precision: {}\n".format(self.get_statistics(self.all_precision)))
         output_file.write("* Recall: {}\n".format(self.get_statistics(self.all_recall)))
         output_file.write("* Reliability: {}\n".format(self.get_statistics(self.all_reliability)))
+        if len(self.errors) > 0:
+            output_file.write("* Least square mean error: {}\n".format(self.get_statistics(self.errors)))
 
         output_file.write("\n")
         output_file.close()

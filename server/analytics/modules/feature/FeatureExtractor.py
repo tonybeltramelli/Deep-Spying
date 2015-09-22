@@ -17,7 +17,7 @@ class FeatureExtractor:
         p = PeakAnalysis()
         p.segment(signal, True)
 
-    def segment_from_labels(self, sensors, label, separator=","):
+    def segment_from_labels(self, sensors, label):
         label_timestamps = label.timestamp
         labels = label.label
 
@@ -28,13 +28,14 @@ class FeatureExtractor:
 
             output_file.write("label:{}\n".format(labels[i]))
 
-            for j in range(0, len(features[0])):
-                length = len(features)
-                line = ""
+            if not self.use_statistical_features:
+                for j in range(0, len(features[0])):
+                    line = self.get_line(features, j)
 
-                for k in range(0, length):
-                    value = '{0:.16f}'.format(features[k][j])
-                    line += "{}{}".format(value, separator if k < length - 1 else '\n')
+                    output_file.write(line)
+            else:
+                features = np.array(features).flatten()
+                line = self.get_line(features)
 
                 output_file.write(line)
 
@@ -45,6 +46,16 @@ class FeatureExtractor:
 
         for sensor in sensors:
             self.plot_segmentation(sensor, label_timestamps, labels)
+
+    def get_line(self, features, j=None, separator=","):
+        length = len(features)
+        line = ""
+
+        for k in range(0, length):
+            value = '{0:.16f}'.format(features[k] if j is None else features[k][j])
+            line += "{}{}".format(value, separator if k < length - 1 else '\n')
+
+        return line
 
     def plot_segmentation(self, sensor, label_timestamps, labels):
         title = "{} segmentation".format(sensor.name)
