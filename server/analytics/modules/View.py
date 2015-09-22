@@ -183,6 +183,20 @@ class View:
         pylab.ylabel('Expected label')
         pylab.xlabel('Predicted label')
 
+    def plot_peaks(self, signal, uphill, peak, downhill):
+        if not self.to_save and not self.to_show:
+            return
+
+        self.big_figure()
+
+        pylab.plot(signal, color='b')
+        pylab.plot(uphill.nonzero()[0], signal[uphill], 'ro')
+        pylab.plot(peak.nonzero()[0], signal[peak], 'go')
+        pylab.plot(downhill.nonzero()[0], signal[downhill], 'bo')
+
+        pylab.xlabel('Time')
+        pylab.ylabel('Value')
+
     def big_figure(self):
         pylab.figure(figsize=(18, 9.5))
 

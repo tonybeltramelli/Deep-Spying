@@ -1,14 +1,14 @@
 __author__ = 'Tony Beltramelli www.tonybeltramelli.com - 04/09/2015'
 
-import numpy as np
-import pylab
-
-from math import *
+from ..utils.UMath import *
+from ..View import *
 
 
 class PeakAnalysis:
+    def __init__(self):
+        self.view = View(False, False)
 
-    def segment(self, signal, to_show=False):
+    def compute_peaks(self, signal):
         ratios = self.get_peak_to_average_ratios(signal)
 
         uphill = (((ratios + np.roll(ratios, -1) + np.roll(ratios, 1)) / 3) <= 9e-02)\
@@ -26,28 +26,12 @@ class PeakAnalysis:
                  (((ratios + np.roll(ratios, -5)) / 2) < 0.1)
 
         uphill = self.filter_from_peak_position(peak, uphill, -1)
-        #uphill_filtered = self.filter_interval(0, 190, uphill).flatten()
-
         downhill = self.filter_from_peak_position(peak, downhill, 1)
-        downhill_filtered = self.filter_interval(len(ratios) - 1, -170, downhill).flatten()
 
-        if to_show:
-            pylab.figure()
+        self.view.plot_peaks(ratios, uphill, peak, downhill)
+        self.view.show()
 
-            pylab.plot(ratios, color='b')
-            pylab.plot(uphill.nonzero()[0], ratios[uphill], 'ro')
-            pylab.plot(peak.nonzero()[0], ratios[peak], 'go')
-            pylab.plot(downhill.nonzero()[0], ratios[downhill], 'bo')
-
-            #for i in range(0, len(uphill_filtered)):
-            #    pylab.axvline(uphill_filtered[i], color="r")
-
-            #for i in range(0, len(downhill_filtered)):
-            #    pylab.axvline(downhill_filtered[i], color="b")
-
-            pylab.xlabel('Time')
-            pylab.ylabel('Value')
-            pylab.show()
+        return {"uphill": np.count_nonzero(uphill), "peak": np.count_nonzero(peak), "downhill": np.count_nonzero(downhill)}
 
     def filter_from_peak_position(self, peak, hill, direction):
         length = len(peak)
@@ -80,7 +64,7 @@ class PeakAnalysis:
                     return
 
     def get_peak_to_average_ratios(self, data):
-        root_mean_square = self.get_root_mean_square(data)
+        root_mean_square = UMath.get_root_mean_square(data)
 
         length = len(data)
         ratios = np.zeros(length)
@@ -92,6 +76,3 @@ class PeakAnalysis:
             ratios[i] = peak_to_average_ratio
 
         return ratios
-
-    def get_root_mean_square(self, data):
-        return sqrt(np.sum(np.square(data) / len(data)))

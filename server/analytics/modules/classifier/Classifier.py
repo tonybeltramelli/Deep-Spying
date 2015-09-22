@@ -118,7 +118,7 @@ class Classifier:
 
         self.relevance.compute(len(data_set))
 
-    def k_fold_cross_validate(self, k=10):
+    def k_fold_cross_validate(self, k=10, iteration=1):
         samples = self.get_samples(self.collection, k)
 
         for i in range(0, k):
@@ -127,7 +127,7 @@ class Classifier:
             evaluation_set = samples[i]
             training_set = samples[:i] + samples[i + 1:]
 
-            self.train_model(1, training_set)
+            self.train_model(iteration, training_set)
             self.evaluate(evaluation_set)
 
     def get_binary_classes(self, label_set):

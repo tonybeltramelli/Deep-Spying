@@ -1,14 +1,17 @@
 __author__ = 'Tony Beltramelli www.tonybeltramelli.com - 14/09/2015'
 
+import scipy.stats as stats
+
 from PeakAnalysis import *
 from ..utils.UMath import *
 from ..Path import Path
 
 
 class FeatureExtractor:
-    def __init__(self, output_path, view):
+    def __init__(self, output_path, view, use_statistical_features=False):
         self.output_path = output_path
         self.view = view
+        self.use_statistical_features = use_statistical_features
 
     def segment_heuristically(self, signal):
         p = PeakAnalysis()
@@ -46,9 +49,7 @@ class FeatureExtractor:
     def plot_segmentation(self, sensor, label_timestamps, labels):
         title = "{} segmentation".format(sensor.name)
         self.view.plot_sensor_data_and_label(title.title(), sensor.timestamp, sensor.x, sensor.y, sensor.z, label_timestamps, labels)
-
         self.view.save("{}{}_{}.png".format(Path.RESULT_PATH, sensor.id, title.replace(" ", "_")))
-
         self.view.show()
 
     def get_features(self, sensors, timestamp_reference):
@@ -66,14 +67,28 @@ class FeatureExtractor:
                 y_sample = self.get_data_slice(sensor.y, center_timestamp_index)
                 z_sample = self.get_data_slice(sensor.z, center_timestamp_index)
 
-                features.append(x_sample)
-                features.append(y_sample)
-                features.append(z_sample)
+                features.append(x_sample if not self.use_statistical_features else self.get_statistical_features(x_sample))
+                features.append(y_sample if not self.use_statistical_features else self.get_statistical_features(y_sample))
+                features.append(z_sample if not self.use_statistical_features else self.get_statistical_features(z_sample))
             else:
                 mean_sample = self.get_data_slice(sensor.mean_signal, center_timestamp_index)
-                features.append(mean_sample)
+                features.append(mean_sample if not self.use_statistical_features else self.get_statistical_features(mean_sample))
 
         return features
+
+    def get_statistical_features(self, data):
+        p = PeakAnalysis()
+
+        min_value = np.amin(data)
+        max_value = np.amax(data)
+        root_mean_square = UMath.get_root_mean_square(data)
+        peaks_number = np.mean(p.compute_peaks(data)["peak"] + p.compute_peaks(data)["uphill"] + p.compute_peaks(data)["downhill"])
+        crest_factor = np.median(p.get_peak_to_average_ratios(data))
+        skewness = stats.skew(data, False)
+        kurtosis = stats.kurtosis(data, False)
+        variance = np.var(data)
+
+        return [min_value, max_value, root_mean_square, peaks_number, crest_factor, skewness, kurtosis, variance]
 
     def get_data_slice(self, data, center_index, window_size=100):
         left_samples = data[center_index - (window_size / 2):center_index]

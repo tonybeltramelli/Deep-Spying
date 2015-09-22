@@ -1,6 +1,5 @@
 __author__ = 'Tony Beltramelli www.tonybeltramelli.com - 04/09/2015'
 
-import numpy as np
 import scipy.signal as signal
 
 from ..utils.UMath import *

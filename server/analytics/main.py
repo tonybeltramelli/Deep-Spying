@@ -8,6 +8,7 @@ from modules.label.Label import *
 from modules.feature.FeatureExtractor import *
 from modules.classifier.Recurrent import *
 
+from modules.utils.UMath import *
 import os
 
 
@@ -30,7 +31,7 @@ class Main:
         accelerometer = Accelerometer(data_path, self.view)
         accelerometer.fit(gyroscope.timestamp)
 
-        feature_extractor = FeatureExtractor(output_path, self.view)
+        feature_extractor = FeatureExtractor(output_path, self.view, True)
         feature_extractor.segment_from_labels([gyroscope, accelerometer], label)
 
     def train(self):
@@ -52,7 +53,7 @@ class Main:
         classifier = Recurrent()
         classifier.retrieve_samples(Path.FEATURE_PATH)
 
-        classifier.k_fold_cross_validate(10)
+        classifier.k_fold_cross_validate(10, 20)
         classifier.relevance.output_confusion_matrix("{}confusion_matrix.png".format(Path.RESULT_PATH))
         classifier.relevance.output_statistics("{}statistics.md".format(Path.RESULT_PATH))
         classifier.relevance.output_compared_plot("{}progression.png".format(Path.RESULT_PATH))
@@ -61,5 +62,5 @@ main = Main()
 #main.process_all()
 #main.process("69141736")
 #main.train()
-main.evaluate()
-#main.cross_validation()
+#main.evaluate()
+main.cross_validation()

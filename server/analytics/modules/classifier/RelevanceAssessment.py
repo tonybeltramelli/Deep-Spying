@@ -108,6 +108,16 @@ class RelevanceAssessment:
         return confusion_matrix
 
     def output_compared_plot(self, path):
+        length = len(self.all_f1_score)
+        elength = len(self.errors)
+
+        if elength > length:
+            ratio = elength / length
+            self.all_f1_score = UMath.interpolate(self.all_f1_score, length * ratio)
+            self.all_precision = UMath.interpolate(self.all_precision, length * ratio)
+            self.all_recall = UMath.interpolate(self.all_recall, length * ratio)
+            self.all_reliability = UMath.interpolate(self.all_reliability, length * ratio)
+
         data = [self.errors, self.all_f1_score, self.all_precision, self.all_recall, self.all_reliability]
         colors = ['m', 'c', 'g', 'b', 'r']
         labels = ["Least square mean error", "F1 score", "Precision", "Recall", "Reliability"]

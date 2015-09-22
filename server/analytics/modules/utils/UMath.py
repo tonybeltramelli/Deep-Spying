@@ -1,6 +1,7 @@
 __author__ = 'Tony Beltramelli www.tonybeltramelli.com - 29/08/2015'
 
 from math import *
+from pandas import Series
 
 import numpy as np
 
@@ -46,3 +47,23 @@ class UMath:
     @staticmethod
     def scale(vector, scalar):
         return [x * scalar for x in vector]
+
+    @staticmethod
+    def interpolate(a, target_size):
+        length = len(a)
+        values = np.zeros(target_size)
+        values[:] = np.NaN
+
+        step = target_size / length
+
+        for i in range(0, length):
+            values[i * step] = a[i]
+
+        s = Series(data=values)
+        s = s.interpolate()
+
+        return s.values
+
+    @staticmethod
+    def get_root_mean_square(data):
+        return sqrt(np.sum(np.square(data) / len(data)))
