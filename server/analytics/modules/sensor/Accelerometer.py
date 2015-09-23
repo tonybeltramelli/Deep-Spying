@@ -14,4 +14,4 @@ class Accelerometer(Sensor):
         self.measurement_variance_estimate = 1e-01
         self.scaling_factor = 10
 
-        Sensor.process(self, merge_axis=True)
+        Sensor.process(self, merge_axis=False)

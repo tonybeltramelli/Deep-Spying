@@ -26,16 +26,6 @@ class Main:
         accelerometer = Accelerometer(data_path, self.view)
         accelerometer.fit(gyroscope.timestamp)
 
-        accelerometer.normalize()
-        gyroscope.normalize()
-
-        v = View(True, True, "paper")
-        v.plot_fusion_sensor("", gyroscope.timestamp,
-                             [gyroscope.mean_signal, accelerometer.mean_signal],
-                             ["gyroscope", "accelerometer"],
-                             ["m", "c"])
-        v.show()
-
         feature_extractor = FeatureExtractor(output_path, self.view, use_statistical_features=False)
         feature_extractor.segment_from_labels([gyroscope], label)
 
