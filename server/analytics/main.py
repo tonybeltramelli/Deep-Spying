@@ -1,20 +1,15 @@
 __author__ = 'Tony Beltramelli www.tonybeltramelli.com - 25/08/2015'
 
-from modules.View import *
-from modules.Path import *
 from modules.sensor.Gyroscope import *
 from modules.sensor.Accelerometer import *
 from modules.label.Label import *
 from modules.feature.FeatureExtractor import *
-from modules.classifier.Recurrent import *
-
-from modules.utils.UMath import *
-import os
+from modules.classification.classifier.Recurrent import *
 
 
 class Main:
     def __init__(self):
-        self.view = View(False, False)
+        self.view = View(False, False, "paper")
 
     def process_all(self):
         for entry in os.listdir(Path.RAW_PATH):
@@ -31,8 +26,18 @@ class Main:
         accelerometer = Accelerometer(data_path, self.view)
         accelerometer.fit(gyroscope.timestamp)
 
+        accelerometer.normalize()
+        gyroscope.normalize()
+
+        v = View(True, True, "paper")
+        v.plot_fusion_sensor("", gyroscope.timestamp,
+                             [gyroscope.mean_signal, accelerometer.mean_signal],
+                             ["gyroscope", "accelerometer"],
+                             ["m", "c"])
+        v.show()
+
         feature_extractor = FeatureExtractor(output_path, self.view, use_statistical_features=False)
-        feature_extractor.segment_from_labels([gyroscope, accelerometer], label)
+        feature_extractor.segment_from_labels([gyroscope], label)
 
     def train(self):
         classifier = Recurrent()
@@ -53,14 +58,27 @@ class Main:
         classifier = Recurrent()
         classifier.retrieve_samples(Path.FEATURE_PATH)
 
-        classifier.k_fold_cross_validate(10, 20)
+        classifier.k_fold_cross_validate(10, 50)
+        classifier.compute()
         classifier.relevance.output_confusion_matrix("{}confusion_matrix.png".format(Path.RESULT_PATH))
         classifier.relevance.output_statistics("{}statistics.md".format(Path.RESULT_PATH))
         classifier.relevance.output_compared_plot("{}progression.png".format(Path.RESULT_PATH))
 
+    def benchmark(self, classifiers):
+        for classifier in classifiers:
+            classifier.retrieve_samples(Path.FEATURE_PATH)
+            classifier.k_fold_cross_validate(10, 50)
+
+            classifier.relevance.output_confusion_matrix("{}{}_confusion_matrix.png".format(Path.RESULT_PATH, classifier.get_name()))
+            classifier.relevance.output_statistics("{}{}_statistics.md".format(Path.RESULT_PATH, classifier.get_name()))
+            classifier.relevance.output_compared_plot("{}{}_progression.png".format(Path.RESULT_PATH, classifier.get_name()))
+
+
+
 main = Main()
 #main.process_all()
-#main.process("69141736")
+main.process("69141736")
 #main.train()
 #main.evaluate()
-main.cross_validation()
+#main.cross_validation()
+#main.benchmark([Recurrent(), FeedForward()])

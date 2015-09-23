@@ -7,9 +7,10 @@ from posixpath import basename
 
 
 class View:
-    def __init__(self, to_show=True, to_save=True):
+    def __init__(self, to_show=True, to_save=True, screen_size=None):
         self.to_show = to_show
         self.to_save = to_save
+        self.screen_size = screen_size
 
     def plot_sensor_data_from_file(self, file_path):
         if not self.to_save and not self.to_show:
@@ -27,6 +28,7 @@ class View:
             return
 
         self.big_figure()
+        pylab.grid("on")
 
         pylab.plot(timestamp, x, color='r', label='x')
         pylab.plot(timestamp, y, color='g', label='y')
@@ -197,8 +199,29 @@ class View:
         pylab.xlabel('Time')
         pylab.ylabel('Value')
 
+    def plot_fusion_sensor(self, title, timestamp, values, labels, colors):
+        if not self.to_save and not self.to_show:
+            return
+
+        self.big_figure()
+        pylab.grid("on")
+
+        for i in range(0, len(values)):
+            pylab.plot(timestamp, values[i], color=colors[i], label=labels[i])
+
+        pylab.legend()
+
+        pylab.title(title)
+        pylab.xlabel('Time')
+        pylab.ylabel('Value')
+
     def big_figure(self):
-        pylab.figure(figsize=(18, 9.5))
+        if self.screen_size == "fullscren":
+            pylab.figure(figsize=(18, 9.5))
+        elif self.screen_size == "paper":
+            pylab.figure(figsize=(12, 6))
+        else:
+            pylab.figure()
 
     def show(self):
         if self.to_show:

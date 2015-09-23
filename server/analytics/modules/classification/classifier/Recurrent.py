@@ -48,3 +48,6 @@ class Recurrent(Classifier):
             predictions = [sum(x) for x in zip(predictions, prediction)]
 
         return UMath.normalize_array(predictions)
+
+    def get_name(self):
+        return "LSTM recurrent network (RProp- training)"

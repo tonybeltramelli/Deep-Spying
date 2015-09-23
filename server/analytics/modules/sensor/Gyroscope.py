@@ -7,12 +7,12 @@ class Gyroscope(Sensor):
     def __init__(self, path, view):
         Sensor.__init__(self, file_path="{}gyroscope.csv".format(path), view=view)
 
-        self.sampling_bias = 62500
+        self.maximum_delay = 62500
         self.median_filter_window_size = 9
         self.filter_type = "lowpass"
         self.process_variance_q = 1e-05
         self.measurement_variance_estimate = 1e-02
         self.scaling_factor = 100
 
-        Sensor.process(self, merge_axis=False)
+        Sensor.process(self, merge_axis=True)
 

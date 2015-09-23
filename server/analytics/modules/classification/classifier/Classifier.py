@@ -5,12 +5,11 @@ import random
 
 from pybrain.tools.xml.networkwriter import NetworkWriter
 from pybrain.tools.xml.networkreader import NetworkReader
-from RelevanceAssessment import *
-from ..utils.UMath import *
+from ..RelevanceAssessment import *
+from modules.utils.UMath import *
 
 
 class Classifier:
-    #LABELS = ["1", "3", "*", "#"]
     LABELS = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "*", "#"]
 
     def __init__(self):
@@ -117,6 +116,9 @@ class Classifier:
             self.relevance.update_evaluation(predicted_label, expected_label, predictions)
 
         self.relevance.compute(len(data_set))
+
+    def compute_relevance(self):
+        self.relevance.compute(len(self.collection))
 
     def k_fold_cross_validate(self, k=10, iteration=1):
         samples = self.get_samples(self.collection, k)

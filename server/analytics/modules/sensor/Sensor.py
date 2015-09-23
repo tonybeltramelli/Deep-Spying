@@ -26,7 +26,7 @@ class Sensor:
         self.name = Path.get_sensor_name(file_path)
         self.id = Path.get_id(file_path)
 
-        self.sampling_bias = None
+        self.maximum_delay = None
         self.filter_type = None
         self.median_filter_window_size = None
         self.process_variance_q = None
@@ -47,8 +47,8 @@ class Sensor:
             self.apply_median_filter(self.median_filter_window_size)
             self.plot("median filter")
 
-        if self.sampling_bias is not None and self.filter_type is not None:
-            self.apply_filter(UMath.get_frequency(self.sampling_bias), self.filter_type)
+        if self.maximum_delay is not None and self.filter_type is not None:
+            self.apply_filter(UMath.get_frequency(self.maximum_delay), self.filter_type)
             self.plot("{} filter".format(self.filter_type))
 
         self.apply_kalman_filter()
@@ -125,14 +125,22 @@ class Sensor:
         return a_posteriori_estimate
 
     def normalize(self):
-        self.x = UMath.normalize_array(self.x, -1.0, 1.0)
-        self.y = UMath.normalize_array(self.y, -1.0, 1.0)
-        self.z = UMath.normalize_array(self.z, -1.0, 1.0)
+        if self.mean_signal is None:
+            self.x = UMath.normalize_array(self.x, -1.0, 1.0)
+            self.y = UMath.normalize_array(self.y, -1.0, 1.0)
+            self.z = UMath.normalize_array(self.z, -1.0, 1.0)
+        else:
+            self.mean_signal = UMath.normalize_array(self.mean_signal, -1.0, 1.0)
+
+        self.calibrate()
 
     def calibrate(self):
-        self.x = self.calibrate_axis(self.x)
-        self.y = self.calibrate_axis(self.y)
-        self.z = self.calibrate_axis(self.z)
+        if self.mean_signal is None:
+            self.x = self.calibrate_axis(self.x)
+            self.y = self.calibrate_axis(self.y)
+            self.z = self.calibrate_axis(self.z)
+        else:
+            self.mean_signal = self.calibrate_axis(self.mean_signal)
 
     def calibrate_axis(self, data):
         mean = np.mean(data)
