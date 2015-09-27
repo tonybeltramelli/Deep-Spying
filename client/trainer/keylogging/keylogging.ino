@@ -4,6 +4,7 @@
 
 #include <Ethernet.h>
 #include <SPI.h>
+#include <Keypad.h>
 
 #include "KeyLoggingTrainer.h"
 
@@ -13,10 +14,24 @@ byte ip[] = { 192, 168, 0, 177 };
 byte serverAddress[] = { 192, 168, 0, 20 };
 int serverPort = 8000;
 
+const byte ROWS = 4;
+const byte COLS = 3;
+
+char keys[ROWS][COLS] = {
+  {'1','2','3'},
+  {'4','5','6'},
+  {'7','8','9'},
+  {'*','0','#'}
+};
+
+byte rowPins[ROWS] = {8, 7, 6, 5};
+byte colPins[COLS] = {9, 3, 2};
+
+Keypad keypad = Keypad(makeKeymap(keys), rowPins, colPins, ROWS, COLS);
 KeyLoggingTrainer trainer = KeyLoggingTrainer();
 
 void setup()
-{
+{ 
   Serial.begin(9600);
   while (!Serial);
   
@@ -30,7 +45,13 @@ void setup()
 }
 
 void loop()
-{ 
-  trainer.sendData(serverAddress, serverPort, trainer.getJSON("a"), true);
-  delay(5000);
+{
+  char key = keypad.getKey();
+  
+  if (key)
+  {
+    String label = String(int(key));
+    Serial.println(key);
+    trainer.sendData(serverAddress, serverPort, trainer.getJSON(label), true);
+  }
 }

@@ -6,19 +6,16 @@
 
 void KeyLoggingTrainer::setup(byte mac[], byte ip[])
 {
-	Ethernet.begin(mac, ip);
+  Ethernet.begin(mac, ip);
 
-  Serial.begin(9600);
-  while (!Serial);
-
-	_referenceTime = 0;
+  _referenceTime = 0;
 }
 
-String KeyLoggingTrainer::sendData(byte serverAddress[], int port, String data, boolean ignoreResponse)
+String KeyLoggingTrainer::sendData(byte serverAddress[], int serverPort, String data, boolean ignoreResponse)
 { 
   String response = "";
   
-  if (!_client.connect(serverAddress, port)) return response;
+  if (!_client.connect(serverAddress, serverPort)) return response;
   
   _client.println("POST / HTTP/1.1"); 
   _client.print("Content-Length: "); 
@@ -88,7 +85,6 @@ void KeyLoggingTrainer::setReferenceTime(String timestamp)
 String KeyLoggingTrainer::getJSON(String label)
 {
   String timestamp = _getTimestamp();
-  Serial.println("timestamp: " + timestamp);
 
   String data = "{\"sensor_name\":\"labels\",\"data_points\":[{\"timestamp\":" + timestamp;
   data = data + ",\"label\":\"" + label + "\"}]}";
