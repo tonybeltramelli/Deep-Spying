@@ -39,7 +39,7 @@ void setup()
   
   delay(2000);
   
-  String timestamp = trainer.sendData(serverAddress, serverPort, "d", false);
+  String timestamp = trainer.sendData(serverAddress, serverPort, "t", false);
   Serial.println("reference timestamp: "+timestamp);
   trainer.setReferenceTime(timestamp);
 }

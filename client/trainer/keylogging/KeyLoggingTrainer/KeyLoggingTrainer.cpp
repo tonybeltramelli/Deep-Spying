@@ -6,9 +6,9 @@
 
 void KeyLoggingTrainer::setup(byte mac[], byte ip[])
 {
-  Ethernet.begin(mac, ip);
+	Ethernet.begin(mac, ip);
 
-  _referenceTime = 0;
+	_referenceTime = 0;
 }
 
 String KeyLoggingTrainer::sendData(byte serverAddress[], int serverPort, String data, boolean ignoreResponse)
@@ -87,7 +87,7 @@ String KeyLoggingTrainer::getJSON(String label)
   String timestamp = _getTimestamp();
 
   String data = "{\"sensor_name\":\"labels\",\"data_points\":[{\"timestamp\":" + timestamp;
-  data = data + ",\"label\":\"" + label + "\"}]}";
+  data = data + ",\"label\":" + label + "}]}";
   
   return data;
 }
