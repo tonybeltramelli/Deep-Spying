@@ -156,7 +156,7 @@ class Sensor:
 
         return mean
 
-    def to_constant_rate(self, rate=2):
+    def to_constant_rate(self, rate=1):
         diff = []
         for i in range(1, len(self.timestamp)):
             diff.append(self.timestamp[i] - self.timestamp[i - 1])

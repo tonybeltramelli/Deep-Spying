@@ -8,7 +8,7 @@ class PeakAnalysis:
     def __init__(self, view):
         self.view = view
 
-    def detect_peaks(self, timestamp, signal, labels):
+    def get_peaks(self, signal):
         ratios = self.get_peak_to_average_ratios(signal)
 
         uphill = (((ratios + np.roll(ratios, -1) + np.roll(ratios, 1)) / 3) <= 9e-02)\
@@ -28,10 +28,16 @@ class PeakAnalysis:
         uphill = self.filter_from_peak_position(peak, uphill, -1)
         downhill = self.filter_from_peak_position(peak, downhill, 1)
 
-        self.view.plot_peaks(timestamp, ratios, uphill, peak, downhill, labels)
+        self.view.plot_peaks(ratios, uphill, peak, downhill)
         self.view.show()
 
-        return {"uphill": np.count_nonzero(uphill), "peak": np.count_nonzero(peak), "downhill": np.count_nonzero(downhill)}
+        peak_indices = []
+
+        for i in range(0, len(peak)):
+            if peak[i]:
+                peak_indices.append(i)
+
+        return peak_indices
 
     def filter_from_peak_position(self, peak, hill, direction):
         length = len(peak)

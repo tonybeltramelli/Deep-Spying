@@ -26,9 +26,12 @@ class Main:
         accelerometer = Accelerometer(data_path, self.view)
         accelerometer.fit(gyroscope.timestamp)
 
-        feature_extractor = FeatureExtractor(output_path, View(True, True, "paper"), use_statistical_features=False)
-        #feature_extractor.segment_from_labels([gyroscope, accelerometer], label)
-        feature_extractor.segment_heuristically([gyroscope, accelerometer], label)
+        feature_extractor = FeatureExtractor(output_path, View(True, True), use_statistical_features=False)
+
+        if label is not None:
+            feature_extractor.segment_from_labels([gyroscope, accelerometer], label)
+        else:
+            feature_extractor.segment_heuristically(gyroscope.get_mean_signal(), [gyroscope, accelerometer])
 
     def train(self):
         classifier = Recurrent()

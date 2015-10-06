@@ -40,7 +40,7 @@ class View:
         pylab.xlabel('Time')
         pylab.ylabel('Amplitude')
 
-    def plot_sensor_data_and_label(self, title, timestamp, x, y, z, label_timestamp, label):
+    def plot_sensor_data_and_label(self, title, timestamp, x, y, z, label_timestamp, label=None):
         if not self.to_save and not self.to_show:
             return
 
@@ -51,7 +51,10 @@ class View:
         pylab.plot(timestamp, z, color='b', label='z')
 
         for i in range(0, len(label_timestamp)):
-            pylab.axvline(label_timestamp[i], color="k", label="{}: key {}".format(i, label[i]), ls='dashed')
+            if label is not None:
+                pylab.axvline(label_timestamp[i], color="k", label="{}: key {}".format(i, label[i]), ls='dashed')
+            else:
+                pylab.axvline(label_timestamp[i], color="k", ls='dashed')
 
         pylab.legend()
 
@@ -185,7 +188,7 @@ class View:
         pylab.ylabel('Expected label')
         pylab.xlabel('Predicted label')
 
-    def plot_peaks(self, timestamp, signal, uphill, peak, downhill, label_timestamp):
+    def plot_peaks(self, signal, uphill, peak, downhill):
         if not self.to_save and not self.to_show:
             return
 
@@ -196,9 +199,6 @@ class View:
         pylab.plot(uphill.nonzero()[0], signal[uphill], 'ro')
         pylab.plot(peak.nonzero()[0], signal[peak], 'go')
         pylab.plot(downhill.nonzero()[0], signal[downhill], 'bo')
-
-        #for i in range(0, len(label_timestamp)):
-        #    pylab.axvline(label_timestamp[i], color="k", ls='dashed')
 
         pylab.xlabel('Time')
         pylab.ylabel('Amplitude')

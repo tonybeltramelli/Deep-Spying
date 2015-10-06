@@ -13,35 +13,30 @@ class FeatureExtractor:
         self.view = view
         self.use_statistical_features = use_statistical_features
 
-    def segment_heuristically(self, sensors, label):
+    def segment_heuristically(self, reference_signal, sensors):
         p = PeakAnalysis(self.view)
+        peaks = p.get_peaks(reference_signal)
 
-        timestamp = sensors[0].timestamp
+        timestamps = []
+        for peak_position in peaks:
+            timestamps.append(sensors[0].timestamp[peak_position])
 
-        sensors = [sensor.get_mean_signal() for sensor in sensors]
-
-        length = len(sensors[0])
-        mean_signal = np.zeros(length)
-
-        for i in range(0, length):
-            value = 0
-            for sensor in sensors:
-                value += sensor[i]
-
-            mean_signal[i] = value / len(sensors)
-
-        p.detect_peaks(timestamp, mean_signal, label.timestamp)
+        self.segment(sensors, timestamps)
 
     def segment_from_labels(self, sensors, label):
         label_timestamps = label.timestamp
         labels = label.label
 
+        self.segment(sensors, label_timestamps, labels)
+
+    def segment(self, sensors, timestamps, labels=None):
         output_file = open("{}labelled.data".format(self.output_path), 'w')
 
-        for i in range(0, len(label_timestamps)):
-            features = self.get_features(sensors, label_timestamps[i])
+        for i in range(0, len(timestamps)):
+            features = self.get_features(sensors, timestamps[i])
 
-            output_file.write("label:{}\n".format(labels[i]))
+            if labels is not None:
+                output_file.write("label:{}\n".format(labels[i]))
 
             if not self.use_statistical_features:
                 for j in range(0, len(features[0])):
@@ -60,7 +55,7 @@ class FeatureExtractor:
         print "Save features in {}".format(output_file.name)
 
         for sensor in sensors:
-            self.plot_segmentation(sensor, label_timestamps, labels)
+            self.plot_segmentation(sensor, timestamps, labels)
 
     def get_line(self, features, j=None, separator=","):
         length = len(features)
@@ -72,7 +67,7 @@ class FeatureExtractor:
 
         return line
 
-    def plot_segmentation(self, sensor, label_timestamps, labels):
+    def plot_segmentation(self, sensor, label_timestamps, labels=None):
         title = "{} segmentation".format(sensor.name)
         self.view.plot_sensor_data_and_label(title.title(), sensor.timestamp, sensor.x, sensor.y, sensor.z, label_timestamps, labels)
         self.view.save("{}{}_{}.png".format(Path.RESULT_PATH, sensor.id, title.replace(" ", "_")))
@@ -108,7 +103,7 @@ class FeatureExtractor:
         min_value = np.amin(data)
         max_value = np.amax(data)
         root_mean_square = UMath.get_root_mean_square(data)
-        peaks_number = np.mean(p.compute_peaks(data)["peak"] + p.compute_peaks(data)["uphill"] + p.compute_peaks(data)["downhill"])
+        peaks_number = np.mean(len(p.get_peaks(data)))
         crest_factor = np.median(p.get_peak_to_average_ratios(data))
         skewness = stats.skew(data, False)
         kurtosis = stats.kurtosis(data, False)
@@ -116,7 +111,7 @@ class FeatureExtractor:
 
         return [min_value, max_value, root_mean_square, peaks_number, crest_factor, skewness, kurtosis, variance]
 
-    def get_data_slice(self, data, center_index, window_size=70):
+    def get_data_slice(self, data, center_index, window_size=150):
         left_samples = data[center_index - (window_size / 2):center_index]
         right_samples = data[center_index:center_index + (window_size / 2)]
 
