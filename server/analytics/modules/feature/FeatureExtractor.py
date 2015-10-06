@@ -13,9 +13,24 @@ class FeatureExtractor:
         self.view = view
         self.use_statistical_features = use_statistical_features
 
-    def segment_heuristically(self, signal):
-        p = PeakAnalysis()
-        p.segment(signal, True)
+    def segment_heuristically(self, sensors, label):
+        p = PeakAnalysis(self.view)
+
+        timestamp = sensors[0].timestamp
+
+        sensors = [sensor.get_mean_signal() for sensor in sensors]
+
+        length = len(sensors[0])
+        mean_signal = np.zeros(length)
+
+        for i in range(0, length):
+            value = 0
+            for sensor in sensors:
+                value += sensor[i]
+
+            mean_signal[i] = value / len(sensors)
+
+        p.detect_peaks(timestamp, mean_signal, label.timestamp)
 
     def segment_from_labels(self, sensors, label):
         label_timestamps = label.timestamp
@@ -101,7 +116,7 @@ class FeatureExtractor:
 
         return [min_value, max_value, root_mean_square, peaks_number, crest_factor, skewness, kurtosis, variance]
 
-    def get_data_slice(self, data, center_index, window_size=100):
+    def get_data_slice(self, data, center_index, window_size=70):
         left_samples = data[center_index - (window_size / 2):center_index]
         right_samples = data[center_index:center_index + (window_size / 2)]
 

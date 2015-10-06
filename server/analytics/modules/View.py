@@ -38,7 +38,7 @@ class View:
 
         pylab.title(title)
         pylab.xlabel('Time')
-        pylab.ylabel('Value')
+        pylab.ylabel('Amplitude')
 
     def plot_sensor_data_and_label(self, title, timestamp, x, y, z, label_timestamp, label):
         if not self.to_save and not self.to_show:
@@ -57,7 +57,7 @@ class View:
 
         pylab.title(title)
         pylab.xlabel('Time')
-        pylab.ylabel('Value')
+        pylab.ylabel('Amplitude')
 
     def plot_signal(self, title, timestamp, signal):
         if not self.to_save and not self.to_show:
@@ -71,7 +71,7 @@ class View:
 
         pylab.title(title)
         pylab.xlabel('Time')
-        pylab.ylabel('Value')
+        pylab.ylabel('Amplitude')
 
     def plot_data(self, title, data, xlabel, ylabel, colors=None, labels=None):
         if not self.to_save and not self.to_show:
@@ -109,7 +109,7 @@ class View:
 
         pylab.title(title)
         pylab.xlabel('Time')
-        pylab.ylabel('Value')
+        pylab.ylabel('Amplitude')
 
     def plot_sensor_data_and_segment(self, title, timestamp, x, y, z, segment, label):
         if not self.to_save and not self.to_show:
@@ -130,7 +130,7 @@ class View:
 
         pylab.title(title)
         pylab.xlabel('Time')
-        pylab.ylabel('Value')
+        pylab.ylabel('Amplitude')
 
     def plot_comparison(self, values, estimate):
         if not self.to_save and not self.to_show:
@@ -144,7 +144,7 @@ class View:
         pylab.legend()
 
         pylab.xlabel('Time')
-        pylab.ylabel('Value')
+        pylab.ylabel('Amplitude')
 
         pylab.show()
 
@@ -162,7 +162,7 @@ class View:
         axis.plot(x, color='r', label='x')
         axis.plot(y, color='g', label='y')
         axis.plot(z, color='b', label='z')
-        axis.set_title("{} key {}".format(self.name, label))
+        axis.set_title("key {}".format(label))
 
     def plot_confusion_matrix(self, matrix, labels):
         if not self.to_save and not self.to_show:
@@ -185,19 +185,23 @@ class View:
         pylab.ylabel('Expected label')
         pylab.xlabel('Predicted label')
 
-    def plot_peaks(self, signal, uphill, peak, downhill):
+    def plot_peaks(self, timestamp, signal, uphill, peak, downhill, label_timestamp):
         if not self.to_save and not self.to_show:
             return
 
         self.big_figure()
+        pylab.grid("on")
 
         pylab.plot(signal, color='b')
         pylab.plot(uphill.nonzero()[0], signal[uphill], 'ro')
         pylab.plot(peak.nonzero()[0], signal[peak], 'go')
         pylab.plot(downhill.nonzero()[0], signal[downhill], 'bo')
 
+        #for i in range(0, len(label_timestamp)):
+        #    pylab.axvline(label_timestamp[i], color="k", ls='dashed')
+
         pylab.xlabel('Time')
-        pylab.ylabel('Value')
+        pylab.ylabel('Amplitude')
 
     def plot_fusion_sensor(self, title, timestamp, values, labels, colors):
         if not self.to_save and not self.to_show:
@@ -213,7 +217,7 @@ class View:
 
         pylab.title(title)
         pylab.xlabel('Time')
-        pylab.ylabel('Value')
+        pylab.ylabel('Amplitude')
 
     def big_figure(self):
         if self.screen_size == "fullscren":

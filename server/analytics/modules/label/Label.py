@@ -16,3 +16,7 @@ class Label:
 
         for i in range(0, len(label)):
             self.label.append(chr(int(label[i])))
+
+        self.diff = np.diff(self.timestamp)
+
+

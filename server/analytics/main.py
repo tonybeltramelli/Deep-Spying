@@ -26,14 +26,15 @@ class Main:
         accelerometer = Accelerometer(data_path, self.view)
         accelerometer.fit(gyroscope.timestamp)
 
-        feature_extractor = FeatureExtractor(output_path, self.view, use_statistical_features=False)
-        feature_extractor.segment_from_labels([gyroscope], label)
+        feature_extractor = FeatureExtractor(output_path, View(True, True, "paper"), use_statistical_features=False)
+        #feature_extractor.segment_from_labels([gyroscope, accelerometer], label)
+        feature_extractor.segment_heuristically([gyroscope, accelerometer], label)
 
     def train(self):
         classifier = Recurrent()
         classifier.retrieve_samples(Path.FEATURE_PATH)
 
-        classifier.train_model(100)
+        classifier.train_model(50)
         classifier.relevance.output_least_square_mean_errors("{}errors.png".format(Path.RESULT_PATH))
 
     def evaluate(self):
@@ -63,8 +64,6 @@ class Main:
             classifier.relevance.output_statistics("{}{}_statistics.md".format(Path.RESULT_PATH, classifier.get_name()))
             classifier.relevance.output_compared_plot("{}{}_progression.png".format(Path.RESULT_PATH, classifier.get_name()))
 
-
-
 main = Main()
 #main.process_all()
 main.process("69141736")
@@ -72,3 +71,7 @@ main.process("69141736")
 #main.evaluate()
 #main.cross_validation()
 #main.benchmark([Recurrent(), FeedForward()])
+
+
+
+

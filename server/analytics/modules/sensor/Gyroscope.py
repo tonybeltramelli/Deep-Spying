@@ -12,7 +12,6 @@ class Gyroscope(Sensor):
         self.filter_type = "lowpass"
         self.process_variance_q = 1e-05
         self.measurement_variance_estimate = 1e-02
-        self.scaling_factor = 100
 
         Sensor.process(self, merge_axis=False)
 

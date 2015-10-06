@@ -12,6 +12,5 @@ class Accelerometer(Sensor):
         self.filter_type = "highpass"
         self.process_variance_q = 1e-02
         self.measurement_variance_estimate = 1e-01
-        self.scaling_factor = 10
 
         Sensor.process(self, merge_axis=False)

@@ -32,7 +32,6 @@ class Sensor:
         self.process_variance_q = None
         self.measurement_variance_estimate = None
         self.mean_signal = None
-        self.scaling_factor = 1.0
 
     def process(self, merge_axis=False):
         self.plot("raw")
@@ -53,6 +52,8 @@ class Sensor:
 
         self.apply_kalman_filter()
         self.plot("kalman filter")
+
+        #self.to_constant_rate()
 
         self.view.show()
 
@@ -154,6 +155,18 @@ class Sensor:
             mean[i] = (self.x[i] + self.y[i] + self.z[i]) / 3
 
         return mean
+
+    def to_constant_rate(self, rate=2):
+        diff = []
+        for i in range(1, len(self.timestamp)):
+            diff.append(self.timestamp[i] - self.timestamp[i - 1])
+
+        mintime = np.amin(self.timestamp)
+        maxtime = np.amax(self.timestamp)
+
+        target_timestamps = np.arange(mintime, maxtime + rate, rate)
+
+        self.fit(target_timestamps)
 
     def fit(self, target_timestamps):
         merged_timestamps = sorted(set(np.concatenate((target_timestamps, self.timestamp))))
