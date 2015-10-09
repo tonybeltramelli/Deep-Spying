@@ -45,3 +45,8 @@ __pycache__/
 *.py[cod]
 __init__.py
 
+####################################
+# .gitignore for custom data files #
+####################################
+
+/server/data/*
