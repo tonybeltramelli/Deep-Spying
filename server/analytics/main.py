@@ -26,9 +26,9 @@ class Main:
         accelerometer = Accelerometer(data_path, self.view)
         accelerometer.fit(gyroscope.timestamp)
 
-        feature_extractor = FeatureExtractor(output_path, View(True, True), use_statistical_features=False)
+        feature_extractor = FeatureExtractor(output_path, self.view, use_statistical_features=False)
 
-        if label is not None:
+        if label.has_label:
             feature_extractor.segment_from_labels([gyroscope, accelerometer], label)
         else:
             feature_extractor.segment_heuristically(gyroscope.get_mean_signal(), [gyroscope, accelerometer])
@@ -68,10 +68,10 @@ class Main:
             classifier.relevance.output_compared_plot("{}{}_progression.png".format(Path.RESULT_PATH, classifier.get_name()))
 
 main = Main()
-#main.process_all()
-main.process("69141736")
-#main.train()
-#main.evaluate()
+main.process_all()
+#main.process("23213605")
+main.train()
+main.evaluate()
 #main.cross_validation()
 #main.benchmark([Recurrent(), FeedForward()])
 

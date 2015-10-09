@@ -133,8 +133,6 @@ class Sensor:
         else:
             self.mean_signal = UMath.normalize_array(self.mean_signal, -1.0, 1.0)
 
-        self.calibrate()
-
     def calibrate(self):
         if self.mean_signal is None:
             self.x = self.calibrate_axis(self.x)
@@ -156,7 +154,7 @@ class Sensor:
 
         return mean
 
-    def to_constant_rate(self, rate=1):
+    def to_constant_rate(self, rate=2):
         diff = []
         for i in range(1, len(self.timestamp)):
             diff.append(self.timestamp[i] - self.timestamp[i - 1])

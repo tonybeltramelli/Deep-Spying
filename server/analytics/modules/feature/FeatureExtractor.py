@@ -12,6 +12,7 @@ class FeatureExtractor:
         self.output_path = output_path
         self.view = view
         self.use_statistical_features = use_statistical_features
+        self.axes = self.view.get_subplot_axes()
 
     def segment_heuristically(self, reference_signal, sensors):
         p = PeakAnalysis(self.view)
@@ -37,6 +38,7 @@ class FeatureExtractor:
 
             if labels is not None:
                 output_file.write("label:{}\n".format(labels[i]))
+                #self.view.subplot(self.axes[i], features[0], features[1], features[2], labels[i])
 
             if not self.use_statistical_features:
                 for j in range(0, len(features[0])):
@@ -111,7 +113,7 @@ class FeatureExtractor:
 
         return [min_value, max_value, root_mean_square, peaks_number, crest_factor, skewness, kurtosis, variance]
 
-    def get_data_slice(self, data, center_index, window_size=150):
+    def get_data_slice(self, data, center_index, window_size=100):
         left_samples = data[center_index - (window_size / 2):center_index]
         right_samples = data[center_index:center_index + (window_size / 2)]
 

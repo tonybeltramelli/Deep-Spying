@@ -9,9 +9,8 @@
 #include "KeyLoggingTrainer.h"
 
 byte mac[] = {  0x90, 0xA2, 0xDA, 0x0D, 0xA3, 0xED };
-byte ip[] = { 192, 168, 0, 177 };
 
-byte serverAddress[] = { 192, 168, 0, 20 };
+byte serverAddress[] = { 192, 168, 52, 231 };
 int serverPort = 8000;
 
 const byte ROWS = 4;
@@ -35,7 +34,7 @@ void setup()
   Serial.begin(9600);
   while (!Serial);
   
-  trainer.setup(mac, ip);
+  trainer.setup(mac);
   
   delay(2000);
   

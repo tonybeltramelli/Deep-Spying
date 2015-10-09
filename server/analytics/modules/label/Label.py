@@ -9,8 +9,10 @@ class Label:
         try:
             data = np.genfromtxt(file_path, delimiter=',', skip_header=1,
                                  names=['timestamp', 'label'], dtype=[("timestamp", long), ('label', int)])
+            self.has_label = True
         except IOError:
-            return None
+            self.has_label = False
+            return
 
         self.timestamp = data['timestamp']
         label = data['label']

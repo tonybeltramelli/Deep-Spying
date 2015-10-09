@@ -11,18 +11,18 @@
 
 class KeyLoggingTrainer
 {
-	public:
-		void setup(byte mac[], byte ip[]);
-		String sendData(byte serverAddress[], int serverPort, String data, boolean ignoreResponse);
-		String getJSON(String label);
-		void setReferenceTime(String timestamp);
-  	private:
-  		EthernetClient _client;
-		unsigned long _startingTime;
-		unsigned long _referenceTime;
-		String _head;
-		//
-  		String _getTimestamp();
+    public:
+        void setup(byte mac[]);
+        String sendData(byte serverAddress[], int serverPort, String data, boolean ignoreResponse);
+        String getJSON(String label);
+        void setReferenceTime(String timestamp);
+    private:
+        EthernetClient _client;
+        unsigned long _startingTime;
+        unsigned long _referenceTime;
+        String _head;
+        //
+        String _getTimestamp();
 };
 
 #endif
