@@ -6,16 +6,20 @@
 
 void KeyLoggingTrainer::setup(byte mac[])
 {
+    Serial.begin(9600);
+    while (!Serial);
+
     Ethernet.begin(mac);
-    _referenceTime = 0;
 }
 
 String KeyLoggingTrainer::sendData(byte serverAddress[], int serverPort, String data, boolean ignoreResponse)
 { 
     String response = "";
-  
+
     if (!_client.connect(serverAddress, serverPort)) return response;
-  
+    
+    if(!ignoreResponse) _delay = millis();
+
     _client.println("POST / HTTP/1.1"); 
     _client.print("Content-Length: "); 
     _client.println(data.length()); 
@@ -44,19 +48,21 @@ String KeyLoggingTrainer::sendData(byte serverAddress[], int serverPort, String 
                 startRecording = !startRecording;
                 if(!startRecording)
                 {
-                    _startingTime = millis();
                     _client.stop();
                 }
             }
         }
     }
-  
+    
+    _delay = millis() - _delay;
     response = response.substring(0, response.length() - 1);
     return response;
 }
 
 void KeyLoggingTrainer::setReferenceTime(String timestamp)
 {
+    _startTime = millis();
+
     int headLength = 5;
     char length = timestamp.length();
 
@@ -93,8 +99,8 @@ String KeyLoggingTrainer::getJSON(String label)
 
 String KeyLoggingTrainer::_getTimestamp()
 {
-    unsigned long currentTime = millis();
-    unsigned long diff = _referenceTime + currentTime - _startingTime;
+    unsigned long currentTime = millis() + _delay;
+    unsigned long diff = _referenceTime + currentTime - _startTime;
 
     return _head + String(diff);
 }

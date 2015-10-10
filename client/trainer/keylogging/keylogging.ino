@@ -10,7 +10,7 @@
 
 byte mac[] = {  0x90, 0xA2, 0xDA, 0x0D, 0xA3, 0xED };
 
-byte serverAddress[] = { 192, 168, 52, 231 };
+byte serverAddress[] = { 192, 168, 0, 20 };
 int serverPort = 8000;
 
 const byte ROWS = 4;

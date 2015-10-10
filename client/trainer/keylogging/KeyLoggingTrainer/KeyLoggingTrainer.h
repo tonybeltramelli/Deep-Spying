@@ -18,7 +18,8 @@ class KeyLoggingTrainer
         void setReferenceTime(String timestamp);
     private:
         EthernetClient _client;
-        unsigned long _startingTime;
+        unsigned long _startTime;
+        unsigned long _delay;
         unsigned long _referenceTime;
         String _head;
         //
