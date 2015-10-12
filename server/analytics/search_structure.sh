@@ -5,7 +5,7 @@
 
 ./main.py process
 
-iteration=30
+iteration=20
 MIN=1
 MAX=12
 
@@ -30,5 +30,4 @@ run train
 mkdir -p ../data/result_train
 mv ../data/result/* ../data/result_train/
 
-exit 0
 run validate
