@@ -133,6 +133,8 @@ class Sensor:
         else:
             self.mean_signal = UMath.normalize_array(self.mean_signal, -1.0, 1.0)
 
+        self.calibrate()
+
     def calibrate(self):
         if self.mean_signal is None:
             self.x = self.calibrate_axis(self.x)

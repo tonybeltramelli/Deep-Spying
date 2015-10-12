@@ -1,4 +1,7 @@
+#!/usr/bin/env python
 __author__ = 'Tony Beltramelli www.tonybeltramelli.com - 25/08/2015'
+
+import sys
 
 from modules.sensor.Gyroscope import *
 from modules.sensor.Accelerometer import *
@@ -8,7 +11,8 @@ from modules.classification.classifier.Recurrent import *
 
 
 class Main:
-    def __init__(self):
+    def __init__(self, run_name=""):
+        self.run_name = "_" + run_name
         self.view = View(False, False, "paper")
 
     def process_all(self):
@@ -33,48 +37,79 @@ class Main:
         else:
             feature_extractor.segment_heuristically(gyroscope.get_mean_signal(), [gyroscope, accelerometer])
 
-    def train(self):
-        classifier = Recurrent()
+    def get_classifier(self, iteration, neurons_per_layer):
+        print "Train for {} iterations with {} neurons ({} layers)".format(iteration, neurons_per_layer, len(neurons_per_layer))
+
+        classifier = Recurrent(neurons_per_layer)
         classifier.retrieve_samples(Path.FEATURE_PATH)
 
-        classifier.train_model(50)
-        classifier.relevance.output_least_square_mean_errors("{}errors.png".format(Path.RESULT_PATH))
+        return classifier
+
+    def train(self, iteration=100, neurons_per_layer=[9]):
+        classifier = self.get_classifier(iteration, neurons_per_layer)
+
+        classifier.train_model(iteration)
+        classifier.relevance.output_least_square_mean_errors("{}errors{}.png".format(Path.RESULT_PATH, self.run_name))
 
     def evaluate(self):
         classifier = Recurrent()
         classifier.retrieve_samples(Path.FEATURE_PATH)
 
         classifier.evaluate()
-        classifier.relevance.output_confusion_matrix("{}confusion_matrix.png".format(Path.RESULT_PATH))
-        classifier.relevance.output_statistics("{}statistics.md".format(Path.RESULT_PATH))
+        classifier.relevance.output_confusion_matrix("{}confusion_matrix{}.png".format(Path.RESULT_PATH, self.run_name))
+        classifier.relevance.output_statistics("{}statistics.md".format(Path.RESULT_PATH), self.run_name)
 
-    def cross_validation(self):
-        classifier = Recurrent()
-        classifier.retrieve_samples(Path.FEATURE_PATH)
+    def cross_validation(self, iteration=30, neurons_per_layer=[9]):
+        classifier = self.get_classifier(iteration, neurons_per_layer)
 
-        classifier.k_fold_cross_validate(10, 50)
+        classifier.k_fold_cross_validate(10, iteration)
         classifier.compute()
-        classifier.relevance.output_confusion_matrix("{}confusion_matrix.png".format(Path.RESULT_PATH))
-        classifier.relevance.output_statistics("{}statistics.md".format(Path.RESULT_PATH))
-        classifier.relevance.output_compared_plot("{}progression.png".format(Path.RESULT_PATH))
+        classifier.relevance.output_confusion_matrix("{}confusion_matrix{}.png".format(Path.RESULT_PATH, self.run_name))
+        classifier.relevance.output_statistics("{}statistics.md".format(Path.RESULT_PATH), self.run_name)
+        classifier.relevance.output_compared_plot("{}progression{}.png".format(Path.RESULT_PATH, self.run_name))
 
     def benchmark(self, classifiers):
         for classifier in classifiers:
             classifier.retrieve_samples(Path.FEATURE_PATH)
-            classifier.k_fold_cross_validate(10, 50)
+            classifier.k_fold_cross_validate(10, 30)
 
             classifier.relevance.output_confusion_matrix("{}{}_confusion_matrix.png".format(Path.RESULT_PATH, classifier.get_name()))
             classifier.relevance.output_statistics("{}{}_statistics.md".format(Path.RESULT_PATH, classifier.get_name()))
             classifier.relevance.output_compared_plot("{}{}_progression.png".format(Path.RESULT_PATH, classifier.get_name()))
 
-main = Main()
-main.process_all()
-#main.process("23213605")
-main.train()
-main.evaluate()
-#main.cross_validation()
-#main.benchmark([Recurrent(), FeedForward()])
+if __name__ == "__main__":
+    argv = sys.argv[1:]
+    length = len(argv)
 
+    if length < 1:
+        print "Error: no argument supplied"
+        print "Usage: "
+        print "     main.py <mode> <args...>"
+    else:
+        mode = argv[0]
 
+        if mode == "process":
+            main = Main()
+            if length == 2:
+                main.process(argv[1])
+            else:
+                main.process_all()
+        else:
+            main = Main(argv[1])
 
+            if mode == "train":
+                if length == 3:
+                    main.train(int(argv[2]))
+                elif length > 3:
+                    main.train(int(argv[2]), [int(x) for x in argv[3:]])
+                else:
+                    main.train()
+                main.evaluate()
+            elif mode == "validate":
+                if length == 3:
+                    main.cross_validation(int(argv[2]))
+                elif length > 3:
+                    main.cross_validation(int(argv[2]), [int(x) for x in argv[3:]])
+                else:
+                    main.cross_validation()
 

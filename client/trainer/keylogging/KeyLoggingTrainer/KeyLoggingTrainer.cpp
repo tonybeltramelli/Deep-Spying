@@ -6,9 +6,6 @@
 
 void KeyLoggingTrainer::setup(byte mac[])
 {
-    Serial.begin(9600);
-    while (!Serial);
-
     Ethernet.begin(mac);
 }
 

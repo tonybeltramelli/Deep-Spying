@@ -126,9 +126,9 @@ class RelevanceAssessment:
         self.view.show()
         self.view.save(path)
 
-    def output_statistics(self, path):
+    def output_statistics(self, path, run_name):
         output_file = open(path, 'a')
-        output_file.write("#Statistics \n")
+        output_file.write("#Statistics {}\n".format(run_name))
 
         output_file.write("* F1 score: {}\n".format(self.get_statistics(self.all_f1_score)))
         output_file.write("* Precision: {}\n".format(self.get_statistics(self.all_precision)))
