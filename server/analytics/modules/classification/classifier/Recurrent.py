@@ -1,6 +1,5 @@
 __author__ = 'Tony Beltramelli www.tonybeltramelli.com - 13/09/2015'
 
-from pybrain.tools.shortcuts import buildNetwork
 from pybrain.datasets import SequentialDataSet
 from pybrain.supervised.trainers import RPropMinusTrainer
 from pybrain.structure import *
@@ -16,28 +15,35 @@ class Recurrent(Classifier):
     def build_neural_net(self):
         input_number, output_number = self.meta_data
 
-        if len(self.neurons_per_layer) == 0:
-            self.neural_net = buildNetwork(input_number, self.neurons_per_layer[0], output_number,
-                                           hiddenclass=LSTMLayer, recurrent=True, outputbias=False)
+        input = LinearLayer(input_number)
+        output = SoftmaxLayer(len(self.LABELS))
+        #bias = BiasUnit(name='bias')
+
+        self.neural_net = RecurrentNetwork()
+        self.neural_net.addInputModule(input)
+        self.neural_net.addOutputModule(output)
+        #self.neural_net.addModule(bias)
+
+        prev = input
+        for i in range(0, len(self.neurons_per_layer)):
+            lstm = LSTMLayer(self.neurons_per_layer[i], peepholes=False)
+
+            self.neural_net.addModule(lstm)
+            self.neural_net.addConnection(FullConnection(prev, lstm))
+            #self.neural_net.addConnection(FullConnection(bias, lstm))
+
+            prev = lstm
+
+        self.neural_net.addConnection(FullConnection(prev, output))
+        self.neural_net.sortModules()
+
+        fast_net = self.neural_net.convertToFastNetwork()
+
+        if fast_net is not None:
+            self.neural_net = fast_net
+            print "Use fast C++ implementation"
         else:
-            input = LinearLayer(input_number)
-            output = LinearLayer(len(self.LABELS))
-
-            self.neural_net = RecurrentNetwork()
-            self.neural_net.addInputModule(input)
-            self.neural_net.addOutputModule(output)
-
-            prev = input
-            for i in range(0, len(self.neurons_per_layer)):
-                lstm = LSTMLayer(self.neurons_per_layer[i])
-
-                self.neural_net.addModule(lstm)
-                self.neural_net.addConnection(FullConnection(prev, lstm))
-
-                prev = lstm
-
-            self.neural_net.addConnection(FullConnection(prev, output))
-            self.neural_net.sortModules()
+            print "Use standard Python implementation"
 
     def get_new_data_set(self):
         input_number, output_number = self.meta_data

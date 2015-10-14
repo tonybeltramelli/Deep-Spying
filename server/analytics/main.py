@@ -63,19 +63,10 @@ class Main:
         classifier = self.get_classifier(iteration, neurons_per_layer)
 
         classifier.k_fold_cross_validate(10, iteration)
-        classifier.compute()
+        classifier.compute_relevance()
         classifier.relevance.output_confusion_matrix("{}confusion_matrix{}.png".format(Path.RESULT_PATH, self.run_name))
         classifier.relevance.output_statistics("{}statistics.md".format(Path.RESULT_PATH), self.run_name)
         classifier.relevance.output_compared_plot("{}progression{}.png".format(Path.RESULT_PATH, self.run_name))
-
-    def benchmark(self, classifiers):
-        for classifier in classifiers:
-            classifier.retrieve_samples(Path.FEATURE_PATH)
-            classifier.k_fold_cross_validate(10, 30)
-
-            classifier.relevance.output_confusion_matrix("{}{}_confusion_matrix.png".format(Path.RESULT_PATH, classifier.get_name()))
-            classifier.relevance.output_statistics("{}{}_statistics.md".format(Path.RESULT_PATH, classifier.get_name()))
-            classifier.relevance.output_compared_plot("{}{}_progression.png".format(Path.RESULT_PATH, classifier.get_name()))
 
 if __name__ == "__main__":
     argv = sys.argv[1:]
@@ -84,7 +75,7 @@ if __name__ == "__main__":
     if length < 1:
         print "Error: no argument supplied"
         print "Usage: "
-        print "     main.py <mode> <args...>"
+        print "     main.py <mode> <run name> <args ...>"
     else:
         mode = argv[0]
 
@@ -112,4 +103,3 @@ if __name__ == "__main__":
                     main.cross_validation(int(argv[2]), [int(x) for x in argv[3:]])
                 else:
                     main.cross_validation()
-
