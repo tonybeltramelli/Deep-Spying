@@ -21,41 +21,40 @@ class Classifier:
         self.meta_data = None
 
     def retrieve_samples(self, data_path):
-        self.collection = []
-        input_number = 0
-        labels = []
-
         for entry in os.listdir(data_path):
             if entry.find(".data") != -1:
-                file_path = "{}{}".format(data_path, entry)
-                data = open(file_path, 'r')
+                self.retrieve_sample("{}{}".format(data_path, entry))
 
-                label = ""
-                data_points = None
+    def retrieve_sample(self, file_path, is_labelled=True):
+        data = open(file_path, 'r')
 
-                for line in data:
-                    line = line.rstrip()
+        label = ""
+        data_points = None
 
-                    if line.find(":") != -1:
-                        label = line[line.find(":") + 1:]
-                        labels.append(label)
+        for line in data:
+            line = line.rstrip()
 
-                        if data_points:
-                            self.collection.append(data_points)
-                        data_points = []
-                    elif line.find(".") != -1:
-                        values = line.split(",")
-                        data_points.append({"values": values, "label": label})
-
-                        if input_number == 0:
-                            input_number = len(values)
-
-                if data_points and len(data_points) > 0:
+            if line.find(":") != -1:
+                if is_labelled:
+                    label = line[line.find(":") + 1:]
+                        
+                if data_points:
                     self.collection.append(data_points)
+                data_points = []
+            elif line.find(".") != -1:
+                values = line.split(",")
 
-        output_number = len(list(set(labels)))
+                if is_labelled:
+                    data_points.append({"values": values, "label": label})
+                else:
+                    data_points.append({"values": values})
 
-        self.meta_data = (input_number, output_number)
+                if self.meta_data is None:
+                    input_number = len(values)
+                    self.meta_data = (input_number, len(self.LABELS))
+
+        if data_points and len(data_points) > 0:
+            self.collection.append(data_points)
 
     def get_samples(self, collection, k=1):
         if k != 1:
@@ -74,13 +73,17 @@ class Classifier:
 
         return training_set
 
-    def get_evaluation_set(self, sample):
+    def get_evaluation_set(self, sample, is_labelled=True):
         evaluation_set = {}
         index = 0
 
         for data_points in sample:
             index += 1
-            expected_label = "{}:{}".format(index, data_points[0]["label"])
+            if is_labelled:
+                expected_label = "{}:{}".format(index, data_points[0]["label"])
+            else:
+                expected_label = "{}".format(index)
+
             evaluation_set[expected_label] = []
 
             for data_point in data_points:
@@ -101,24 +104,24 @@ class Classifier:
 
         self.serialize("neural_net.xml")
 
-    def evaluate(self, evaluation_set=None):
+    def evaluate(self, evaluation_set=None, is_labelled=True):
         evaluation_set = self.collection if evaluation_set is None else evaluation_set
-        data_set = self.get_evaluation_set(evaluation_set)
+        data_set = self.get_evaluation_set(evaluation_set, is_labelled)
 
         for key, sample in data_set.iteritems():
             self.deserialize("neural_net.xml")
 
             predictions = self.get_predictions(sample)
-
             predicted_label = self.get_label_from_binary_position(np.argmax(predictions))
-            expected_label = key[key.find(":") + 1:]
+            
+            if is_labelled:
+                expected_label = key[key.find(":") + 1:]
+                self.relevance.update_evaluation(predicted_label, expected_label, predictions)
+            else:
+                print "predict: {}".format(predicted_label)
 
-            self.relevance.update_evaluation(predicted_label, expected_label, predictions)
-
-        self.relevance.compute(len(data_set))
-
-    def compute_relevance(self):
-        self.relevance.compute(len(self.collection))
+        if is_labelled:
+            self.relevance.compute(len(data_set))
 
     def k_fold_cross_validate(self, k=10, iteration=1):
         samples = self.get_samples(self.collection, k)

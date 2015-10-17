@@ -22,7 +22,7 @@ class Main:
                 self.process(session_id, sensors, merge_axes)
 
     def process(self, session_id, sensors="ga", merge_axes={"g": False, "a": False}):
-        data_path = Path.get_path(Path.RAW_PATH, session_id)
+        data_path = Path.get_path(Path.RAW_PATH, session_id) + "_"
         output_path = Path.get_path(Path.FEATURE_PATH, session_id)
 
         label = Label(data_path)
@@ -33,10 +33,10 @@ class Main:
         feature_extractor = FeatureExtractor(output_path, self.view, use_statistical_features=False)
 
         fusion = []
-        for s in sensors:
-            if s == 'g':
+        for sensor in sensors:
+            if sensor == 'g':
                 fusion.append(gyroscope)
-            if s == 'a':
+            if sensor == 'a':
                 fusion.append(accelerometer)
 
         if label.has_label:
@@ -74,6 +74,13 @@ class Main:
         classifier.relevance.output_statistics("{}statistics.md".format(Path.RESULT_PATH), self.run_name)
         classifier.relevance.output_compared_plot("{}progression{}.png".format(Path.RESULT_PATH, self.run_name))
 
+    def predict(self, session_id):
+        self.process(session_id)
+        
+        classifier = Recurrent()
+        classifier.retrieve_sample("{}{}.data".format(Path.FEATURE_PATH, session_id), is_labelled=False)
+        classifier.evaluate(is_labelled=False)
+
 if __name__ == "__main__":
     argv = sys.argv[1:]
     length = len(argv)
@@ -87,6 +94,7 @@ if __name__ == "__main__":
         print "     main.py process ga gyan"
         print "     main.py train dev 10 9"
         print "     main.py validate session1 10 5 9"
+        print "     main.py predict 69141736"
     else:
         mode = argv[0]
 
@@ -109,6 +117,9 @@ if __name__ == "__main__":
                 main.process_all(s, a)
             else:
                 main.process_all()
+        elif mode == "predict" and length == 2:
+            main = Main()
+            main.predict(argv[1])
         else:
             main = Main(argv[1])
 

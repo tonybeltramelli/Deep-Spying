@@ -11,7 +11,7 @@ class Path:
 
     @staticmethod
     def get_path(root, variable):
-        path = "{}{}_".format(root, variable)
+        path = "{}{}".format(root, variable)
         return path
 
     @staticmethod

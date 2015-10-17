@@ -31,7 +31,7 @@ class FeatureExtractor:
         self.segment(sensors, label_timestamps, labels)
 
     def segment(self, sensors, timestamps, labels=None):
-        output_file = open("{}labelled.data".format(self.output_path), 'w')
+        output_file = open("{}.data".format(self.output_path), 'w')
 
         for i in range(0, len(timestamps)):
             features = self.get_features(sensors, timestamps[i])
@@ -39,6 +39,8 @@ class FeatureExtractor:
             if labels is not None:
                 output_file.write("label:{}\n".format(labels[i]))
                 #self.view.subplot(self.axes[i], features[0], features[1], features[2], labels[i])
+            else:
+                output_file.write(":\n")
 
             if not self.use_statistical_features:
                 for j in range(0, len(features[0])):
