@@ -7,7 +7,7 @@ from modules.sensor.Gyroscope import *
 from modules.sensor.Accelerometer import *
 from modules.label.Label import *
 from modules.feature.FeatureExtractor import *
-from modules.classification.classifier.Recurrent import *
+from modules.classification.Recurrent import *
 
 
 class Main:
@@ -76,7 +76,7 @@ class Main:
 
     def predict(self, session_id):
         self.process(session_id)
-        
+
         classifier = Recurrent()
         classifier.retrieve_sample("{}{}.data".format(Path.FEATURE_PATH, session_id), is_labelled=False)
         classifier.evaluate(is_labelled=False)

@@ -1,17 +1,21 @@
 __author__ = 'Tony Beltramelli www.tonybeltramelli.com - 22/09/2015'
 
-from pybrain.tools.shortcuts import buildNetwork
 from pybrain.datasets import SupervisedDataSet
 from pybrain.supervised.trainers import BackpropTrainer
-from pybrain.structure import *
 from Classifier import *
+from ..utils.NeuralNet import *
 
 
 class FeedForward(Classifier):
+    def __init__(self, neurons_per_layer=[9]):
+        Classifier.__init__(self)
+
+        self.neurons_per_layer = neurons_per_layer
+
     def build_neural_net(self):
         input_number, output_number = self.meta_data
-
-        self.neural_net = buildNetwork(input_number, 5, output_number, bias=True, hiddenclass=TanhLayer)
+        self.neural_net = NeuralNet.get_neural_net(input_number, output_number,
+                                                   FeedForwardNetwork, TanhLayer, self.neurons_per_layer)
 
     def get_new_data_set(self):
         input_number, output_number = self.meta_data

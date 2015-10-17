@@ -5,8 +5,8 @@ import random
 
 from pybrain.tools.xml.networkwriter import NetworkWriter
 from pybrain.tools.xml.networkreader import NetworkReader
-from ..RelevanceAssessment import *
-from modules.utils.UMath import *
+from RelevanceAssessment import *
+from ..utils.UMath import *
 
 
 class Classifier:

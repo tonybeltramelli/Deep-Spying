@@ -102,7 +102,7 @@ class FeatureExtractor:
         return features
 
     def get_statistical_features(self, data):
-        p = PeakAnalysis()
+        p = PeakAnalysis(self.view)
 
         min_value = np.amin(data)
         max_value = np.amax(data)
@@ -115,7 +115,7 @@ class FeatureExtractor:
 
         return [min_value, max_value, root_mean_square, peaks_number, crest_factor, skewness, kurtosis, variance]
 
-    def get_data_slice(self, data, center_index, window_size=100):
+    def get_data_slice(self, data, center_index, window_size=50):
         left_samples = data[center_index - (window_size / 2):center_index]
         right_samples = data[center_index:center_index + (window_size / 2)]
 
