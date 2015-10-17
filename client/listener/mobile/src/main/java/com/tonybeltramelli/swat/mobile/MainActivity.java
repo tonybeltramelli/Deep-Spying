@@ -7,6 +7,9 @@ import android.widget.Button;
 import com.tonybeltramelli.swat.mobile.data.DataManager;
 import com.tonybeltramelli.swat.mobile.preference.APrefActivity;
 
+/**
+ * Created by Tony Beltramelli www.tonybeltramelli.com on 05/08/15.
+ */
 public class MainActivity extends APrefActivity implements View.OnClickListener
 {
     private MeasurementController _measurementController;

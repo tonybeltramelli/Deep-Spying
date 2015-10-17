@@ -6,6 +6,9 @@ import android.os.Bundle;
 import android.support.wearable.view.WatchViewStub;
 import android.widget.TextView;
 
+/**
+ * Created by Tony Beltramelli www.tonybeltramelli.com on 05/08/15.
+ */
 public class MainActivity extends Activity
 {
     private TextView _textView;
