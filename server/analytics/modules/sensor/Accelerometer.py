@@ -4,7 +4,7 @@ from Sensor import *
 
 
 class Accelerometer(Sensor):
-    def __init__(self, path, view):
+    def __init__(self, path, view, merge_axes=False):
         Sensor.__init__(self, file_path="{}accelerometer.csv".format(path), view=view)
 
         self.maximum_delay = 10000
@@ -13,4 +13,4 @@ class Accelerometer(Sensor):
         self.process_variance_q = 1e-02
         self.measurement_variance_estimate = 1e-01
 
-        Sensor.process(self, merge_axis=False)
+        Sensor.process(self, merge_axes)

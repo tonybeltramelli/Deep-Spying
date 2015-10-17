@@ -15,27 +15,34 @@ class Main:
         self.run_name = "_" + run_name
         self.view = View(False, False, "paper")
 
-    def process_all(self):
+    def process_all(self, sensors="ga", merge_axes={"g": False, "a": False}):
         for entry in os.listdir(Path.RAW_PATH):
             if entry.find("e.csv") != -1:
                 session_id = entry[:entry.find("_")]
-                self.process(session_id)
+                self.process(session_id, sensors, merge_axes)
 
-    def process(self, session_id):
+    def process(self, session_id, sensors="ga", merge_axes={"g": False, "a": False}):
         data_path = Path.get_path(Path.RAW_PATH, session_id)
         output_path = Path.get_path(Path.FEATURE_PATH, session_id)
 
         label = Label(data_path)
-        gyroscope = Gyroscope(data_path, self.view)
-        accelerometer = Accelerometer(data_path, self.view)
+        gyroscope = Gyroscope(data_path, self.view, merge_axes["g"])
+        accelerometer = Accelerometer(data_path, self.view, merge_axes["a"])
         accelerometer.fit(gyroscope.timestamp)
 
         feature_extractor = FeatureExtractor(output_path, self.view, use_statistical_features=False)
 
+        fusion = []
+        for s in sensors:
+            if s == 'g':
+                fusion.append(gyroscope)
+            if s == 'a':
+                fusion.append(accelerometer)
+
         if label.has_label:
-            feature_extractor.segment_from_labels([gyroscope, accelerometer], label)
+            feature_extractor.segment_from_labels(fusion, label)
         else:
-            feature_extractor.segment_heuristically(gyroscope.get_mean_signal(), [gyroscope, accelerometer])
+            feature_extractor.segment_heuristically(fusion, gyroscope.get_mean_signal())
 
     def get_classifier(self, iteration, neurons_per_layer):
         print "Train for {} iterations with {} neurons ({} layers)".format(iteration, neurons_per_layer, len(neurons_per_layer))
@@ -75,6 +82,11 @@ if __name__ == "__main__":
         print "Error: no argument supplied"
         print "Usage: "
         print "     main.py <mode> <run name> <args ...>"
+        print "Examples: "
+        print "     main.py process 69141736"
+        print "     main.py process ga gyan"
+        print "     main.py train dev 10 9"
+        print "     main.py validate session1 10 5 9"
     else:
         mode = argv[0]
 
@@ -82,6 +94,19 @@ if __name__ == "__main__":
             main = Main()
             if length == 2:
                 main.process(argv[1])
+            elif length > 2:
+                s = argv[1]
+                m = argv[2]
+
+                a = {"g": False, "a": False}
+                for i in xrange(0, len(m), 2):
+                    c = m[i] + m[i + 1]
+                    sensor = c[0]
+                    strategy = c[1]
+
+                    a[sensor] = True if strategy == 'y' else False
+
+                main.process_all(s, a)
             else:
                 main.process_all()
         else:

@@ -4,7 +4,7 @@ from Sensor import *
 
 
 class Gyroscope(Sensor):
-    def __init__(self, path, view):
+    def __init__(self, path, view, merge_axes=False):
         Sensor.__init__(self, file_path="{}gyroscope.csv".format(path), view=view)
 
         self.maximum_delay = 62500
@@ -13,5 +13,5 @@ class Gyroscope(Sensor):
         self.process_variance_q = 1e-05
         self.measurement_variance_estimate = 1e-02
 
-        Sensor.process(self, merge_axis=False)
+        Sensor.process(self, merge_axes)
 

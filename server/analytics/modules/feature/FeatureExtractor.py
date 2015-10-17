@@ -14,7 +14,7 @@ class FeatureExtractor:
         self.use_statistical_features = use_statistical_features
         self.axes = self.view.get_subplot_axes()
 
-    def segment_heuristically(self, reference_signal, sensors):
+    def segment_heuristically(self, sensors, reference_signal):
         p = PeakAnalysis(self.view)
         peaks = p.get_peaks(reference_signal)
 

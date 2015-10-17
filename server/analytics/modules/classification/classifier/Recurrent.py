@@ -17,12 +17,10 @@ class Recurrent(Classifier):
 
         input = LinearLayer(input_number)
         output = SoftmaxLayer(len(self.LABELS))
-        #bias = BiasUnit(name='bias')
 
         self.neural_net = RecurrentNetwork()
         self.neural_net.addInputModule(input)
         self.neural_net.addOutputModule(output)
-        #self.neural_net.addModule(bias)
 
         prev = input
         for i in range(0, len(self.neurons_per_layer)):
@@ -30,7 +28,6 @@ class Recurrent(Classifier):
 
             self.neural_net.addModule(lstm)
             self.neural_net.addConnection(FullConnection(prev, lstm))
-            #self.neural_net.addConnection(FullConnection(bias, lstm))
 
             prev = lstm
 

@@ -33,13 +33,13 @@ class Sensor:
         self.measurement_variance_estimate = None
         self.mean_signal = None
 
-    def process(self, merge_axis=False):
+    def process(self, merge_axes=False):
         self.plot("raw")
 
         self.calibrate()
         self.plot("calibration")
 
-        if merge_axis:
+        if merge_axes:
             self.mean_signal = self.get_mean_signal()
 
         if self.median_filter_window_size is not None:
