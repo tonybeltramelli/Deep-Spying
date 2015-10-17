@@ -5,24 +5,25 @@
 
 ./main.py process
 
-iteration=1
-MIN=5
+ITERATION=10
+MIN=6
 MAX=12
 
 function run
 {
 	for i in $(seq $MIN $MAX);
 	do
-		./main.py $1 $i"_layer" $iteration $i
+		./main.py $1 "singlelayer_"$i $ITERATION $i
 	done
 
 	for i in $(seq $MIN $MAX);
 	do
 		for j in $(seq $MIN $MAX);
 		do
-			./main.py $1 $i"_"$j"_multilayer" $iteration $i $j
+			./main.py $1 "multilayer_"$i"_"$j $ITERATION $i $j
 		done
 	done
 }
 
 run validate
+
