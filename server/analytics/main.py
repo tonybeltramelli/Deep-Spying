@@ -63,7 +63,6 @@ class Main:
         classifier = self.get_classifier(iteration, neurons_per_layer)
 
         classifier.k_fold_cross_validate(10, iteration)
-        classifier.compute_relevance()
         classifier.relevance.output_confusion_matrix("{}confusion_matrix{}.png".format(Path.RESULT_PATH, self.run_name))
         classifier.relevance.output_statistics("{}statistics.md".format(Path.RESULT_PATH), self.run_name)
         classifier.relevance.output_compared_plot("{}progression{}.png".format(Path.RESULT_PATH, self.run_name))

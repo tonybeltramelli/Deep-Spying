@@ -5,7 +5,7 @@
 
 ./main.py process
 
-iteration=20
+iteration=1
 MIN=5
 MAX=12
 
@@ -24,10 +24,5 @@ function run
 		done
 	done
 }
-
-#run train
-
-#mkdir -p ../data/result_train
-#mv ../data/result/* ../data/result_train/
 
 run validate
