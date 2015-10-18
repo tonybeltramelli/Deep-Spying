@@ -1,7 +1,7 @@
 __author__ = 'Tony Beltramelli www.tonybeltramelli.com - 16/09/2015'
 
 from ..utils.UMath import *
-from modules.View import *
+from ..View import *
 
 import collections
 

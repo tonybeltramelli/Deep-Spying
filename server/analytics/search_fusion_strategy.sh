@@ -17,4 +17,3 @@ run "accelerometer_mean_gyroscope_mean" ga gyay
 run "accelerometer_mean_gyroscope" ga gnay
 run "accelerometer_gyroscope_mean" ga gyan
 run "accelerometer_gyroscope" ga gnan
-
