@@ -219,6 +219,25 @@ class View:
         pylab.xlabel('Time')
         pylab.ylabel('Amplitude')
 
+    def plot_barchart(self, data, labels, colors, xlabel, ylabel, xticks):
+        self.big_figure()
+
+        index = np.arange(len(data[0][0]))
+        bar_width = 0.25
+
+        for i in range(0, len(data)):
+            rects = pylab.bar(bar_width / 2 + index + (i * bar_width), data[i][0], bar_width,
+                              alpha=0.5, color=colors[i],
+                              yerr=data[i][1],
+                              error_kw={'ecolor': '0.3'},
+                              label=labels[i])
+
+        pylab.legend(loc=2, prop={'size': 12})
+
+        pylab.xlabel(xlabel)
+        pylab.ylabel(ylabel)
+        pylab.xticks(bar_width / 2 + index + ((bar_width * (len(data[0]) + 1)) / len(data[0])), xticks)
+
     def big_figure(self):
         if self.screen_size == "fullscren":
             pylab.figure(figsize=(18, 9.5))
