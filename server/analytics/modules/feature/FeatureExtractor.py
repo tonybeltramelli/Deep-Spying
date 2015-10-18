@@ -14,6 +14,33 @@ class FeatureExtractor:
         self.use_statistical_features = use_statistical_features
         self.axes = self.view.get_subplot_axes()
 
+    def generate_labelled_sequence(self, sensors, label_timestamps):
+        for sensor in sensors:
+            sensor.normalize()
+
+        reference_sensor = sensors[0]
+
+        center_timestamp_indices = [(np.abs(reference_sensor.timestamp - label_timestamp)).argmin() for label_timestamp in label_timestamps]
+
+        output_file = open("{}.data".format(self.output_path), 'w')
+
+        length = len(reference_sensor.timestamp)
+
+        for i in range(0, length):
+            label = "y" if i in center_timestamp_indices else "n"
+            output_file.write("label:{}\n".format(label))
+
+            features = []
+            for sensor in sensors:
+                features.append(sensor.x[i])
+                features.append(sensor.y[i])
+                features.append(sensor.z[i])
+
+            line = self.get_line(features)
+            output_file.write(line)
+            output_file.write("\n")
+        output_file.close()
+
     def segment_heuristically(self, sensors, reference_signal):
         p = PeakAnalysis(self.view)
         peaks = p.get_peaks(reference_signal)

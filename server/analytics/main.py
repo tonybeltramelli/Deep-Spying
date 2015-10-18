@@ -32,17 +32,21 @@ class Main:
 
         feature_extractor = FeatureExtractor(output_path, self.view, use_statistical_features=False)
 
-        fusion = []
-        for sensor in sensors:
-            if sensor == 'g':
-                fusion.append(gyroscope)
-            if sensor == 'a':
-                fusion.append(accelerometer)
+        feature_extractor.generate_labelled_sequence([gyroscope], label.timestamp)
 
-        if label.has_label:
-            feature_extractor.segment_from_labels(fusion, label)
-        else:
-            feature_extractor.segment_heuristically(fusion, gyroscope.get_mean_signal())
+        f = False
+        if f is True:
+            fusion = []
+            for sensor in sensors:
+                if sensor == 'g':
+                    fusion.append(gyroscope)
+                if sensor == 'a':
+                    fusion.append(accelerometer)
+
+            if label.has_label:
+                feature_extractor.segment_from_labels(fusion, label)
+            else:
+                feature_extractor.segment_heuristically(fusion, gyroscope.get_mean_signal())
 
     def get_classifier(self, iteration, neurons_per_layer):
         print "Train for {} iterations with {} neurons ({} layers)".format(iteration, neurons_per_layer, len(neurons_per_layer))

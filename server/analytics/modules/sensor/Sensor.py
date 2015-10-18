@@ -53,7 +53,7 @@ class Sensor:
         self.apply_kalman_filter()
         self.plot("kalman filter")
 
-        #self.to_constant_rate()
+        self.to_constant_rate()
 
         self.view.show()
 

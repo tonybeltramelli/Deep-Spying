@@ -10,7 +10,8 @@ from ..utils.UMath import *
 
 
 class Classifier:
-    LABELS = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "*", "#"]
+    #LABELS = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "*", "#"]
+    LABELS = ["y", "n"]
 
     def __init__(self):
         self.classes = self.get_binary_classes(self.LABELS)
@@ -108,8 +109,10 @@ class Classifier:
         evaluation_set = self.collection if evaluation_set is None else evaluation_set
         data_set = self.get_evaluation_set(evaluation_set, is_labelled)
 
+        self.deserialize("neural_net.xml")
+
         for key, sample in data_set.iteritems():
-            self.deserialize("neural_net.xml")
+            #self.deserialize("neural_net.xml")
 
             predictions = self.get_predictions(sample)
             predicted_label = self.get_label_from_binary_position(np.argmax(predictions))
