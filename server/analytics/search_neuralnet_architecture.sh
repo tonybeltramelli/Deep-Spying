@@ -41,9 +41,9 @@ function run
 {
 	for i in $(seq $MIN $MAX);
 	do
-		./main.py $1 "singlelayer_"$i $ITERATION $i
+		neurons=$(echo "2^$i" | bc)
+		./main.py $1 "singlelayer_"$neurons $ITERATION $neurons
 	done
 }
 
 run validate
-
