@@ -41,7 +41,7 @@ function run
 {
 	for i in $(seq $MIN $MAX);
 	do
-		neurons=$(echo "100*$i" | bc)
+		neurons=$(echo "50*$i" | bc)
 		./main.py $1 "singlelayer_"$neurons $ITERATION $neurons
 	done
 }

@@ -2,6 +2,7 @@ __author__ = 'Tony Beltramelli www.tonybeltramelli.com - 07/09/2015'
 
 import os
 import random
+import collections
 
 from pybrain.tools.xml.networkwriter import NetworkWriter
 from pybrain.tools.xml.networkreader import NetworkReader
@@ -60,7 +61,20 @@ class Classifier:
         if k != 1:
             random.shuffle(collection)
 
-        sub_samples = np.split(np.array(collection), k)
+        last_sample = None
+        length = len(collection)
+        m = length % k
+        if m != 0:
+            last_sample = collection[length - m:]
+            samples = collection[:length - m]
+        else:
+            samples = collection
+
+        sub_samples = np.split(np.array(samples), k)
+
+        if last_sample is not None:
+            sub_samples.append(np.array(last_sample))
+
         return sub_samples
 
     def get_training_set(self, samples):
@@ -74,7 +88,7 @@ class Classifier:
         return training_set
 
     def get_evaluation_set(self, sample, is_labelled=True):
-        evaluation_set = {}
+        evaluation_set = collections.OrderedDict()
         index = 0
 
         for data_points in sample:
@@ -99,6 +113,9 @@ class Classifier:
         for i in range(0, iteration):
             error = trainer.train()
             print "Training {}/{} -> error: {}".format(i + 1, iteration, error)
+
+            if isnan(error):
+                break
 
             self.relevance.update_training(error)
 
@@ -132,6 +149,7 @@ class Classifier:
             evaluation_set = samples[i]
             training_set = samples[:i] + samples[i + 1:]
 
+            self.neural_net = None
             self.train_model(iteration, training_set)
             self.evaluate(evaluation_set)
 

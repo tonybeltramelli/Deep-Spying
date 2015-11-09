@@ -1,9 +1,9 @@
 __author__ = 'Tony Beltramelli www.tonybeltramelli.com - 22/09/2015'
 
 from pybrain.datasets import SupervisedDataSet
-from pybrain.supervised.trainers import BackpropTrainer
+from pybrain.supervised.trainers import RPropMinusTrainer
 from Classifier import *
-from ..utils.NeuralNet import *
+from ..utils.UNeuralNet import *
 
 
 class FeedForward(Classifier):
@@ -14,8 +14,8 @@ class FeedForward(Classifier):
 
     def build_neural_net(self):
         input_number, output_number = self.meta_data
-        self.neural_net = NeuralNet.get_neural_net(input_number, output_number,
-                                                   FeedForwardNetwork, TanhLayer, self.neurons_per_layer)
+        self.neural_net = UNeuralNet.get_neural_net(input_number, output_number,
+                                                    FeedForwardNetwork, SigmoidLayer, self.neurons_per_layer)
 
     def get_new_data_set(self):
         input_number, output_number = self.meta_data
@@ -26,7 +26,7 @@ class FeedForward(Classifier):
         if not self.neural_net:
             self.build_neural_net()
 
-        return BackpropTrainer(self.neural_net, data_set)
+        return RPropMinusTrainer(self.neural_net, dataset=data_set)
 
     def get_predictions(self, input_values):
         return self.neural_net.activate(input_values[0])

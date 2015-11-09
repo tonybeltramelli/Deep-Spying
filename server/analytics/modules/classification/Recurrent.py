@@ -3,7 +3,7 @@ __author__ = 'Tony Beltramelli www.tonybeltramelli.com - 13/09/2015'
 from pybrain.datasets import SequentialDataSet
 from pybrain.supervised.trainers import RPropMinusTrainer
 from Classifier import *
-from ..utils.NeuralNet import *
+from ..utils.UNeuralNet import *
 
 
 class Recurrent(Classifier):
@@ -13,8 +13,8 @@ class Recurrent(Classifier):
 
     def build_neural_net(self):
         input_number, output_number = self.meta_data
-        self.neural_net = NeuralNet.get_neural_net(input_number, output_number,
-                                                   RecurrentNetwork, LSTMLayer, self.neurons_per_layer)
+        self.neural_net = UNeuralNet.get_neural_net(input_number, output_number,
+                                                    RecurrentNetwork, LSTMLayer, self.neurons_per_layer)
 
     def get_new_data_set(self):
         input_number, output_number = self.meta_data

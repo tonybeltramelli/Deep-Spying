@@ -69,7 +69,7 @@ class Main:
     def cross_validation(self, iteration=30, neurons_per_layer=[9]):
         classifier = self.get_classifier(iteration, neurons_per_layer)
 
-        classifier.k_fold_cross_validate(10, iteration)
+        classifier.k_fold_cross_validate(5, iteration)
         classifier.relevance.output_confusion_matrix("{}confusion_matrix{}.png".format(Path.RESULT_PATH, self.run_name))
         classifier.relevance.output_statistics("{}statistics.md".format(Path.RESULT_PATH), self.run_name)
         classifier.relevance.output_compared_plot("{}progression{}.png".format(Path.RESULT_PATH, self.run_name))
@@ -138,3 +138,5 @@ if __name__ == "__main__":
                     main.cross_validation(int(argv[2]), [int(x) for x in argv[3:]])
                 else:
                     main.cross_validation()
+            elif mode == "evaluate":
+                main.evaluate()

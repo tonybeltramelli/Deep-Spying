@@ -28,6 +28,7 @@ class PeakAnalysis:
         uphill = self.filter_from_peak_position(peak, uphill, -1)
         downhill = self.filter_from_peak_position(peak, downhill, 1)
 
+        self.view = View(True, True)
         self.view.plot_peaks(ratios, uphill, peak, downhill)
         self.view.show()
 
@@ -57,28 +58,8 @@ class PeakAnalysis:
 
         return hill
 
-    def filter_interval(self, index, limit, data):
-        length = len(data)
+    def get_peak_to_average_ratios(self, signal):
+        root_mean_square = UMath.get_root_mean_square(signal)
 
-        for i in xrange(index, 0 if limit < 0.0 else length, -1 if limit < 0.0 else 1):
-            if data[i]:
-                index = i + limit
-
-                if index < length:
-                    return np.vstack((i, self.filter_interval(index, limit, data)))
-                else:
-                    return
-
-    def get_peak_to_average_ratios(self, data):
-        root_mean_square = UMath.get_root_mean_square(data)
-
-        length = len(data)
-        ratios = np.zeros(length)
-
-        for i in range(0, length):
-            crest_factor = data[i] / root_mean_square
-            peak_to_average_ratio = pow(crest_factor, 2)
-
-            ratios[i] = peak_to_average_ratio
-
+        ratios = np.array([pow(x / root_mean_square, 2) for x in signal])
         return ratios

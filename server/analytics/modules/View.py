@@ -52,7 +52,10 @@ class View:
 
         for i in range(0, len(label_timestamp)):
             if label is not None:
-                pylab.axvline(label_timestamp[i], color="k", label="{}: key {}".format(i, label[i]), ls='dashed')
+                if i != 0:
+                    pylab.axvline(label_timestamp[i], color="k", ls='dashed')
+                else:
+                    pylab.axvline(label_timestamp[i], color="k", label="keystroke", ls='dashed')
             else:
                 pylab.axvline(label_timestamp[i], color="k", ls='dashed')
 
@@ -61,6 +64,8 @@ class View:
         pylab.title(title)
         pylab.xlabel('Time')
         pylab.ylabel('Amplitude')
+        if label:
+            pylab.xticks(label_timestamp, label)
 
     def plot_signal(self, title, timestamp, signal):
         if not self.to_save and not self.to_show:
@@ -242,6 +247,8 @@ class View:
         if self.screen_size == "fullscren":
             pylab.figure(figsize=(18, 9.5))
         elif self.screen_size == "paper":
+            pylab.figure(figsize=(11, 4))
+        elif self.screen_size == "medium":
             pylab.figure(figsize=(12, 6))
         else:
             pylab.figure()
