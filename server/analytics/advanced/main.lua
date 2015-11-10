@@ -21,6 +21,7 @@ end
 LABELS = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "*", "#"}
 HIDDEN_LAYERS = {256, 256}
 DATA_PATH = "../../data/feature/"
+INIT_WEIGHT=0.08
 
 metaData = nil
 
@@ -81,26 +82,60 @@ function createDataset()
 end
 
 function buildNeuralNet()
-	torch.manualSeed(1234)
+	-- torch.manualSeed(1234)
 
-	local inputSize = metaData.inputSize
-	local outputSize = metaData.outputSize
+	-- local LSTM = require 'model.LSTM'
+	-- model = LSTM.model(metaData.inputSize, metaData.outputSize, HIDDEN_LAYERS, INIT_WEIGHT)
 
-	model = nn.Sequential()
-	local layerSize = inputSize
+	inputSize = 2
+	outputSize = 4
+	layerSize = 10
+	initWeight = 0.08
+	layers = 1
 
-	for i = 1, #HIDDEN_LAYERS do
-		local hiddenSize = HIDDEN_LAYERS[i]
+	local inputs = {}
+	local outputs = {}
 
-		model:add(nn.Linear(layerSize, hiddenSize))
-		model:add(nn.Tanh())
-		model:add(nn.Dropout())
-
-		layerSize = hiddenSize
+	table.insert(inputs, nn.Identity()())
+	for i = 1, layers do
+		table.insert(inputs, nn.Identity()())
+		table.insert(inputs, nn.Identity()())
 	end
 
-	model:add(nn.Linear(layerSize, outputSize))
-	model:add(nn.LogSoftMax())
+	local input = inputs[1]
+
+	for i = 1, layers do
+		local prevC = inputs[i * 2]
+		local prevY = inputs[i * 2 + 1]
+
+		local function lstmCell(input, prevY, prevC)
+	    	local xi = nn.Linear(inputSize, layerSize)(input)
+		    local prevYi = nn.Linear(layerSize, layerSize)(prevY)
+		    local gateInput = nn.CAddTable()({xi, prevYi})
+		    
+		    local inputGate = nn.Sigmoid()(gateInput)
+		    local forgetGate = nn.Sigmoid()(gateInput)
+		    local cellInput = nn.Tanh()(gateInput)
+		    local nextC = nn.CAddTable()({
+		      nn.CMulTable()({forgetGate, prevC}),
+		      nn.CMulTable()({inputGate, cellInput})
+		    })
+		    local outputGate = nn.Sigmoid()(gateInput)
+		    local nextY = nn.CMulTable()({outputGate, nn.Tanh()(nextC)})
+		    return nextY, nextC
+		end
+
+		local nextY, nextC = lstmCell(input, prevY, prevC)
+		table.insert(outputs, nextC)
+		table.insert(outputs, nextY)
+	end
+	
+	local topY = outputs[#outputs]
+	local prediction = nn.LogSoftMax()(nn.Linear(layerSize, outputSize)(topY))
+	table.insert(outputs, prediction)
+
+	model = nn.gModule(inputs, outputs)
+	model:getParameters():uniform(-initWeight, initWeight)
 end
 
 function train()
@@ -115,11 +150,19 @@ function train()
 	trainer:train(dataset)
 end
 
-makeBinaryClasses(LABELS)
-createDataset()
+--makeBinaryClasses(LABELS)
+--createDataset()
 --buildNeuralNet()
-local FNN = require 'model.FNN'
-model = FNN.fnn(metaData.inputSize, metaData.outputSize, HIDDEN_LAYERS)
-train()
+--train()
 
 -- os.exit()
+
+
+
+
+
+
+
+buildNeuralNet()
+out = model:forward({torch.randn(1,2), torch.randn(1, 10), torch.randn(1, 10)})
+print(out[3])

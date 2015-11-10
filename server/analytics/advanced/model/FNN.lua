@@ -1,6 +1,6 @@
 local FNN = {}
 
-function FNN.fnn(inputSize, outputSize, hiddenLayers)
+function FNN.model(inputSize, outputSize, hiddenLayers, initWeight)
   	local input = nn.Identity()()
 
 	local layerSize = inputSize
@@ -8,16 +8,17 @@ function FNN.fnn(inputSize, outputSize, hiddenLayers)
 
 	for i = 1, #hiddenLayers do
 		local hiddenSize = hiddenLayers[i]
-
-		hidden = nn.Tanh()(nn.Linear(layerSize, hiddenSize)(previous))
+		local hidden = nn.Tanh()(nn.Linear(layerSize, hiddenSize)(previous))
 
 		layerSize = hiddenSize
 		previous = hidden
 	end
 
-	output = nn.LogSoftMax()(nn.Linear(layerSize, outputSize)(previous))
+	local output = nn.LogSoftMax()(nn.Linear(layerSize, outputSize)(previous))
 
-	return nn.gModule({input}, {output})
+	local m = nn.gModule({input}, {output})
+	m:getParameters():uniform(-initWeight, initWeight)
+	return m
 end
 
 return FNN
