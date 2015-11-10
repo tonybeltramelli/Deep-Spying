@@ -91,7 +91,7 @@ function buildNeuralNet()
 	outputSize = 4
 	layerSize = 10
 	initWeight = 0.08
-	layers = 1
+	layers = 2
 
 	local inputs = {}
 	local outputs = {}
@@ -164,5 +164,11 @@ end
 
 
 buildNeuralNet()
-out = model:forward({torch.randn(1,2), torch.randn(1, 10), torch.randn(1, 10)})
-print(out[3])
+
+local t = torch.Tensor(1, 2)
+local inputVect = t:storage()
+inputVect[1] = 0.1
+inputVect[2] = 0.2
+
+out = model:forward({torch.Tensor(inputVect), torch.randn(1, 10), torch.randn(1, 10), torch.randn(1, 10), torch.randn(1, 10)})
+print(out[#out])
