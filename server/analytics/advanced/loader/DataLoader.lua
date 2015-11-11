@@ -17,7 +17,7 @@ function DataLoader.load(path, labelSet)
 	DataLoader.makeBinaryClasses(labelSet)
 
 	DataLoader.dataset = {}
-	DataLoader.metaData = nil
+	DataLoader.dataset.metaData = nil
 
 	for file in lfs.dir(path) do
 	    if string.match(file, ".data") then
@@ -35,8 +35,8 @@ function DataLoader.load(path, labelSet)
 		                if sequence then
 		                	table.insert(DataLoader.dataset, sequence)
 
-		                	if not DataLoader.metaData.sequenceLength then
-		                		DataLoader.metaData['sequenceLength'] = #sequence
+		                	if not DataLoader.dataset.metaData.sequenceLength then
+		                		DataLoader.dataset.metaData['sequenceLength'] = #sequence
 		                	end
 		                end
 
@@ -55,8 +55,8 @@ function DataLoader.load(path, labelSet)
 
 		            	table.insert(sequence, {torch.Tensor(inputVect), outputVect})
 
-		            	if DataLoader.metaData == nil then
-		            		DataLoader.metaData = {inputSize = len, outputSize = #labelSet}
+		            	if DataLoader.dataset.metaData == nil then
+		            		DataLoader.dataset.metaData = {inputSize = len, outputSize = #labelSet}
 		            	end
 		            end
 				end

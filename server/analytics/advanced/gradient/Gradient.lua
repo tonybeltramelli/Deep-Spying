@@ -1,12 +1,22 @@
 -- adapted from https://github.com/karpathy/char-rnn/ and https://github.com/oxford-cs-ml-2015/practical6/
 
-local Trainer = {}
+local Gradient = {}
 
+function Gradient.getInitialState(layerSize, layerNum)
+    local initialState = {}
+    for L=1,layerNum do
+        local emptyVector = torch.zeros(1, layerSize)
+        table.insert(initialState, emptyVector:clone())
+        table.insert(initialState, emptyVector:clone())
+    end
+    return initialState
+end
+
+-- Gradient.trainRecurrent
 -- example config:
 -- {
 --   initWeight : 0.08
 --   learningRate : 0.002
---   sequenceLength : 50
 --   layerSize : 128
 --   decayRate : 0.95
 --   layerNum : 2
@@ -14,11 +24,8 @@ local Trainer = {}
 --   learningRateDecay : 0.97
 --   maxEpochs : 50
 -- }
-
-function Trainer.trainRecurrent(model, criterion, dataset, config)
+function Gradient.trainRecurrent(model, criterion, dataset, config)
     local config = config or {}
-    
-    local sequenceLength = config.sequenceLength
     local initWeight = config.initWeight
     local layerSize = config.layerSize
     local layerNum = config.layerNum
@@ -29,22 +36,18 @@ function Trainer.trainRecurrent(model, criterion, dataset, config)
     local learningRateDecayAfter = config.learningRateDecayAfter
     local maxEpochs = config.maxEpochs
 
+    local sequenceLength = dataset.metaData.sequenceLength
     local currentSequence = nil
 
     local params, gradParams = model:getParameters()
     params:uniform(-initWeight, initWeight)
 
-    print('Parameters in the model: ' .. params:nElement())
+    print("Parameters in the model: "..params:nElement())
 
     local models = UClone.cloneNetOverTime(model, sequenceLength, not model.parameters)
     local criterions = UClone.cloneNetOverTime(criterion, sequenceLength, not criterion.parameters)
 
-    local initialState = {}
-    for L=1,layerNum do
-        local emptyVector = torch.zeros(1, layerSize)
-        table.insert(initialState, emptyVector:clone())
-        table.insert(initialState, emptyVector:clone())
-    end
+    local initialState = Gradient.getInitialState(layerSize, layerNum)
 
     function backpropagation(p)
         if p ~= params then
@@ -52,7 +55,7 @@ function Trainer.trainRecurrent(model, criterion, dataset, config)
         end
         gradParams:zero()
 
-        local state = {[0] = UClone.cloneList(initialState)}
+        local states = {[0] = UClone.cloneList(initialState)}
         local predictions = {}
         local loss = 0
 
@@ -61,13 +64,13 @@ function Trainer.trainRecurrent(model, criterion, dataset, config)
             local expectedOutputVector = currentSequence[t][2]
 
             models[t]:training()
-            local output = models[t]:forward{inputVector, unpack(state[t - 1])}
+            local output = models[t]:forward{inputVector, unpack(states[t - 1])}
             predictions[t] = output[#output]
             loss = loss + criterions[t]:forward(predictions[t], expectedOutputVector)
 
-            state[t] = {}
+            states[t] = {}
             for i=1, #output - 1 do
-                table.insert(state[t], output[i])
+                table.insert(states[t], output[i])
             end
         end
 
@@ -80,7 +83,7 @@ function Trainer.trainRecurrent(model, criterion, dataset, config)
 
             local backpropagatedState = criterions[t]:backward(predictions[t], expectedOutputVector)
             table.insert(finalState[t], backpropagatedState)
-            local derivative = models[t]:backward({inputVector, unpack(state[t-1])}, finalState[t])
+            local derivative = models[t]:backward({inputVector, unpack(states[t-1])}, finalState[t])
             finalState[t-1] = {}
 
             for k,v in pairs(derivative) do
@@ -90,7 +93,7 @@ function Trainer.trainRecurrent(model, criterion, dataset, config)
             end
         end
         
-        initialState = state[#state]
+        initialState = states[#states]
         gradParams:clamp(-gradientClip, gradientClip)
         return loss, gradParams
     end
@@ -119,24 +122,53 @@ function Trainer.trainRecurrent(model, criterion, dataset, config)
             if epoch >= learningRateDecayAfter then
                 local decay_factor = learningRateDecay
                 optimization.learningRate = optimization.learningRate * decay_factor
-                print('decayed learning rate by a factor ' .. decay_factor .. ' to ' .. optimization.learningRate)
+                print("Decayed learning rate by a factor "..decay_factor.." to "..optimization.learningRate)
             end
         end
 
-        print(string.format("%d/%d (epoch %.3f), train_loss = %6.8f, grad/param norm = %6.4e", i, iterations, epoch, currentLoss, gradParams:norm() / params:norm()))
+        print(i..'/'..iterations..", epoch: "..epoch..", loss: "..currentLoss)
         
         if i % 10 == 0 then collectgarbage() end
-
-        if loss[1] ~= loss[1] then
-            print('loss is NaN.  This usually indicates a bug.  Please check the issues page for existing issues, or create a new issue, if none exist.  Ideally, please state: your operating system, 32-bit/64-bit, your blas version, cpu/cuda/cl?')
-            break
-        end
-        if lossBug == nil then lossBug = loss[1] end
-        if loss[1] > lossBug * 3 then
-            print('loss is exploding, aborting.')
-            break
-        end
     end
 end
 
-return Trainer
+-- Gradient.evaluate
+-- example config:
+-- {
+--   layerSize : 128
+--   layerNum : 2
+-- }
+function Gradient.evaluate(model, dataset, config)
+    local config = config or {}
+    local layerSize = config.layerSize
+    local layerNum = config.layerNum
+
+    local sequenceLength = dataset.metaData.sequenceLength
+    
+    local models = UClone.cloneNetOverTime(model, sequenceLength, not model.parameters)
+    local states = {[0] = Gradient.getInitialState(layerSize, layerNum)}
+    
+    for i = 1, dataset.size() do
+        currentSequence = dataset[i]
+        local predictions = {}
+
+        for t = 1, sequenceLength do
+            local inputVector = currentSequence[t][1]
+            local expectedOutputVector = currentSequence[t][2]
+
+            models[t]:evaluate()
+            local output = models[t]:forward{inputVector, unpack(states[t - 1])}
+            predictions[t] = output[#output]
+            states[t] = {}
+            for i=1, #output - 1 do
+                table.insert(states[t], output[i])
+            end
+        end
+        
+        states[0] = states[#states]
+        
+        print(i..'/'..dataset.size())
+    end
+end
+
+return Gradient
