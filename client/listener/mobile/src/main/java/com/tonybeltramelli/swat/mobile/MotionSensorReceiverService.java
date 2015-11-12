@@ -17,6 +17,7 @@ import com.tonybeltramelli.swat.mobile.data.DataManager;
 
 /**
  * Created by Tony Beltramelli www.tonybeltramelli.com on 11/08/15.
+ * Adapted from https://github.com/pocmo/SensorDashboard
  */
 public class MotionSensorReceiverService extends WearableListenerService
 {
