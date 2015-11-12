@@ -1,3 +1,5 @@
+-- Author Tony Beltramelli www.tonybeltramelli.com - 10/11/2015
+
 require 'torch'
 require 'nn'
 require 'nngraph'

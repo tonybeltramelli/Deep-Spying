@@ -1,4 +1,5 @@
--- adapted from https://github.com/karpathy/char-rnn/ and https://github.com/oxford-cs-ml-2015/practical6/
+-- Author Tony Beltramelli www.tonybeltramelli.com - 11/11/2015
+-- Adapted from https://github.com/karpathy/char-rnn/ and https://github.com/oxford-cs-ml-2015/practical6/
 
 local Gradient = {}
 

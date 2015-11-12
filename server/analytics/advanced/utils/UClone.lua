@@ -1,4 +1,5 @@
--- adapted from https://github.com/wojciechz/learning_to_execute and https://github.com/karpathy/char-rnn/
+-- Author Tony Beltramelli www.tonybeltramelli.com - 11/11/2015
+-- Adapted from https://github.com/wojciechz/learning_to_execute and https://github.com/karpathy/char-rnn/
 
 local UClone = {}
 

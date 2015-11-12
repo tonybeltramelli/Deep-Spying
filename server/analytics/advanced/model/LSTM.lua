@@ -1,3 +1,5 @@
+-- Author Tony Beltramelli www.tonybeltramelli.com - 10/11/2015
+
 local LSTM = {}
 
 function LSTM.get(inputSize, outputSize, layerSize, layerNum)
