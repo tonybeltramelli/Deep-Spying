@@ -144,31 +144,44 @@ function Gradient.evaluate(model, dataset, config)
     local layerNum = config.layerNum
 
     local sequenceLength = dataset.metaData.sequenceLength
-    
+
     local models = UClone.cloneNetOverTime(model, sequenceLength, not model.parameters)
     local states = {[0] = Gradient.getInitialState(layerSize, layerNum)}
     
-    for i = 1, dataset.size() do
+    local results = {}
+    for i = 1, dataset:size() do
         currentSequence = dataset[i]
-        local predictions = {}
 
+        local expectedOutputVector = nil
+        local accumulativePrediction = torch.zeros(dataset.metaData.outputSize)
         for t = 1, sequenceLength do
             local inputVector = currentSequence[t][1]
-            local expectedOutputVector = currentSequence[t][2]
+            expectedOutputVector = currentSequence[t][2]
 
             models[t]:evaluate()
             local output = models[t]:forward{inputVector, unpack(states[t - 1])}
-            predictions[t] = output[#output]
+            local prediction = output[#output]
+            accumulativePrediction = torch.add(accumulativePrediction, prediction)
+
             states[t] = {}
             for i=1, #output - 1 do
                 table.insert(states[t], output[i])
             end
         end
-        
+
         states[0] = states[#states]
         
-        print(i..'/'..dataset.size())
+        print(i..'/'..dataset:size())
+
+        local v, index = torch.max(expectedOutputVector, 1)
+        indexExpected = torch.sum(index)
+        v, index = torch.max(accumulativePrediction, 1)
+        indexPredicted = torch.sum(index)
+
+        results[i] = {expected = indexExpected, predicted = indexPredicted}
     end
+
+    return results
 end
 
 return Gradient
