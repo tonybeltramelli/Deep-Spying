@@ -127,10 +127,12 @@ function Gradient.trainRecurrent(model, criterion, dataset, config)
             end
         end
 
-        print(i..'/'..iterations..", epoch: "..epoch..", loss: "..currentLoss)
+        print(i.."/"..iterations..", epoch: "..epoch..", loss: "..currentLoss)
         
         if i % 10 == 0 then collectgarbage() end
     end
+
+    return losses
 end
 
 -- Gradient.evaluate
@@ -172,14 +174,16 @@ function Gradient.evaluate(model, dataset, config)
 
         states[0] = states[#states]
         
-        print(i..'/'..dataset:size())
+        print(i.."/"..dataset:size())
+
+        if i % 10 == 0 then collectgarbage() end
 
         local v, index = torch.max(expectedOutputVector, 1)
         indexExpected = torch.sum(index)
         v, index = torch.max(accumulativePrediction, 1)
         indexPredicted = torch.sum(index)
 
-        results[i] = {expected = indexExpected, predicted = indexPredicted}
+        results[i] = {expected = indexExpected, predicted = indexPredicted, output = UMath.normalizeTensor(accumulativePrediction)}
     end
 
     return results

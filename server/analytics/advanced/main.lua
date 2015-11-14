@@ -10,9 +10,11 @@ cmd = torch.CmdLine()
 cmd:text()
 cmd:text("Options:")
 cmd:option("-data_path", "../../data/feature/", "pre-processed data directory")
-cmd:option('-output_file_name', 'neural_net', 'filename to save the net model after training')
+cmd:option('-output_model', 'neural_net', 'filename to save the model after training')
+cmd:option('-output_report', 'report', 'filename to save the validation report')
 cmd:option("-mode", "train", "train | evaluate | validate")
 cmd:option("-labels", "1,2,3,4,5,6,7,8,9,0,*,#", "list of labels separated with a comma")
+cmd:option('-k', 5, 'number of dataset splits to perform k-fold cross-validation')
 cmd:option("-model", "lstm", "lstm | fnn | gru | rnn")
 cmd:option("-layer_size", 128, "size of hidden internal state")
 cmd:option("-layer_num", 2, "number of hidden layers")
@@ -22,7 +24,7 @@ cmd:option("-learning_rate_decay", 0.97, "learning rate decay")
 cmd:option("-learning_rate_decay_after", 10, "in number of epochs, when to start decaying the learning rate")
 cmd:option("-decay_rate", 0.95, "decay rate for rmsprop")
 cmd:option("-init_weight", 0.08, "value interval to init weights")
-cmd:option('-gradient_clip',5,'clip gradients at this value')
+cmd:option('-gradient_clip', 5, 'clip gradients at this value')
 cmd:option("-seed", 123, "seed to pseudo-random number generator")
 cmd:option("-gpu", 0, "use gpu (OpenCL)")
 cmd:text()
@@ -43,16 +45,19 @@ else
 	print("Use CPU")
 end
 
+torch.manualSeed(opt.seed)
+
 UClone = require 'utils.UClone'
+UMath = require 'utils.UMath'
+
 local data = require 'data.Data'
 local lstm = require 'model.LSTM'
 local gradient = require 'gradient.Gradient'
 
 local labels = opt.labels:split(",")
-data.load(opt.data_path, labels)
-local dataset = data.dataset
+local referenceDataset = data.load(opt.data_path, labels)
 
-function train()
+function train(dataset)
     local model = lstm.get(dataset.metaData.inputSize, dataset.metaData.outputSize, opt.layer_size, opt.layer_num)
     local criterion = nn.MSECriterion()
 
@@ -68,12 +73,14 @@ function train()
         maxEpochs = opt.max_epochs
     }
 
-    gradient.trainRecurrent(model, criterion, dataset, config)
-    torch.save(opt.output_file_name, model)
+    local losses = gradient.trainRecurrent(model, criterion, dataset, config)
+    torch.save(opt.output_model, model)
+
+    return losses
 end
 
-function evaluate()
-    local model = torch.load(opt.output_file_name)
+function evaluate(dataset)
+    local model = torch.load(opt.output_model)
 
     config = {
         layerSize = opt.layer_size,
@@ -89,12 +96,34 @@ function evaluate()
     end
     
     print(confusion)
+    return results
+end
+
+function crossValidation(dataset)
+    local report = require 'data.Report'
+    local datasets = data.shuffleAndSplit(dataset, opt.k)
+
+    for i = 1, opt.k do
+        print(opt.k.."-fold cross-validation: "..i.."/"..opt.k)
+
+        local evaluationSet = datasets[i]
+        local trainingSet = data.excludeAndMerge(datasets, i)
+
+        local losses = train(trainingSet)
+        local results = evaluate(evaluationSet)
+
+        report.store(losses, results, labels)
+    end
+    report.save(opt.output_report)
 end
 
 if opt.mode == "train" then
     print("Train")
-    train()
+    train(referenceDataset)
 elseif opt.mode == "evaluate" then
     print("Evaluate")
-    evaluate()
+    evaluate(referenceDataset)
+elseif opt.mode == "validate" then
+    print("Validate")
+    crossValidation(referenceDataset)
 end

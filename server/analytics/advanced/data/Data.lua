@@ -15,11 +15,55 @@ function Data.makeBinaryClasses(labelSet)
 	end
 end
 
+-- Data.dataset
+-- example dataset of size n:
+-- { -- sequence 1 of length m
+-- 		{
+-- 			1 : Tensor -- input 1
+-- 			2 : Tensor -- output 1
+-- 		}
+-- 			...
+-- 		{
+-- 			1 : Tensor -- input m
+-- 			2 : Tensor -- output m
+-- 		}
+-- 	}
+-- 		...
+-- 	{ -- sequence n
+-- 		...
+-- 	}
+function Data.getNewDataset()
+	local dataset = {}
+	dataset.metaData = nil
+
+	function dataset.insertInto(sequence, element)
+		table.insert(sequence, element)
+		dataset.setMetaData(element)
+	end
+
+	function dataset.insertSequence(sequence)
+		table.insert(dataset, sequence)
+		dataset.setMetaData(sequence[1])
+
+		if not dataset.metaData.sequenceLength then
+			dataset.metaData['sequenceLength'] = #sequence
+		end
+	end
+
+	function dataset.setMetaData(element)
+		if dataset.metaData == nil then
+			dataset.metaData = {inputSize = element[1]:size()[1], outputSize = element[2]:size()[1]}
+		end
+	end
+
+	function dataset:size() return #dataset end
+	return dataset
+end
+
 function Data.load(path, labelSet)
 	Data.makeBinaryClasses(labelSet)
 
-	Data.dataset = {}
-	Data.dataset.metaData = nil
+	local dataset = Data.getNewDataset()
 
 	for file in lfs.dir(path) do
 	    if string.match(file, ".data") then
@@ -35,11 +79,7 @@ function Data.load(path, labelSet)
 		                local label = string.sub(line, s + 1)
 
 		                if sequence then
-		                	table.insert(Data.dataset, sequence)
-
-		                	if not Data.dataset.metaData.sequenceLength then
-		                		Data.dataset.metaData['sequenceLength'] = #sequence
-		                	end
+		                	dataset.insertSequence(sequence)
 		                end
 
 		                sequence = {}
@@ -55,24 +95,60 @@ function Data.load(path, labelSet)
 		            		inputVect[j] = dataPoints[j]
 		            	end
 
-		            	table.insert(sequence, {torch.Tensor(inputVect), outputVect})
-
-		            	if Data.dataset.metaData == nil then
-		            		Data.dataset.metaData = {inputSize = len, outputSize = #labelSet}
-		            	end
+		            	dataset.insertInto(sequence, {torch.Tensor(inputVect), outputVect})
 		            end
 				end
 			end
 
-	    	data.close()
+	    	data:close()
 	    end
 	end
-	function Data.dataset:size() return #Data.dataset end
+
+	return dataset
 end
 
-function Data.shuffle()
-	local indices = torch.randperm(Data.dataset:size())
-	
+function Data.shuffleAndSplit(dataset, k)
+	local indices = torch.randperm(dataset:size()):storage()
+	local step =  math.floor(#indices / k)
+	local remainder = #indices % k
+
+	local datasets = {}
+
+	for i = 1, #indices, step do
+		local subDataset = Data.getNewDataset()
+
+		local e = i + step - 1
+		local toBreak = false
+
+		if (e + step) > #indices then
+			e = #indices
+			toBreak = true
+		end
+
+		for j = i, e do
+			subDataset.insertSequence(dataset[j])
+		end
+
+		table.insert(datasets, subDataset)
+		if toBreak then break end
+	end
+
+	return datasets
+end
+
+function Data.excludeAndMerge(datasets, excludedIndex)
+	local dataset = Data.getNewDataset()
+
+	for i = 1, #datasets do
+		if i ~= excludedIndex then
+			local subDataset = datasets[i]
+			for j = 1, #subDataset do
+				dataset.insertSequence(subDataset[j])
+			end
+		end 
+	end
+
+	return dataset
 end
 
 return Data
