@@ -10,21 +10,22 @@ cmd = torch.CmdLine()
 cmd:text()
 cmd:text("Options:")
 cmd:option("-data_path", "../../data/feature/", "pre-processed data directory")
-cmd:option('-output_model', 'neural_net', 'filename to save the model after training')
-cmd:option('-output_report', 'report', 'filename to save the validation report')
+cmd:option("-output_model", "neural_net", "filename to save the model after training")
+cmd:option("-output_report", "report", "filename to save the validation report")
 cmd:option("-mode", "train", "train | evaluate | validate")
 cmd:option("-labels", "1,2,3,4,5,6,7,8,9,0,*,#", "list of labels separated with a comma")
-cmd:option('-k', 5, 'number of dataset splits to perform k-fold cross-validation')
+cmd:option("-k", 5, "number of dataset splits to perform k-fold cross-validation")
 cmd:option("-model", "lstm", "lstm | fnn | gru | rnn")
 cmd:option("-layer_size", 128, "size of hidden internal state")
 cmd:option("-layer_num", 2, "number of hidden layers")
 cmd:option("-max_epochs", 100, "maximum number of passes through the training dataset")
-cmd:option("-learning_rate", 2e-3, "learning rate")
+cmd:option("-learning_rate", 0.01, "learning rate") --2e-3
 cmd:option("-learning_rate_decay", 0.97, "learning rate decay")
 cmd:option("-learning_rate_decay_after", 10, "in number of epochs, when to start decaying the learning rate")
 cmd:option("-decay_rate", 0.95, "decay rate for rmsprop")
 cmd:option("-init_weight", 0.08, "value interval to init weights")
-cmd:option('-gradient_clip', 5, 'clip gradients at this value')
+cmd:option("-gradient_clip", 5, "clip gradients at this value")
+cmd:option("-dropout", 0.1, "dropout for regularization and avoid overfitting")
 cmd:option("-seed", 123, "seed to pseudo-random number generator")
 cmd:option("-gpu", 0, "use gpu (OpenCL)")
 cmd:text()
@@ -51,20 +52,32 @@ UClone = require 'utils.UClone'
 UMath = require 'utils.UMath'
 
 local data = require 'data.Data'
-local lstm = require 'model.LSTM'
 local gradient = require 'gradient.Gradient'
 
 local labels = opt.labels:split(",")
 local referenceDataset = data.load(opt.data_path, labels)
 
 function train(dataset)
-    local model = lstm.get(dataset.metaData.inputSize, dataset.metaData.outputSize, opt.layer_size, opt.layer_num)
+    local model = nil
+    
+    if opt.model == "lstm" then
+        local lstm = require 'model.LSTM'
+        model = lstm.get(dataset.metaData.inputSize, dataset.metaData.outputSize, opt.layer_size, opt.layer_num, opt.dropout)
+    elseif opt.model == "fnn" then
+        local fnn = require 'model.FNN'
+        model = fnn.get(dataset.metaData.inputSize, dataset.metaData.outputSize, opt.layer_size, opt.layer_num)
+    elseif opt.model == "gru" then
+        local gru = require 'model.GRU'
+        model = gru.get(dataset.metaData.inputSize, dataset.metaData.outputSize, opt.layer_size, opt.layer_num)
+    elseif opt.model == "rnn" then
+        local rnn = require 'model.RNN'
+        model = rnn.get(dataset.metaData.inputSize, dataset.metaData.outputSize, opt.layer_size, opt.layer_num)
+    end
+
     local criterion = nn.MSECriterion()
 
     config = {
         initWeight = opt.init_weight,
-        layerSize = opt.layer_size,
-        layerNum = opt.layer_num,
         gradientClip = opt.gradient_clip,
         learningRate = opt.learning_rate,
         decayRate = opt.decay_rate,
@@ -73,8 +86,13 @@ function train(dataset)
         maxEpochs = opt.max_epochs
     }
 
-    local losses = gradient.trainRecurrent(model, criterion, dataset, config)
-    torch.save(opt.output_model, model)
+    local losses = nil
+    if model.isRecurrent then
+        losses = gradient.trainRecurrent(model, criterion, dataset, config)
+    else
+        losses = gradient.trainFeedforward(model, criterion, dataset, config)
+    end
+    --torch.save(opt.output_model, model)
 
     return losses
 end
@@ -82,12 +100,13 @@ end
 function evaluate(dataset)
     local model = torch.load(opt.output_model)
 
-    config = {
-        layerSize = opt.layer_size,
-        layerNum = opt.layer_num
-    }
+    local results = nil
+    if model.isRecurrent then
+        results = gradient.evaluate(model, dataset)
+    else
+        results = gradient.evaluateFeedforward(model, dataset)
+    end
 
-    local results = gradient.evaluate(model, dataset, config)
     local confusion = optim.ConfusionMatrix(#labels)
 
     for i = 1, #results do
@@ -112,7 +131,7 @@ function crossValidation(dataset)
         local losses = train(trainingSet)
         local results = evaluate(evaluationSet)
 
-        report.store(losses, results, labels)
+        report.store(losses, results, labels, evaluationSet:size())
     end
     report.save(opt.output_report)
 end

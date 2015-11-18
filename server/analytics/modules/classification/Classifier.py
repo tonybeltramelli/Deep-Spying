@@ -114,9 +114,6 @@ class Classifier:
             error = trainer.train()
             print "Training {}/{} -> error: {}".format(i + 1, iteration, error)
 
-            if isnan(error):
-                break
-
             self.relevance.update_training(error)
 
         self.serialize("neural_net.xml")

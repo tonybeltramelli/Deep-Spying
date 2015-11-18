@@ -120,9 +120,9 @@ class RelevanceAssessment:
 
         data = [self.errors, self.all_f1_score, self.all_precision, self.all_recall, self.all_reliability]
         colors = ['m', 'c', 'g', 'b', 'r']
-        labels = ["Least square mean error", "F1 score", "Precision", "Recall", "Reliability"]
+        labels = ["Mean square error", "F1 score", "Precision", "Recall", "Reliability"]
 
-        self.view.plot_data("K-fold cross-validation", data, "Iteration", "Amplitude", colors, labels)
+        self.view.plot_data("K-fold cross-validation", data, "Epoch", "Amplitude", colors, labels)
         self.view.show()
         self.view.save(path)
 
@@ -135,13 +135,13 @@ class RelevanceAssessment:
         output_file.write("* Recall: {}\n".format(self.get_statistics(self.all_recall)))
         output_file.write("* Reliability: {}\n".format(self.get_statistics(self.all_reliability)))
         if len(self.errors) > 0:
-            output_file.write("* Least square mean error: {}\n".format(self.get_statistics(self.errors)))
+            output_file.write("* Mean square error: {}\n".format(self.get_statistics(self.errors)))
 
         output_file.write("\n")
         output_file.close()
 
-    def output_least_square_mean_errors(self, path):
-        self.view.plot_data("Training", [self.errors], "Iteration", "Least square mean error")
+    def output_mean_square_mean_error(self, path):
+        self.view.plot_data("Training", [self.errors], "Epoch", "Mean square error")
         self.view.show()
         self.view.save(path)
 

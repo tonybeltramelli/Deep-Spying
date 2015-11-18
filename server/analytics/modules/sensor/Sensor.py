@@ -8,7 +8,7 @@ from ..Path import Path
 
 
 class Sensor:
-    def __init__(self, file_path, view=None):
+    def __init__(self, file_path, view=None, preprocess_signal=True):
         data = np.genfromtxt(file_path, delimiter=',', skip_header=1,
                              names=['timestamp', 'x', 'y', 'z'],
                              dtype=[('timestamp', long), ('x', float), ('y', float), ('z', float)])
@@ -33,6 +33,8 @@ class Sensor:
         self.measurement_variance_estimate = None
         self.mean_signal = None
 
+        self.preprocess_signal = preprocess_signal
+
     def process(self, merge_axes=False):
         self.plot("raw")
 
@@ -42,16 +44,17 @@ class Sensor:
         if merge_axes:
             self.mean_signal = self.get_mean_signal()
 
-        if self.median_filter_window_size is not None:
-            self.apply_median_filter(self.median_filter_window_size)
-            self.plot("median filter")
+        if self.preprocess_signal:
+            if self.median_filter_window_size is not None:
+                self.apply_median_filter(self.median_filter_window_size)
+                self.plot("median filter")
 
-        if self.maximum_delay is not None and self.filter_type is not None:
-            self.apply_filter(UMath.get_frequency(self.maximum_delay), self.filter_type)
-            self.plot("{} filter".format(self.filter_type))
+            if self.maximum_delay is not None and self.filter_type is not None:
+                self.apply_filter(UMath.get_frequency(self.maximum_delay), self.filter_type)
+                self.plot("{} filter".format(self.filter_type))
 
-        self.apply_kalman_filter()
-        self.plot("kalman filter")
+            self.apply_kalman_filter()
+            self.plot("kalman filter")
 
         self.to_constant_rate()
 

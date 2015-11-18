@@ -104,6 +104,8 @@ function Data.load(path, labelSet)
 	    end
 	end
 
+	print("Dataset of size "..dataset:size().." loaded")
+	
 	return dataset
 end
 

@@ -5,7 +5,7 @@ local Report = {}
 Report.training = {}
 Report.evaluation = {}
 
-function Report.store(losses, results, labels)
+function Report.store(losses, results, labels, datasetSize)
 	for i = 1, #losses do
 		table.insert(Report.training, tostring(losses[i]))
 	end
@@ -18,14 +18,13 @@ function Report.store(losses, results, labels)
 
 		table.insert(Report.evaluation, expectedLabel.."|"..predictedLabel.."|"..output)
 	end
-	table.insert(Report.evaluation, "--")
+	table.insert(Report.evaluation, "--"..datasetSize)
+
+	collectgarbage()
 end
 
 function Report.save(path)
 	local file = io.open(path.."_training", "w")
-
-	print(Report.training)
-	print(Report.evaluation)
 
 	for i = 1, #Report.training do
 		file:write(Report.training[i].."\n")
@@ -41,6 +40,8 @@ function Report.save(path)
 
 	Report.training = {}
 	Report.evaluation = {}
+
+	collectgarbage()
 end
 
 function Report.toFlatString(tensor)

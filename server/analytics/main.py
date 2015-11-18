@@ -11,9 +11,11 @@ from modules.classification.Recurrent import *
 
 
 class Main:
-    def __init__(self, run_name=""):
+    def __init__(self, run_name="", use_statistical_features=False, preprocess_signal=True):
         self.run_name = "_" + run_name
         self.view = View(False, False, "paper")
+        self.use_statistical_features = use_statistical_features
+        self.preprocess_signal = preprocess_signal
 
     def process_all(self, sensors="ga", merge_axes={"g": False, "a": False}):
         for entry in os.listdir(Path.RAW_PATH):
@@ -26,11 +28,12 @@ class Main:
         output_path = Path.get_path(Path.FEATURE_PATH, session_id)
 
         label = Label(data_path)
-        gyroscope = Gyroscope(data_path, self.view, merge_axes["g"])
-        accelerometer = Accelerometer(data_path, self.view, merge_axes["a"])
+
+        gyroscope = Gyroscope(data_path, self.view, merge_axes["g"], preprocess_signal=self.preprocess_signal)
+        accelerometer = Accelerometer(data_path, self.view, merge_axes["a"], preprocess_signal=self.preprocess_signal)
         accelerometer.fit(gyroscope.timestamp)
 
-        feature_extractor = FeatureExtractor(output_path, self.view, use_statistical_features=False)
+        feature_extractor = FeatureExtractor(output_path, self.view, use_statistical_features=self.use_statistical_features)
 
         fusion = []
         for sensor in sensors:
@@ -56,7 +59,7 @@ class Main:
         classifier = self.get_classifier(iteration, neurons_per_layer)
 
         classifier.train_model(iteration)
-        classifier.relevance.output_least_square_mean_errors("{}errors{}.png".format(Path.RESULT_PATH, self.run_name))
+        classifier.relevance.output_mean_square_mean_error("{}errors{}.png".format(Path.RESULT_PATH, self.run_name))
 
     def evaluate(self):
         classifier = Recurrent()
@@ -95,6 +98,7 @@ if __name__ == "__main__":
         print "     main.py train dev 10 9"
         print "     main.py validate session1 10 5 9"
         print "     main.py predict 69141736"
+        print "     main.py extract y n"
     else:
         mode = argv[0]
 
@@ -117,6 +121,21 @@ if __name__ == "__main__":
                 main.process_all(s, a)
             else:
                 main.process_all()
+        elif mode == "extract":
+            statistical = argv[1]
+            preprocessing = argv[2]
+
+            use_statistical_features = False
+            preprocess_signal = True
+
+            if statistical == 'y':
+                use_statistical_features = True
+
+            if preprocessing == 'n':
+                preprocess_signal = False
+
+            main = Main(use_statistical_features=use_statistical_features, preprocess_signal=preprocess_signal)
+            main.process_all()
         elif mode == "predict" and length == 2:
             main = Main()
             main.predict(argv[1])
