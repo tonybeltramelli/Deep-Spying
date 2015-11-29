@@ -52,4 +52,6 @@ __init__.py
 /server/data/*
 neural_net
 neural_net.xml
+*.csv
+*.data
 
