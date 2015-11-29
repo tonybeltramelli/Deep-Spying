@@ -1,6 +1,5 @@
 # Deep-Spying
 *Spying using Smartwatch and Deep Learning*
-**Spying using Smartwatch and Deep Learning**
 
 This repository contains the code implemented for my Master's thesis project submitted in fulfillment of the requirements for the degree of Master of Science at the [IT University of Copenhagen](http://en.itu.dk/)
 
