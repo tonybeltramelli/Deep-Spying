@@ -5,6 +5,8 @@ This repository contains the code implemented for my Master's thesis project sub
 
 The following software is shared for educational purpose only. The author of the code and its affiliated institution are not responsible in any manner whatsoever for any damages, including any direct, indirect, special, incidental, or consequential damages of any character arising as a result of the use or inability to use this software. Please find more details in the provided Licence file.
 
+<img src="logo.png?raw=true" align="right"/>
+
 ## Abstract
 Wearable technologies are today on the rise, becoming more common and broadly available to mainstream users. In fact, wristband and armband devices such as smartwatches and fitness trackers already took an important place in the consumer electronics market and are becoming ubiquitous. By their very nature of being wearable, these devices, however, provide a new pervasive attack surface threatening users privacy, among others.
 
@@ -16,5 +18,3 @@ The LSTM-based implementation presented in this research can perform touchloggin
 
 ### Keywords
 Security, Side-Channel Attack, Keystroke Inference, Motion Sensors, Deep Learning, Recurrent Neural Network, Wearable Computing
-
-<img src="logo.png?raw=true"/>
