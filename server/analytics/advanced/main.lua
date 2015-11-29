@@ -10,7 +10,6 @@ cmd = torch.CmdLine()
 cmd:text()
 cmd:text("Options:")
 cmd:option("-data_path", "../../data/feature/", "pre-processed data directory")
-cmd:option("-output_model", "neural_net", "filename to save the model after training")
 cmd:option("-output_report", "report", "filename to save the validation report")
 cmd:option("-mode", "train", "train | evaluate | validate")
 cmd:option("-labels", "1,2,3,4,5,6,7,8,9,0,*,#", "list of labels separated with a comma")
@@ -92,13 +91,12 @@ function train(dataset)
     else
         losses = gradient.trainFeedforward(model, criterion, dataset, config)
     end
-    --torch.save(opt.output_model, model)
 
     return losses
 end
 
 function evaluate(dataset)
-    local model = torch.load(opt.output_model)
+    local model = torch.load("neural_net")
 
     local results = nil
     if model.isRecurrent then
@@ -122,6 +120,14 @@ function crossValidation(dataset)
     local report = require 'data.Report'
     local datasets = data.shuffleAndSplit(dataset, opt.k)
 
+    function joinMyTables(t1, t2)
+       for k,v in ipairs(t2) do
+          table.insert(t1, v)
+       end 
+     
+       return t1
+    end
+
     for i = 1, opt.k do
         print(opt.k.."-fold cross-validation: "..i.."/"..opt.k)
 
@@ -129,7 +135,7 @@ function crossValidation(dataset)
         local trainingSet = data.excludeAndMerge(datasets, i)
 
         local losses = train(trainingSet)
-        local results = evaluate(evaluationSet)
+        local results = evaluate(joinMyTables(trainingSet, evaluationSet))
 
         report.store(losses, results, labels, evaluationSet:size())
     end
