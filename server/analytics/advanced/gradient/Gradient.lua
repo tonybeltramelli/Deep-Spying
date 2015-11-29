@@ -253,7 +253,7 @@ function Gradient.trainFeedforward(model, criterion, dataset, config)
 
     local losses = {}
     local minLoss = 1.0
-    local optimization = {learningRate = learningRate, alpha = decayRate}
+    local optimizationState = {learningRate = learningRate, alpha = decayRate}
     local iterations = maxEpochs * sequenceLength
     local j = 0
 
@@ -266,7 +266,7 @@ function Gradient.trainFeedforward(model, criterion, dataset, config)
         currentSequence = dataset[j]
 
         local epoch = i / sequenceLength
-        local newParams, loss = optim.rmsprop(backpropagation, params, optimization)
+        local newParams, loss = optim.rmsprop(backpropagation, params, optimizationState)
 
         local currentLoss = loss[1]
         losses[i] = currentLoss
@@ -278,8 +278,8 @@ function Gradient.trainFeedforward(model, criterion, dataset, config)
         end
 
         if i % sequenceLength == 0 and learningRateDecay < 1 and epoch >= learningRateDecayAfter then
-            optimization.learningRate = optimization.learningRate * learningRateDecay
-            print("Decayed learning rate by a factor "..learningRateDecay.." to "..optimization.learningRate)
+            optimizationState.learningRate = optimizationState.learningRate * learningRateDecay
+            print("Decayed learning rate by a factor "..learningRateDecay.." to "..optimizationState.learningRate)
         end
 
         print(i.."/"..iterations..", epoch: "..epoch..", loss: "..currentLoss)

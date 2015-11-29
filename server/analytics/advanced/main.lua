@@ -18,7 +18,7 @@ cmd:option("-model", "lstm", "lstm | fnn | gru | rnn")
 cmd:option("-layer_size", 128, "size of hidden internal state")
 cmd:option("-layer_num", 2, "number of hidden layers")
 cmd:option("-max_epochs", 100, "maximum number of passes through the training dataset")
-cmd:option("-learning_rate", 0.01, "learning rate") --2e-3
+cmd:option("-learning_rate", 0.01, "learning rate")
 cmd:option("-learning_rate_decay", 0.97, "learning rate decay")
 cmd:option("-learning_rate_decay_after", 10, "in number of epochs, when to start decaying the learning rate")
 cmd:option("-decay_rate", 0.95, "decay rate for rmsprop")
