@@ -110,16 +110,21 @@ class Classifier:
         data_set = self.get_training_set(training_set)
         trainer = self.get_new_trainer(data_set)
 
+        print "Train for {} iterations".format(iteration)
+
+        min_loss = 1.0
+
         for i in range(0, iteration):
             error = trainer.train()
             print "Training {}/{} -> error: {}".format(i + 1, iteration, error)
 
-            if isnan(error):
-                break
-
             self.relevance.update_training(error)
 
-        self.serialize("neural_net.xml")
+            if error < min_loss:
+                min_loss = error
+                self.serialize("neural_net.xml")
+
+        print "Minimum loss: {}".format(min_loss)
 
     def evaluate(self, evaluation_set=None, is_labelled=True):
         evaluation_set = self.collection if evaluation_set is None else evaluation_set
@@ -140,7 +145,7 @@ class Classifier:
         if is_labelled:
             self.relevance.compute(len(data_set))
 
-    def k_fold_cross_validate(self, k=10, iteration=1):
+    def k_fold_cross_validate(self, k=5, iteration=1):
         samples = self.get_samples(self.collection, k)
 
         for i in range(0, k):

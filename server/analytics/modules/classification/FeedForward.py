@@ -9,13 +9,12 @@ from ..utils.UNeuralNet import *
 class FeedForward(Classifier):
     def __init__(self, neurons_per_layer=[9]):
         Classifier.__init__(self)
-
         self.neurons_per_layer = neurons_per_layer
 
     def build_neural_net(self):
         input_number, output_number = self.meta_data
         self.neural_net = UNeuralNet.get_neural_net(input_number, output_number,
-                                                    FeedForwardNetwork, SigmoidLayer, self.neurons_per_layer)
+                                                    FeedForwardNetwork, TanhLayer, self.neurons_per_layer)
 
     def get_new_data_set(self):
         input_number, output_number = self.meta_data
@@ -32,6 +31,6 @@ class FeedForward(Classifier):
         return self.neural_net.activate(input_values[0])
 
     def get_name(self):
-        return "Feed forward network (Backpropagation training)"
+        return "Feed forward network (RProp- training)"
 
 

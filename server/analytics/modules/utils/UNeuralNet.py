@@ -1,12 +1,14 @@
 __author__ = 'Tony Beltramelli www.tonybeltramelli.com - 17/10/2015'
 
 from pybrain.structure import *
-
+from scipy import random
 
 class UNeuralNet:
 
     @staticmethod
     def get_neural_net(input_number, output_number, NetworkType, HiddenLayerType, neurons_per_layer=[9], use_bias=False):
+        random.seed(123)
+
         input = LinearLayer(input_number)
         output = SoftmaxLayer(output_number)
 
@@ -44,5 +46,7 @@ class UNeuralNet:
             print "Use fast C++ implementation"
         else:
             print "Use standard Python implementation"
+
+        print "Create neural network with {} neurons ({} layers)".format(neurons_per_layer, len(neurons_per_layer))
 
         return neural_net
