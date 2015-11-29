@@ -12,9 +12,8 @@ class FeatureExtractor:
         self.output_path = output_path
         self.view = view
         self.use_statistical_features = use_statistical_features
-        self.axes = self.view.get_subplot_axes()
 
-    def segment_heuristically(self, sensors, reference_signal):
+    def segment_heuristically(self, sensors, reference_signal, label=None):
         p = PeakAnalysis(self.view)
         peaks = p.get_peaks(reference_signal)
 
@@ -22,7 +21,31 @@ class FeatureExtractor:
         for peak_position in peaks:
             timestamps.append(sensors[0].timestamp[peak_position])
 
-        self.segment(sensors, timestamps)
+        if label:
+            label_timestamps = label.timestamp
+            labels = label.label
+            closer_labels = []
+            closer_timestamps = []
+
+            for i in range(0, len(label_timestamps)):
+                min_dist = label_timestamps[len(label_timestamps) - 1] - label_timestamps[0]
+                closer_label = None
+                closer_timestamp = None
+
+                for heuristic_timestamp in timestamps:
+                    dist = sqrt(np.square(label_timestamps[i] - heuristic_timestamp))
+
+                    if dist < min_dist:
+                        min_dist = dist
+                        closer_label = labels[i]
+                        closer_timestamp = heuristic_timestamp
+
+                closer_labels.append(closer_label)
+                closer_timestamps.append(closer_timestamp)
+
+            self.segment(sensors, closer_timestamps, closer_labels)
+        else:
+            self.segment(sensors, timestamps)
 
     def segment_from_labels(self, sensors, label):
         label_timestamps = label.timestamp
@@ -38,7 +61,6 @@ class FeatureExtractor:
 
             if labels is not None:
                 output_file.write("label:{}\n".format(labels[i]))
-                #self.view.subplot(self.axes[i], features[0], features[1], features[2], labels[i])
             else:
                 output_file.write(":\n")
 

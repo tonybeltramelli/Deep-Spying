@@ -224,11 +224,14 @@ class View:
         pylab.xlabel('Time')
         pylab.ylabel('Amplitude')
 
-    def plot_barchart(self, data, labels, colors, xlabel, ylabel, xticks):
+    def plot_barchart(self, data, labels, colors, xlabel, ylabel, xticks, legendloc=1):
         self.big_figure()
 
         index = np.arange(len(data[0][0]))
         bar_width = 0.25
+
+        pylab.grid("on", axis='y')
+        pylab.ylim([0.5, 1.0])
 
         for i in range(0, len(data)):
             rects = pylab.bar(bar_width / 2 + index + (i * bar_width), data[i][0], bar_width,
@@ -237,7 +240,7 @@ class View:
                               error_kw={'ecolor': '0.3'},
                               label=labels[i])
 
-        pylab.legend(loc=2, prop={'size': 12})
+        pylab.legend(loc=legendloc, prop={'size': 12})
 
         pylab.xlabel(xlabel)
         pylab.ylabel(ylabel)
@@ -250,6 +253,8 @@ class View:
             pylab.figure(figsize=(11, 4))
         elif self.screen_size == "medium":
             pylab.figure(figsize=(12, 6))
+        elif self.screen_size == "square":
+            pylab.figure(figsize=(5, 5))
         else:
             pylab.figure()
 

@@ -4,8 +4,8 @@ from Sensor import *
 
 
 class Accelerometer(Sensor):
-    def __init__(self, path, view, merge_axes=False):
-        Sensor.__init__(self, file_path="{}accelerometer.csv".format(path), view=view)
+    def __init__(self, path, view, merge_axes=False, preprocess_signal=True):
+        Sensor.__init__(self, file_path="{}accelerometer.csv".format(path), view=view, preprocess_signal=preprocess_signal)
 
         self.maximum_delay = 10000
         self.median_filter_window_size = 5
