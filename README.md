@@ -14,7 +14,7 @@ In the meantime, advances in machine learning are providing unprecedented possib
 
 The goal of this work is to raise awareness about the potential risks related to motion sensors built-in wearable devices and to demonstrate abuse opportunities leveraged by advanced neural network architectures.
 
-The LSTM-based implementation presented in this research can perform touchlogging and keylogging on 12 keys numerical keypads with above-average accuracy even when confronted with raw unprocessed data. Thus demonstrating that deep neural networks are capable of making keystroke inference attacks based on motion sensors easier to achieve by removing the need for non-trivial pre-processing pipelines and carefully engineered feature extraction strategies. Our results suggest that the complete technological ecosystem of a user can be compromised when a wearable wristband device is worn.
+The LSTM-based implementation presented in this research can perform touchlogging and keylogging on 12-keys keypads with above-average accuracy even when confronted with raw unprocessed data. Thus demonstrating that deep neural networks are capable of making keystroke inference attacks based on motion sensors easier to achieve by removing the need for non-trivial pre-processing pipelines and carefully engineered feature extraction strategies. Our results suggest that the complete technological ecosystem of a user can be compromised when a wearable wristband device is worn.
 
 ### Keywords
 Security, Side-Channel Attack, Keystroke Inference, Motion Sensors, Deep Learning, Recurrent Neural Network, Wearable Computing
