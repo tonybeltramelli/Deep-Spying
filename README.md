@@ -20,4 +20,4 @@ The LSTM-based implementation presented in this research can perform touchloggin
 Security, Side-Channel Attack, Keystroke Inference, Motion Sensors, Deep Learning, Recurrent Neural Network, Wearable Computing
 
 ## Fun fact
-The original project name was "SWAT: Spying using Wearable Wristband/Armband Technology", which explain why some packages still reflect this old name.
+The original project name was "SWAT: Spying using Wearable Wristband/Armband Technology", which explains why some packages still reflect this old name.
