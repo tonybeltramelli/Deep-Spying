@@ -8,6 +8,8 @@ public class Const
     public static final int TCP_SOCKET_SERVER_PORT = 25500;
     public static final int HTTP_SERVER_PORT = 8000;
     //
+    public static final String DATA_ANALYTICS_SCRIPT = "./predict.sh";
+    //
     public static final String TIMESTAMP = "timestamp";
     public static final String X = "x";
     public static final String Y = "y";
@@ -30,5 +32,4 @@ public class Const
         int max = 50;
         return data.substring(0, length < max ? length : max) + (length < max ? "" : "...");
     }
-
 }

@@ -1,5 +1,6 @@
 package com.tonybeltramelli.swat.server.data;
 
+import com.tonybeltramelli.swat.server.AnalyticsProcess;
 import com.tonybeltramelli.swat.server.Const;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -25,9 +26,12 @@ public class DataStore
 
     private int _sessionID;
     private boolean _isRecording;
+    private boolean _useLiveMode;
 
-    public DataStore()
+    public DataStore(boolean useLiveMode)
     {
+        _useLiveMode = useLiveMode;
+
         _init();
     }
 
@@ -97,6 +101,8 @@ public class DataStore
         }
 
         _init();
+
+        if(_useLiveMode) AnalyticsProcess.run("session_" + _sessionID);
     }
 
     public void generateSessionID()

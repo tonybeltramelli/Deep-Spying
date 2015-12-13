@@ -247,7 +247,7 @@ class View:
         pylab.xticks(bar_width / 2 + index + ((bar_width * (len(data[0]) + 1)) / len(data[0])), xticks)
 
     def big_figure(self):
-        if self.screen_size == "fullscren":
+        if self.screen_size == "fullscreen":
             pylab.figure(figsize=(18, 9.5))
         elif self.screen_size == "paper":
             pylab.figure(figsize=(11, 4))

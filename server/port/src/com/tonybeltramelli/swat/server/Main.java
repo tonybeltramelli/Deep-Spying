@@ -14,9 +14,11 @@ public class Main {
 
     public static void main(String[] args) throws IOException
     {
+        boolean useLiveMode = args.length == 1 && args[0].equals("live");
+
         System.out.println(InetAddress.getLocalHost().getHostAddress());
 
-        DataStore dataStore = new DataStore();
+        DataStore dataStore = new DataStore(useLiveMode);
 
         TCPSocketServer tcpSocketServer = new TCPSocketServer(Const.TCP_SOCKET_SERVER_PORT, dataStore);
         tcpSocketServer.start();
