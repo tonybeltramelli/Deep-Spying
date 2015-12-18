@@ -5,8 +5,8 @@
 
 This repository contains the code implemented for my Master's thesis project submitted in fulfillment of the requirements for the degree of Master of Science at the [IT University of Copenhagen](http://en.itu.dk/)
 
-A video demo of the system can be seen [here](https://youtu.be/ZBwSfvnoq5U)
-The paper is available at [http://arxiv.org/abs/1512.05616](http://arxiv.org/abs/1512.05616)
+* A video demo of the system can be seen [here](https://youtu.be/ZBwSfvnoq5U)
+* The paper is available at [http://arxiv.org/abs/1512.05616](http://arxiv.org/abs/1512.05616)
 
 The following software is shared for educational purpose only. The author of the code and its affiliated institution are not responsible in any manner whatsoever for any damages, including any direct, indirect, special, incidental, or consequential damages of any character arising as a result of the use or inability to use this software. Neither the names of the author or the name of its affiliated institution may be used to endorse or promote products derived from this software. Please find more details in the provided Licence file.
 
