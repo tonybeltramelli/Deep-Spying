@@ -24,3 +24,12 @@ Security, Side-Channel Attack, Keystroke Inference, Motion Sensors, Deep Learnin
 
 ## Fun fact
 The original project name was "SWAT: Spying using Wearable Wristband/Armband Technology", which explains why some packages still reflect this old name.
+
+## Media coverage
+* [Wired UK](http://www.wired.co.uk/news/archive/2015-12/21/smartwatch-typing-spying)
+* [GEEK](http://www.geek.com/news/your-smartwatch-can-guess-your-pin-1642965/)
+* [El Pais](http://tecnologia.elpais.com/tecnologia/2015/12/21/actualidad/1450722128_471371.html)
+* [Vice](http://motherboard.vice.com/read/heres-how-your-smartphone-can-reveal-what-youre-typing)
+* [Gizmodo](http://gizmodo.com/your-smartwatchs-motion-sensors-can-reveal-everything-y-1750442236)
+* [XDA Developers](http://www.xda-developers.com/xda-external-link/how-your-smartwatch-can-reveal-what-youre-typing/)
+
