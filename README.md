@@ -32,4 +32,3 @@ The original project name was "SWAT: Spying using Wearable Wristband/Armband Tec
 * [Vice](http://motherboard.vice.com/read/heres-how-your-smartphone-can-reveal-what-youre-typing)
 * [Gizmodo](http://gizmodo.com/your-smartwatchs-motion-sensors-can-reveal-everything-y-1750442236)
 * [XDA Developers](http://www.xda-developers.com/xda-external-link/how-your-smartwatch-can-reveal-what-youre-typing/)
-
