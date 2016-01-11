@@ -35,6 +35,9 @@ The original project name was "SWAT: Spying using Wearable Wristband/Armband Tec
 * [Huffington Post](http://www.huffingtonpost.com/entry/smartwatch-hack-passwords_5689e6d5e4b014efe0daceeb?utm_hp_ref=world)
 * [IFL Science](http://www.iflscience.com/technology/new-ways-your-smartwatch-and-phone-may-be-spying-you-how-worried-should-you-be)
 * [XDA Developers](http://www.xda-developers.com/xda-external-link/how-your-smartwatch-can-reveal-what-youre-typing/)
+* [Naked Security](https://nakedsecurity.sophos.com/2016/01/11/could-your-smartwatch-be-giving-away-your-atm-pin/)
+* [Softpedia](http://news.softpedia.com/news/smartwatches-can-be-used-to-spy-on-your-card-s-pin-code-498756.shtml)
+* [Version2](http://www.version2.dk/artikel/itu-studerende-sensorer-i-smartwatch-kan-afsloere-pinkoden-til-dit-dankort-549635)
 
 Read comments on [Hacker News](https://news.ycombinator.com/item?id=10758298)
 
