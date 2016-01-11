@@ -35,3 +35,6 @@ The original project name was "SWAT: Spying using Wearable Wristband/Armband Tec
 * [Huffington Post](http://www.huffingtonpost.com/entry/smartwatch-hack-passwords_5689e6d5e4b014efe0daceeb?utm_hp_ref=world)
 * [IFL Science](http://www.iflscience.com/technology/new-ways-your-smartwatch-and-phone-may-be-spying-you-how-worried-should-you-be)
 * [XDA Developers](http://www.xda-developers.com/xda-external-link/how-your-smartwatch-can-reveal-what-youre-typing/)
+
+Read comments on [Hacker News](https://news.ycombinator.com/item?id=10758298)
+
