@@ -39,5 +39,5 @@ The original project name was "SWAT: Spying using Wearable Wristband/Armband Tec
 * [Softpedia](http://news.softpedia.com/news/smartwatches-can-be-used-to-spy-on-your-card-s-pin-code-498756.shtml)
 * [Version2](http://www.version2.dk/artikel/itu-studerende-sensorer-i-smartwatch-kan-afsloere-pinkoden-til-dit-dankort-549635)
 
-University blog post [here](http://en.itu.dk/About-ITU/Press/News-from-ITU/Your-smartwatch-can-reveal-your-PIN-code)
-Read comments on [Hacker News](https://news.ycombinator.com/item?id=10758298)
+University blog post [here](http://en.itu.dk/About-ITU/Press/News-from-ITU/Your-smartwatch-can-reveal-your-PIN-code) 
+Read comments on [Hacker News](https://news.ycombinator.com/item?id=10758298) 
