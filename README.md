@@ -31,7 +31,6 @@ The original project name was "SWAT: Spying using Wearable Wristband/Armband Tec
 * [El Pais](http://tecnologia.elpais.com/tecnologia/2015/12/21/actualidad/1450722128_471371.html)
 * [Vice](http://motherboard.vice.com/read/heres-how-your-smartphone-can-reveal-what-youre-typing)
 * [Gizmodo](http://gizmodo.com/your-smartwatchs-motion-sensors-can-reveal-everything-y-1750442236)
-* [Forbes](www.forbes.com/sites/kalevleetaru/2016/01/15/when-cameras-and-wearables-could-be-used-to-steal-passwords-and-keys/)
 * [Lifehacker Australia](http://www.lifehacker.com.au/2016/01/should-you-be-worried-about-smartwatches-and-smartphones-spying-on-you/)
 * [Huffington Post](http://www.huffingtonpost.com/entry/smartwatch-hack-passwords_5689e6d5e4b014efe0daceeb?utm_hp_ref=world)
 * [IFL Science](http://www.iflscience.com/technology/new-ways-your-smartwatch-and-phone-may-be-spying-you-how-worried-should-you-be)
@@ -39,6 +38,7 @@ The original project name was "SWAT: Spying using Wearable Wristband/Armband Tec
 * [Naked Security](https://nakedsecurity.sophos.com/2016/01/11/could-your-smartwatch-be-giving-away-your-atm-pin/)
 * [Softpedia](http://news.softpedia.com/news/smartwatches-can-be-used-to-spy-on-your-card-s-pin-code-498756.shtml)
 * [Version2](http://www.version2.dk/artikel/itu-studerende-sensorer-i-smartwatch-kan-afsloere-pinkoden-til-dit-dankort-549635)
+* [Forbes](http://www.forbes.com/sites/kalevleetaru/2016/01/15/when-cameras-and-wearables-could-be-used-to-steal-passwords-and-keys/)
 
 University blog post [here](http://en.itu.dk/About-ITU/Press/News-from-ITU/Your-smartwatch-can-reveal-your-PIN-code)
 
