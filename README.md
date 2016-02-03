@@ -22,9 +22,6 @@ The LSTM-based implementation presented in this research can perform touchloggin
 ### Keywords
 Security, Side-Channel Attack, Keystroke Inference, Motion Sensors, Deep Learning, Recurrent Neural Network, Wearable Computing
 
-## Fun fact
-The original project name was "SWAT: Spying using Wearable Wristband/Armband Technology", which explains why some packages still reflect this old name.
-
 ## International media coverage
 * [Wired UK](http://www.wired.co.uk/news/archive/2015-12/21/smartwatch-typing-spying)
 * [GEEK](http://www.geek.com/news/your-smartwatch-can-guess-your-pin-1642965/)
@@ -40,6 +37,17 @@ The original project name was "SWAT: Spying using Wearable Wristband/Armband Tec
 * [Version2](http://www.version2.dk/artikel/itu-studerende-sensorer-i-smartwatch-kan-afsloere-pinkoden-til-dit-dankort-549635)
 * [Forbes](http://www.forbes.com/sites/kalevleetaru/2016/01/15/when-cameras-and-wearables-could-be-used-to-steal-passwords-and-keys/)
 
-University blog post [here](http://en.itu.dk/About-ITU/Press/News-from-ITU/Your-smartwatch-can-reveal-your-PIN-code)
+University blog post [here](http://en.itu.dk/About-ITU/Press/News-from-ITU/Your-smartwatch-can-reveal-your-PIN-code)  
+Read comments on [Hacker News](https://news.ycombinator.com/item?id=10758298)
 
-Read comments on [Hacker News](https://news.ycombinator.com/item?id=10758298) 
+## Citation
+
+    @article{beltramelli2015deep,
+      title={Deep-Spying: Spying using Smartwatch and Deep Learning},
+      author={Beltramelli, Tony and Risi, Sebastian},
+      journal={arXiv preprint arXiv:1512.05616},
+      year={2015}
+    }
+
+## Fun fact
+The original project name was "SWAT: Spying using Wearable Wristband/Armband Technology", which explains why some packages still reflect this old name.
