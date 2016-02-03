@@ -1,6 +1,8 @@
 # Deep-Spying
 *Spying using Smartwatch and Deep Learning*
 
+[![License](http://img.shields.io/badge/license-APACHE2-blue.svg)](LICENSE.txt)
+
 <img src="logo.png?raw=true" align="right"/>
 
 This repository contains the code implemented for my Master's thesis project submitted in fulfillment of the requirements for the degree of Master of Science at the [IT University of Copenhagen](http://en.itu.dk/)
