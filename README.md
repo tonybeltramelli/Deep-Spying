@@ -41,6 +41,7 @@ Security, Side-Channel Attack, Keystroke Inference, Motion Sensors, Deep Learnin
 
 University blog post [here](http://en.itu.dk/About-ITU/Press/News-from-ITU/Your-smartwatch-can-reveal-your-PIN-code)  
 Read comments on [Hacker News](https://news.ycombinator.com/item?id=10758298)
+On Danish national TV channel [TV2 NewScience)(http://play.tv2.dk/programmer/magasiner/serier/newscience/smarture-kan-afsloere-din-pinkode-109753/)
 
 ## Citation
 
