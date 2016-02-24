@@ -39,9 +39,9 @@ Security, Side-Channel Attack, Keystroke Inference, Motion Sensors, Deep Learnin
 * [Version2](http://www.version2.dk/artikel/itu-studerende-sensorer-i-smartwatch-kan-afsloere-pinkoden-til-dit-dankort-549635)
 * [Forbes](http://www.forbes.com/sites/kalevleetaru/2016/01/15/when-cameras-and-wearables-could-be-used-to-steal-passwords-and-keys/)
 
+On Danish national TV channel [TV2 NewScience)(http://play.tv2.dk/programmer/magasiner/serier/newscience/smarture-kan-afsloere-din-pinkode-109753/)  
 University blog post [here](http://en.itu.dk/About-ITU/Press/News-from-ITU/Your-smartwatch-can-reveal-your-PIN-code)  
 Read comments on [Hacker News](https://news.ycombinator.com/item?id=10758298)
-On Danish national TV channel [TV2 NewScience)(http://play.tv2.dk/programmer/magasiner/serier/newscience/smarture-kan-afsloere-din-pinkode-109753/)
 
 ## Citation
 
