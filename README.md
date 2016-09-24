@@ -5,7 +5,7 @@
 
 <img src="logo.png?raw=true" align="right"/>
 
-This repository contains the code implemented for my Master's thesis project submitted in fulfillment of the requirements for the degree of Master of Science at the [IT University of Copenhagen](http://en.itu.dk/) supervised by [Professor Sebastian Risi](http://http://sebastianrisi.com/).
+This repository contains the code implemented for my Master's thesis project submitted in fulfillment of the requirements for the degree of Master of Science at the [IT University of Copenhagen](http://en.itu.dk/) supervised by [Professor Sebastian Risi](http://sebastianrisi.com/).
 
 * A video demo of the system can be seen [here](https://youtu.be/ZBwSfvnoq5U)
 * The paper is available at [http://arxiv.org/abs/1512.05616](http://arxiv.org/abs/1512.05616)
@@ -31,7 +31,7 @@ Security, Side-Channel Attack, Keystroke Inference, Motion Sensors, Deep Learnin
 * [Vice](http://motherboard.vice.com/read/heres-how-your-smartphone-can-reveal-what-youre-typing)
 * [Gizmodo](http://gizmodo.com/your-smartwatchs-motion-sensors-can-reveal-everything-y-1750442236)
 * [Lifehacker Australia](http://www.lifehacker.com.au/2016/01/should-you-be-worried-about-smartwatches-and-smartphones-spying-on-you/)
-* [Huffington Post](http://www.huffingtonpost.com/entry/smartwatch-hack-passwords_5689e6d5e4b014efe0daceeb?utm_hp_ref=world)
+* [Huffington Post](http://www.huffingtonpost.com/entry/smartwatch-hack-passwords_5689e6d5e4b014efe0daceeb)
 * [IFL Science](http://www.iflscience.com/technology/new-ways-your-smartwatch-and-phone-may-be-spying-you-how-worried-should-you-be)
 * [XDA Developers](http://www.xda-developers.com/xda-external-link/how-your-smartwatch-can-reveal-what-youre-typing/)
 * [Naked Security](https://nakedsecurity.sophos.com/2016/01/11/could-your-smartwatch-be-giving-away-your-atm-pin/)
