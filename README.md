@@ -5,7 +5,7 @@
 
 <img src="logo.png?raw=true" align="right"/>
 
-This repository contains the code implemented for my Master's thesis project submitted in fulfillment of the requirements for the degree of Master of Science at the [IT University of Copenhagen](http://en.itu.dk/)
+This repository contains the code implemented for my Master's thesis project submitted in fulfillment of the requirements for the degree of Master of Science at the [IT University of Copenhagen](http://en.itu.dk/) supervised by [Professor Sebastian Risi](http://http://sebastianrisi.com/).
 
 * A video demo of the system can be seen [here](https://youtu.be/ZBwSfvnoq5U)
 * The paper is available at [http://arxiv.org/abs/1512.05616](http://arxiv.org/abs/1512.05616)
