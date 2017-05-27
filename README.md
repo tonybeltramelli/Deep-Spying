@@ -40,7 +40,7 @@ Security, Side-Channel Attack, Keystroke Inference, Motion Sensors, Deep Learnin
 * [Forbes](http://www.forbes.com/sites/kalevleetaru/2016/01/15/when-cameras-and-wearables-could-be-used-to-steal-passwords-and-keys/)
 * [phys.org](http://phys.org/news/2016-01-ways-smartwatch-spying.html)
 
-On Danish national TV channel [TV2 NewScience](http://play.tv2.dk/programmer/magasiner/serier/newscience/smarture-kan-afsloere-din-pinkode-109753/)  
+On Danish national TV channel [TV2 NewScience](http://nyheder.tv2.dk/2016-01-22-dit-smartur-kan-lure-din-pinkode)  
 University blog post [here](http://en.itu.dk/About-ITU/Press/News-from-ITU/Your-smartwatch-can-reveal-your-PIN-code)  
 Read comments on [Hacker News](https://news.ycombinator.com/item?id=10758298)
 
